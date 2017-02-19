@@ -1,0 +1,64 @@
+---
+
+title: Simple Page-of-Posts Solution for Wordpress
+date: 2012-11-04 08:44:47.000000000 -06:00
+categories:
+- How-to Guides
+- Utilities And Other Useful Things
+tags:
+- page of posts
+- wordpress
+meta:
+  _wpas_done_all: '1'
+  _publicize_pending: '1'
+  jabber_published: '1352040288'
+  _wpas_done_1477650: '1'
+  publicize_twitter_user: alexdglover
+  _wpas_done_1477652: '1'
+  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:297624509;b:1;}}
+  publicize_reach: a:2:{s:7:"twitter";a:1:{i:1477652;i:25;}s:2:"wp";a:1:{i:0;i:3;}}
+  email_notification: '1352040291'
+  tagazine-media: a:7:{s:7:"primary";s:75:"http://alexdglover.files.wordpress.com/2012/11/page_of_posts_screenshot.png";s:6:"images";a:1:{s:75:"http://alexdglover.files.wordpress.com/2012/11/page_of_posts_screenshot.png";a:6:{s:8:"file_url";s:75:"http://alexdglover.files.wordpress.com/2012/11/page_of_posts_screenshot.png";s:5:"width";i:663;s:6:"height";i:532;s:4:"type";s:5:"image";s:4:"area";i:352716;s:9:"file_path";b:0;}}s:6:"videos";a:0:{}s:11:"image_count";i:1;s:6:"author";s:8:"34836694";s:7:"blog_id";s:8:"34954019";s:9:"mod_stamp";s:19:"2012-11-04
+    14:50:17";}
+  _wpas_skip_1477652: '1'
+  _wpas_skip_1477650: '1'
+  _edit_last: '1'
+  _s2mail: 'yes'
+---
+<p>Recently I have been helping Make a Difference Wisconsin, a local non-profit, with their Wordpress website. Without going into details as to why,  I needed to create a simple 'page of posts' for menu hierarchy reasons. It needed to be a page, but I wanted it to display all of the posts from a particular category. Google took me to many solutions, including the <a href="http://codex.wordpress.org/Pages#A_Page_of_Posts" target="_blank">Wordpress Codex</a>, but none of them worked. Some used out of date or deprecated query functions and some didn't work with the custom theme that was already in place. This should have been a very easy task, but took me several  days to pin down my solution.</p>
+<p>So, if you want to create a simple page-of-posts that should work in any theme (with some minor tweaking, of course), feel free to use this code:</p>
+<pre class="lang:php decode:true crayon-selected">&lt;?php
+/*
+Template Name: pageofposts
+*/
+/*
+Author: Alex Glover
+Date: 4-Nov-2012
+*/
+?&gt;
+&lt;?php get_header(); ?&gt;
+&lt;div id="content-area"&gt;
+&lt;?php
+global $post;
+$args = array( 'numberposts' =&gt; 5, 'category' =&gt; 47 );//CHANGE THESE VALUES AS NEEDED
+$myposts = get_posts( $args );
+foreach( $myposts as $post ) : setup_postdata($post); ?&gt;
+&lt;h2&gt;&lt;a href="&lt;?php the_permalink(); ?&gt;"&gt;&lt;?php the_title(); ?&gt;&lt;/a&gt;&lt;/h2&gt;&lt;br /&gt;
+&lt;?php if ( has_post_thumbnail()) : ?&gt;
+&lt;a href="&lt;?php the_permalink(); ?&gt;" title="&lt;?php the_title_attribute(); ?&gt; " style="float:left; position: relative; margin: 0px 20px 0px 0px;"&gt;
+&lt;?php the_post_thumbnail('thumbnail'); ?&gt;
+&lt;/a&gt;&lt;p style="width:450px; float:left; position: relative;"&gt;
+&lt;?php the_excerpt(); ?&gt;
+&lt;/p&gt;
+&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;
+&lt;?php endif; ?&gt;
+&lt;?php endforeach; wp_reset_postdata(); ?&gt;
+&lt;div&gt;&lt;/div&gt;
+
+&lt;/div&gt; &lt;!-- #content-area --&gt;
+
+&lt;?php get_sidebar(); ?&gt;
+&lt;?php get_footer(); ?&gt;</pre>
+<p>Here's a quick preview of what the 'page of posts' code looks like, but obviously aspects of this will be very different based on the theme that you are using.</p>
+<p><a href="http://alexdglover.files.wordpress.com/2012/11/page_of_posts_screenshot.png"><img class="aligncenter size-full wp-image-152" title="page_of_posts_screenshot" alt="" src="{{ site.baseurl }}/assets/page_of_posts_screenshot.png" width="595" height="477" /></a></p>
+<p>You can check out the full page and see the code in action at <a href="http://www.makeadifferencewisconsin.org/investment-conference/past-conferences">http://www.makeadifferencewisconsin.org/investment-conference/past-conferences</a></p>

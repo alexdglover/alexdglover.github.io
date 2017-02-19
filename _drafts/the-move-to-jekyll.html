@@ -1,0 +1,150 @@
+---
+layout: post
+title: The Move to Jekyll
+date: 
+type: post
+published: false
+status: draft
+categories:
+- Fun IT Projects
+- How-to Guides
+tags:
+- github pages
+- jekyll
+- search
+meta:
+  _edit_last: '1'
+  _s2mail: 'yes'
+  _publicize_twitter_user: "@alexdglover"
+  _oembed_5c38271ebbb75e4d7957e4a10a8c98b8: "{{unknown}}"
+  _wpas_mess: The Move to Jekyll
+  _wpas_skip_16584087: '1'
+  _thumbnail_id: '1115'
+author:
+  login: AlexDGlover
+  email: alex@alexdglover.com
+  display_name: AlexDGlover
+  first_name: Alex
+  last_name: Glover
+---
+<p>WordPress has served me well over the years, but it's time for me to move on. My blog first started with Wordpress.com hosting, but I didn't like that I was hosting WP's ads,  a custom domain was an up-charge, and they limit which themes and plugins I could use. So I migrated to a self-hosted WordPress instance, allowing me to serve Google ads, add membership functionality, and allow people to subscribe to my site by email.</p>
+<p>I've had some issues with 1and1 hosting over the years (downtime, charges for PHP support, non-refundable contracts), and I've come to realize I don't need most of these plugins. I don't make enough money to justify the ads, and a lot of the site's visitors are friends and family. I only have a few members/subscribers, so I don't really need membership functionality either. On top of that, 1and1 isn't free - I'm literally paying for a hosting service I don't like, to host functionality I don't need.</p>
+<p>With all of that in mind, blogging with Jekyll and hosting on GitHub seemed like a no-brainer. Hosting is free, it's faster and more secure than WP, and I get to enjoy hacking on a new tool set. But before I made the switch, I wanted to make sure Jekyll could do everything I wanted with a blogging platform.</p>
+<p>TL;DR - I'm ditching WordPress hosted on 1and1, and I'm moving to Jekyll hosted on GitHub.</p>
+<h2>Reproducing features in Jekyll</h2>
+<p>Out of the box, <a href="https://jekyllrb.com/">Jekyll</a> is a great blogging platform and meets the majority of my use cases. That said, there a few features of my WordPress blog that Jekyll doesn't include, and I didn't want to lose as part of the transition.</p>
+<ul>
+<li>Featured image functionality - basically, I can set an image for a post, and it shows up in any list of posts, as well as the first image you see when you open a specific blog post.<br />
+<a href="http://alexdglover.com/wp-content/uploads/2017/02/anim.gif"><img class="aligncenter size-large wp-image-1107" src="{{ site.baseurl }}/assets/anim-1024x563.gif" alt="Featured Image functionality" width="616" height="339" /></a></li>
+<li>JetPack site statistics - Part of the satisfaction of blogging is seeing how much traffic you get. WordPress does a great job with their JetPack plugin, which allows you to get fairly substantial analytics in a simple and consumable dashboard.<br />
+<a href="http://alexdglover.com/wp-content/uploads/2017/02/anim-1.gif"><img class="aligncenter size-large wp-image-1108" src="{{ site.baseurl }}/assets/anim-1-1024x563.gif" alt="Jetpack Stats Overview" width="616" height="339" /></a></li>
+<li>Social media integration - when I publish a post, WordPress shares it to Twitter, Facebook, and LinkedIn automatically. There are also sharing buttons appended to every post.</li>
+<li>Retaining permalinks for SEO and backlinks - SEO is not very important for my humble blog, but I <em>hate</em> when I try to browse to some personal blog only to get a 404 or weird redirect. With that in mind, Jekyll needs to support my existing permalink structure (e.g. alexdglover.com<strong>/my-post-title)</strong></li>
+<li>Search - users should be able to find content based on query text.</li>
+</ul>
+<p>The rest of this post will cover how I modified Jekyll and the <a href="https://mmistakes.github.io/minimal-mistakes/">Minimal Mistakes</a> theme for my blog.</p>
+<h2>Featured Image Functionality</h2>
+<p>Fortunately, implementing the "featured image" was fairly easy with the <a href="https://mmistakes.github.io/minimal-mistakes/">Minimal Mistakes</a> theme.  The theme itself is supposed to offer it out-of-the-box, but either I'm doing something wrong or misunderstanding the theme documentation. In theory, you only need to set "teaser" property in the header section of your posts' front matter, like this:</p>
+<pre class="lang:default mark:5-6 decode:true" title="Example Jekyll Post with " featured="" image="">---
+title:  "Hello world"
+date:   2016-11-17 16:16:01 -0600
+categories: jekyll category1 category2
+header:
+  teaser: https://i0.wp.com/alexdglover.com/wp-content/uploads/2017/01/anim-3.gif
+---
+
+And here's the body of your blog post.</pre>
+<p>For some reason, that didn't work for me using the stock home page. After doing some digging, I narrowed the so-called issue to a "grid" conditional in _includes/archive-single.html:</p>
+<pre class="lang:default decode:true" title="_includes/archive-single.html snippet">    {% if include.type == "grid" and teaser %}
+      &lt;div class="archive__item-teaser"&gt;
+        &lt;img src=
+          {% if teaser contains "://" %}
+            "{{ teaser }}"
+          {% else %}
+            "{{ teaser | prepend: "/images/" | prepend: base_path }}"
+          {% endif %}
+          alt=""&gt;
+      &lt;/div&gt;
+    {% endif %}</pre>
+<p>Well, I couldn't figure out where the include.type was supposed to be set, but who cares! The best thing about Jekyll is you have total control and it's easy to modify. I have no plans to use this "grid" functionality, so I just removed it from the conditional. Now the teaser is displayed on the home page (and in any page using the archive layout).</p>
+<p><a href="http://imgur.com/ByzZD5Jl.png"><img class="aligncenter size-large" src="{{ site.baseurl }}/assets/ByzZD5Jl.png" alt="teaser image on home page of Jekyll" width="640" height="360" /></a></p>
+<h2>Site Analytics and Stats</h2>
+<p>Jekyll supports Google Analytics, injecting your tracking ID into every page on your behalf. Google Analytics is a little overkill for a personal blog and I personally dislike the dashboard/interface, but there aren't that many site analytics platforms out there that are free and feature-rich. So I'm going down the path of least resistance on this one. I just need to take my existing GA tracking ID, and put in the _config.yml file:</p>
+<pre class="lang:default decode:true" title="_config.yml snippet"># Analytics
+analytics:
+  provider               : "google"
+  google:
+    tracking_id          : "ga-my-tracking-id-12973291"</pre>
+<h2>Posting to Social Media</h2>
+<p>I've seen plenty of other Jekyll users create a simple integration to social media sites using the built-in RSS feed from Jekyll and <a href="http://www.ifttt.com/">IFTTT</a>, so I won't beat that dear horse. The most interesting implementation I've seen done was by <a href="https://eduardoboucas.com/blog/2015/04/28/sharing-jekyll-posts-on-social-media-using-front-matter-and-ifttt.html">Eduardo Boucas</a>, so I'll direct you to his site for an example.</p>
+<h2>Retaining Permalinks</h2>
+<p>Fortunately, when I set up my self-hosted WordPress site I had the foresight to choose a sane and practical permalink structure. All of my permalinks are just the post title, but URL encoded  (99% of the time this just means spaces are replaced by hyphens, and all words are downcased). I can maintain all of my permalinks and not lose any SEO "juice" by using that same permalink pattern in my new Jekyll blog:</p>
+<pre class="lang:default decode:true " title="_config.yml snippet"># Outputting
+permalink: /:title/</pre>
+<p>Easy.</p>
+<h2></h2>
+<h2>Search</h2>
+<p>Search functionality was an interesting problem, but I knew right away how I wanted to solve it. In short, since Jekyll is a static site generator, there is no server-side code that can process search queries. It all needs to be handled in HTML and JavaScript.</p>
+<p>This is a trivial limitation, considering how small my site is and how "cheap" it is to send a few extra kilobytes of HTML text to the end user. With that in mind, a search solution is fairly easy. In my initial implementation, I set up a separate search page (rather than try to do an _includes/search.html that I could embed in other pages or sidebars). The search page is populated with an HTML input field, followed by every single post in the blog wrapped in div tags with <code>style="display: none;"</code> . At this point, the DOM of the page becomes our search "database," and we just need to write some JavaScript to find our query and update the div to <code>style="display: none;"</code>. This gives us the power to search not only post titles, but also the actual <em>content</em> of the post bodies.</p>
+<pre class="lang:default decode:true " title="search.html">---
+title: Search
+permalink: search.html
+---
+
+&lt;script&gt;
+
+function getSearchResults(val) {
+  console.log("hiding all elements");
+  $( ".result" ).hide();
+  $( ".postContent" ).hide();
+  $( ".searchResultSnippet " ).hide();
+
+  if(val.length &gt; 2){
+    // Downcase query val for case-insensitive search
+    val = val.toLowerCase();
+
+    // Show any results based on post title matching query
+    $( "div[id*='" + val + "' i]" ).filter( ".result").show();
+
+    // Show any results where query matches part of the post content
+    $( "div:contains('" + val + "')" ).filter( ".result").show();
+
+    // For each result based on post content, extract the surrounding text
+    // and display it in the search results, bolding the search term
+   $( "div:contains('" + val + "')" ).filter( ".result").each( function( index ) {
+      var postText = $( this ).find( ".postContent" ).text();
+      var resultPosition = postText.indexOf(val);
+      if(resultPosition &gt; -1){
+        var snippet = "..." + postText.substring( resultPosition-30, resultPosition+30 ) + "...";
+        snippet = snippet.replace(val, "&lt;strong&gt;" + val + "&lt;/strong&gt;");
+        $( this ).find( ".searchResultSnippet" ).show().html(snippet);
+      }
+    });
+  } // End of input length check
+  
+} // End of getSearchResults
+&lt;/script&gt;
+
+&lt;input type="text" onkeyup="getSearchResults(this.value)"&gt;
+
+&lt;div id="results"&gt;
+  {% for post in site.posts %}
+  &lt;div id="{{ post.title }}" class="result" style="display: none;"&gt; 
+    &lt;h3&gt;&lt;a href="{{ post.url }}"&gt;{{ post.title }}&lt;/a&gt;&lt;/h3&gt;
+    {% if post.header.teaser %}
+    &lt;a href="{{ post.url }}"&gt;&lt;img src="{{ post.header.teaser }}" style="width: 150px;" class="align-left" /&gt;&lt;/a&gt;
+    {% endif %}
+    &lt;p&gt;&lt;small&gt;&lt;strong&gt;{{ post.date | date: "%B %e, %Y" }}&lt;/strong&gt; - &lt;strong&gt;Categories&lt;/strong&gt; {{ post.categories | join:',' }} &lt;/small&gt;&lt;/p&gt;
+    &lt;div class="postContent" style="display:none;"&gt;{{ post.content }}&lt;/div&gt;
+    &lt;div id="searchResult{{ post.url }}" class="searchResultSnippet" style="display:none;"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  {% endfor %}
+&lt;/div&gt;
+</pre>
+<p>And here's the end result:</p>
+<p><a href="http://alexdglover.com/wp-content/uploads/2017/02/anim-2.gif"><img class="aligncenter size-large wp-image-1115" src="{{ site.baseurl }}/assets/anim-2-1024x563.gif" alt="Jekyll Search Page Demo" width="616" height="339" /></a></p>
+<p>It even looks good on mobile-friendly display port sizes:</p>
+<p><a href="http://alexdglover.com/wp-content/uploads/2017/02/anim-3.gif"><img class="aligncenter size-large wp-image-1116" src="{{ site.baseurl }}/assets/anim-3-377x1024.gif" alt="Jekyll Search Page Demo (Mobile)" width="377" height="1024" /></a></p>
+<p>&nbsp;</p>
+<h2>Conclusion</h2>
+<p>Well I'm sold! After testing my minor customizations, I'm ready to make the switch to GitHub pages using Jekyll and the Minimal Mistakes theme. I'll be sure to post again to describe any lessons learned from the actual migration, as well as any future customizations I make. If any of you have Jekyll tips and tricks to share, send 'em my way!</p>

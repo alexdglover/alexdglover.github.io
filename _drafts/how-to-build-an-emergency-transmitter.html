@@ -1,0 +1,27 @@
+---
+layout: post
+title: How to Build an Emergency Transmitter
+date: 
+type: post
+published: false
+status: draft
+categories:
+- Fun Electronics Projects
+- How-to Guides
+tags: []
+meta: {}
+author:
+  login: AlexDGlover
+  email: alex@alexdglover.com
+  display_name: AlexDGlover
+  first_name: Alex
+  last_name: Glover
+---
+<p>Let's assume you're stranded at sea, survived a plane crash in the wilderness, or find yourself in some sort of apocalyptic scenario (zombie or otherwise). Obviously you'll need to find food and water, possibly shelter from the elements, all of the basics. Once you've met your basic survival needs, you should try to find ways to signal for help.</p>
+<p>Let's further assume that, in whatever emergency situation you are, you have some access to salvageable electronics. I know this is a bit of a stretch, but it's more fun this way.</p>
+<p style="text-align:left;"><a href="http://alexdglover.wordpress.com/?attachment_id=307" rel="attachment wp-att-307"><img class="aligncenter  wp-image-307" alt="IMAG0356" src="{{ site.baseurl }}/assets/imag0356.jpg" height="329" width="476" /></a><br />
+You're looking for one of these - a packaged crystal oscillator (sometimes just referred to as oscillators). This picture's enlarged so you can read it obviously - depending on the type, they're usually about the size of your thumbnail with 3 or 4 pins coming out of the bottom. If you can find one of these, that's half the battle. It's basically a quartz crystal (cut to work for a specific frequency), a capacitor, and an inductor in a sealed package that provides an oscillating signal. These oscillators are used in radios and cell phones (as one would imagine) but can also be found in DVD players, Ethernet cards, older motherboards, and serial peripherals. So if we stick with our assumption that you have some salvageable electronics, there's a fair chance you can find one of these. Check out <a href="http://en.wikipedia.org/wiki/Crystal_oscillator_frequencies" target="_blank">this list of common frequencies of oscillators and their applications</a> for ideas where you can salvage one.</p>
+<p style="text-align:left;">Oscillators are made to operate at very different frequencies depending on their use. If you find an oscillator with a frequency between 153 KHz and 26 MHz, you can broadcast to AM receivers. If you find an oscillator with a frequency between 27 MHz and 28 MHz, you can broadcast to <a href="http://en.wikipedia.org/wiki/Citizens_Band_radio" target="_blank">CB radios</a>. As you can see, that's a pretty large range of frequencies that might get picked up if someone was looking for you. Anyway, one could write dozens of pages about radio fundamentals. This is a post about building an emergency radios, so let's get to it.</p>
+<p style="text-align:left;">One of the most simplest radios you can build requires only an oscillator and a power source. By connecting and disconnecting the power source, you can send Morse code. Of course, you might not be able to send anything but SOS (... --- ...), but it would work. The signal also wouldn't carry the tone that we generally associate with Morse code. Instead it would sound more like sets of clicks as you started and stopped broadcasting. So not super effective, but it works. To do so, connect the ground of your power source to the ground of the oscillator - generally the bottom right pin, if you're looking at the front of the oscillator. Then simply connect and disconnect your voltage supply to the V-in connection, the top right pin. Another way to remember this is to look for the special squared corner (see bottom right of the picture) - the pin closest to the squared corner is usually the antenna, with the V-in in the opposite corner.</p>
+<p style="text-align:left;">
+<p style="text-align:left;">

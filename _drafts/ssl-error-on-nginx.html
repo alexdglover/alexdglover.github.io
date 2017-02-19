@@ -1,0 +1,39 @@
+---
+layout: post
+title: SSL Error on NGINX
+date: 
+type: post
+published: false
+status: draft
+categories: []
+tags: []
+meta:
+  _edit_last: '1'
+  _s2mail: 'yes'
+  _publicize_twitter_user: "@alexdglover"
+author:
+  login: AlexDGlover
+  email: alex@alexdglover.com
+  display_name: AlexDGlover
+  first_name: Alex
+  last_name: Glover
+---
+<h2>Change below text, this is just a reminder</h2>
+<p>seen on Docker registry:</p>
+<p class="p1">tls: oversized record received with length 28012</p>
+<h2>ssl_error_rx_record_too_long on nginx</h2>
+<div class="message">
+<p>Today I encountered a problem with nginx that was caused by "long" ssl keys. Our old keys had a length of just 1024 bits, but the new ones had 2048 which introduced a problem. In firefox the error "ssl_error_rx_record_too_long" showed up. In chrome "Error 107 (net::ERR_SSL_PROTOCOL_ERROR)" appeared.</p>
+<div></div>
+<div>The solution is really simple, if you know how to do it.</div>
+<div></div>
+<div>Open the vhost configuration of your site and edit this line:</div>
+<div></div>
+<div><b>listen 443;</b></div>
+<div><b> </b></div>
+<div>change it into</div>
+<div></div>
+<div><b>listen 443 ssl;</b></div>
+<div><b> </b></div>
+<div>Now you're done!</div>
+</div>

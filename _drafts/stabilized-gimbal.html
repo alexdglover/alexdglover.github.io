@@ -1,0 +1,55 @@
+---
+layout: post
+title: Stabilized Gimbal
+date: 
+type: post
+published: false
+status: pending
+categories:
+- Project Ideas
+tags:
+- accelerometer
+- arduino
+- gimbal
+- pan and tilt
+- project ideas
+- servo
+meta:
+  _edit_last: '1'
+  _s2mail: 'no'
+  _wpas_mess: Stabilized Gimbal
+  _wpas_skip_1477652: '1'
+  _wpas_skip_1477650: '1'
+  _thumbnail_id: '485'
+  _wpas_done_all: '1'
+author:
+  login: AlexDGlover
+  email: alex@alexdglover.com
+  display_name: AlexDGlover
+  first_name: Alex
+  last_name: Glover
+---
+<p><em>This post is part of a new series strictly dedicated to project <strong>ideas. </strong>Unlike my usual posts, these are projects I haven't had the time to implement, but that I would like to record both for myself and for other makers who may need ideas for projects. See the <a title="Project Ideas" href="http://alexdglover.com/project-ideas/">Project Ideas </a>page for more.</em></p>
+<p>This is a really fun project idea, and has a dozen use cases. Basically, a gimbal is a device that keeps an object oriented in one way regardless of how the supporting structure moves. This definition is sort of hard to picture or imagine, so let's talk about a few use cases first.</p>
+<p>One of the most common and practical applications is photography. If you're running around or bouncing around in a boat or something, a gimbal can be used to stabilize the camera. Some gimbals use no electronics whatsoever and rely on a counterweight. Other gimbals are super-expensive pieces of engineering madness. Here's an awesome example of the latter:</p>
+<p>[vimeo http://vimeo.com/72793930]</p>
+<p><!--more--></p>
+<p>The wackiest application of a gimbal I've seen are "un-spillable drink gimbals."</p>
+<p>[youtube=https://www.youtube.com/watch?v=lMu9qZY2NaY]</p>
+<p>Most terrifying example is probably the turrets on modern tanks - the turret is stabilized to allow operators to fire the main cannon without even stopping. Watch the turret in this video of an M1A2 Abrams tank</p>
+<p>[youtube=https://www.youtube.com/watch?v=nN-AwDX77h8]</p>
+<h2>Implementation</h2>
+<p>My plan for this project was to start with just one stabilized platform to begin. Once the concept is proven and works, you could chain multiple stabilizers together for more degrees of freedom (like the un-spillable beer video). Lets start with a component list:</p>
+<ul>
+<li><span style="line-height: 13px;"><a href="http://www.amazon.com/dp/B007R9TSIC/ref=as_li_ss_til?tag=alexdgloverwo-20&amp;camp=213381&amp;creative=390973&amp;linkCode=as4&amp;creativeASIN=B007R9TSIC&amp;adid=0RMCWRKZ0CKW0EKPQKN6&amp;&amp;ref-refURL=http%3A%2F%2Frcm-na.amazon-adsystem.com%2Fe%2Fcm%3Flt1%3D_blank%26bc1%3D000000%26IS2%3D1%26bg1%3DFFFFFF%26fc1%3D000000%26lc1%3D0000FF%26t%3Dalexdgloverwo-20%26o%3D1%26p%3D8%26l%3Das4%26m%3Damazon%26f%3Difr%26ref%3Dss_til%26asins%3DB007R9TSIC" target="_blank">Pan and Tilt Bracket Set</a> - $9.95</span></li>
+<li><a href="http://www.amazon.com/dp/B008BOPN40/ref=as_li_ss_til?tag=alexdgloverwo-20&amp;camp=213381&amp;creative=390973&amp;linkCode=as4&amp;creativeASIN=B008BOPN40&amp;adid=169R5E10KCYNSE0WCWFW&amp;&amp;ref-refURL=http%3A%2F%2Frcm-na.amazon-adsystem.com%2Fe%2Fcm%3Flt1%3D_blank%26bc1%3D000000%26IS2%3D1%26bg1%3DFFFFFF%26fc1%3D000000%26lc1%3D0000FF%26t%3Dalexdgloverwo-20%26o%3D1%26p%3D8%26l%3Das4%26m%3Damazon%26f%3Difr%26ref%3Dss_til%26asins%3DB008BOPN40" target="_blank">3-Axis Accelerometer</a> - $9.99</li>
+<li><a href="http://www.amazon.com/gp/product/B006H06TVG/ref=as_li_ss_tl?ie=UTF8&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B006H06TVG&amp;linkCode=as2&amp;tag=alexdgloverwo-20" target="_blank">Arduino Uno R3</a> - $12.00 (although you could use any Arduino or microprocessor)</li>
+<li><a href="http://www.amazon.com/gp/product/B00EQQXR7M/ref=as_li_ss_tl?ie=UTF8&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B00EQQXR7M&amp;linkCode=as2&amp;tag=alexdgloverwo-20" target="_blank">2 x Micro Servos</a> - $8.88 per, $17.76 total</li>
+<li><a href="http://www.amazon.com/gp/product/B004RXKWDQ/ref=as_li_ss_tl?ie=UTF8&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B004RXKWDQ&amp;linkCode=as2&amp;tag=alexdgloverwo-20" target="_blank">Jumper wires and breadboard</a> - $8.59</li>
+<li>Grand total for project - $60</li>
+</ul>
+<p>[caption id="" align="alignleft" width="110"]<a href="http://www.amazon.com/gp/product/B006LRRM3E/ref=as_li_ss_il?ie=UTF8&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B006LRRM3E&amp;linkCode=as2&amp;tag=alexdgloverwo-20"><img style="border: 0px;" alt="" src="{{ site.baseurl }}/assets/q?_encoding=UTF8&amp;ASIN=B006LRRM3E&amp;Format=_SL110_&amp;ID=AsinImage&amp;MarketPlace=US&amp;ServiceVersion=20070822&amp;WS=1&amp;tag=alexdgloverwo-20" width="110" height="82" border="0" /></a> An Arduino shield with joystick may help during testing[/caption]</p>
+<p><img style="border: none !important; margin: 0px !important;" alt="" src="{{ site.baseurl }}/assets/ir?t=alexdgloverwo-20&amp;l=as2&amp;o=1&amp;a=B006LRRM3E" width="1" height="1" border="0" /></p>
+<p>Start by building your pan and tilt platform with your servos. Experiment with the platform using a <a href="http://www.amazon.com/gp/product/B006LRRM3E/ref=as_li_ss_il?ie=UTF8&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B006LRRM3E&amp;linkCode=as2&amp;tag=alexdgloverwo-20">joystick</a> or some other input method to get a feel for the servo speed/responsiveness as well as honing in on what position values align with a level position.</p>
+<p>Once you're acquainted with your pan and tilt set up, mount your accelerometer. You'll likely want to mount the accelerometer on the surface that you want to be stabilized (where the pint glass goes in the beer commercial example). That should allow for simpler logic when it comes time to translate changes in orientation to commands to the servos.</p>
+<p>I foresee a few challenges in this project. Accelerometers occasionally throw large values - if your system does not do any level of aggregating or input validation, your gimbal may occasionally move violently in one direction corresponding with those random extreme values. Additionally, the speed at which the system processes signals and makes corrections will dictate how "smooth" the gimbal will operate. Finally, chaining a few stabilized gimbals together will require coordination between multiple sets of servos to achieve the desired effect.</p>

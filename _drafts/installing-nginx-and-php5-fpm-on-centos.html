@@ -1,0 +1,73 @@
+---
+layout: post
+title: Installing NGINX and PHP5-FPM on CentOS
+date: 
+type: post
+published: false
+status: draft
+categories:
+- How-to Guides
+tags: []
+meta: {}
+author:
+  login: AlexDGlover
+  email: alex@alexdglover.com
+  display_name: AlexDGlover
+  first_name: Alex
+  last_name: Glover
+---
+<p>I recently learned of <a href="http://wiki.nginx.org/Main" target="_blank">NGINX</a>, "a free, open-source, high-performance HTTP server and reverse proxy." After some perusing, this seemed like an easier way to provide asynchronous, high-performance web services than using <a href="http://nodejs.org/" target="_blank">Node.JS</a>, and would be more flexible when it came to which languages can be used.</p>
+<p>So, in my usual fashion, I decided to install it on my CentOS virtual machine. While not technically very challenging, the various steps were scattered across a few sites, so I thought I'd consolidate everything I did into one post for convenience. For convenience sake, go ahead and open up a terminal window and switch to the root user. We'll need to be the root user for many of these steps.</p>
+<ol>
+<ol>
+<li>Installing NGINX. This was pretty easy, all you need is to add the NGINX repo to your YUM repos, and install through YUM. The <a href="http://wiki.nginx.org/Install" target="_blank">instructions at NGINXs Wiki </a>are pretty clear, but let's break it down real quick. First, create a text file titled nginx.repo in the /etc/yum.repos.d/ directory with whatever text editor you want. Here's a quick example:<br />
+/etc/yum.repos.d/nginx.repo<br />
+<code> [root@blackhat1 /]# vi /etc/yum.repos.d/nginx.repo<br />
+</code><br />
+Enter the following text into the nginx.repo file:<br />
+<code>[nginx]<br />
+name=nginx repo<br />
+baseurl=http://nginx.org/packages/centos/$releasever/$basearch/<br />
+gpgcheck=0<br />
+enabled=1<br />
+</code><br />
+Then save and close the file. Next, we'll install NGINX with YUM and start the service (if necessary), like this:<br />
+<code>[root@blackhat1 /]# yum install nginx<br />
+[root@blackhat1 /]# /etc/init.d/nginx start</code><br />
+That's it! Open a browser, and browse to http://127.0.0.1 , and you should see the NGINX welcome page.<br />
+<a href="http://alexdglover.wordpress.com/?attachment_id=288" rel="attachment wp-att-288"><img class="aligncenter size-medium wp-image-288" alt="NGINX Default Page" src="{{ site.baseurl }}/assets/nginx-default-page.png?w=300" height="134" width="300" /></a><br />
+Note: If you're running another web server (e.g. Apache) that is also running on port 80, you'll be hit that web server instead. Try stopping your other web server, or change it to use another port and restart the service.</li>
+<li>Install <a href="http://php-fpm.org/" target="_blank">PHP5-FPM</a>. Fortunately, we can install this quite easily with YUM. Unfortunately, the PHP-FPM packages are not included in the default CentOS repositories. So let's skip this step for now and add the new repositories.</li>
+<li>Adding the necessary repositories. This turned out to be a bit of snowball effect, as one dependency quickly led to more. The PHP-FPM package is available in the <a href="http://rpms.famillecollet.com/" target="_blank">Remi RPM Repo</a>, but the Remi RPM Repo requires the <a href="http://fedoraproject.org/wiki/EPEL" target="_blank">EPEL Repo</a>. Lovely - let's hope that's where the fun ends. Let's install these repos:<br />
+<code>[root@blackhat1 /]# rpm -ivh http://mirrors.xmission.com/fedora/epel/5/i386/epel-release-5-4.noarch.rpm<br />
+Retrieving http://mirrors.xmission.com/fedora/epel/5/i386/epel-release-5-4.noarch.rpm<br />
+warning: /var/tmp/rpm-xfer.VVaY1o: Header V3 DSA signature: NOKEY, key ID XXXXXXXX<br />
+Preparing... ########################################### [100%]<br />
+1:epel-release ########################################### [100%]<br />
+[root@blackhat1 /]# rpm -ivh http://rpms.famillecollet.com/enterprise/remi-release-5.rpm<br />
+Retrieving http://rpms.famillecollet.com/enterprise/remi-release-5.rpm<br />
+warning: /var/tmp/rpm-xfer.y9qZZ2: Header V3 DSA signature: NOKEY, key ID XXXXXXXX<br />
+Preparing... ########################################### [100%]<br />
+1:remi-release ########################################### [100%]<br />
+[root@blackhat1 /]#<br />
+</code><br />
+We also need to enable the recently added package, so the repo file in a text editor and set enabled=1.<br />
+<code> [root@blackhat1 /]# vi /etc/yum.repos.d/remi.repo </code><br />
+<code> [remi]<br />
+name=Les RPM de remi pour Enterprise Linux $releasever - $basearch<br />
+#baseurl=http://rpms.famillecollet.com/enterprise/$releasever/remi/$basearch/<br />
+mirrorlist=http://rpms.famillecollet.com/enterprise/$releasever/remi/mirror<br />
+<strong>enabled=1</strong><br />
+gpgcheck=1<br />
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-remi<br />
+failovermethod=priority<br />
+</code></li>
+<li>Edit php.ini file. Set cgi.fix_pathinfo = 0</li>
+<li>Restart NGINX - just to be sure<br />
+<code>[root@blackhat1 ~]# /etc/init.d/nginx restart<br />
+Stopping nginx: [ OK ]<br />
+Starting nginx: [ OK ]<br />
+</code></li>
+<li></li>
+</ol>
+</ol>

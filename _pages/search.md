@@ -40,15 +40,15 @@ function getSearchResults(val) {
 <input type="text" onkeyup="getSearchResults(this.value)">
 
 <div id="results">
-  {% for post in site.posts %}
+  {% for post in site.posts reversed %}
   <div id="{{ post.title }}" class="result" style="display: none;"> 
     <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
     {% if post.header.teaser %}
     <a href="{{ post.url }}"><img src="{{ post.header.teaser }}" style="width: 150px;" class="align-left" /></a>
     {% endif %}
     <p><small><strong>{{ post.date | date: "%B %e, %Y" }}</strong> - <strong>Categories</strong> {{ post.categories | join:',' }} </small></p>
-    <div class="postContent" style="display:none;">{{ post.content }}</div>
-    <div id="searchResult{{ post.url }}" class="searchResultSnippet" style="display:none;"></div>
+    <div class="postContent" style="display:none;">{{ post.content | strip_html }}</div>
+    <div class="searchResultSnippet" style="display:none;"></div>
   </div>
   {% endfor %}
 </div>

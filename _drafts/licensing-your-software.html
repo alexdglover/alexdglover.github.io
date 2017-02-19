@@ -1,0 +1,51 @@
+---
+layout: post
+title: Licensing Your Software
+date: 
+type: post
+published: false
+status: draft
+categories: []
+tags: []
+meta: {}
+author:
+  login: AlexDGlover
+  email: alex@alexdglover.com
+  display_name: AlexDGlover
+  first_name: Alex
+  last_name: Glover
+---
+<p>You've probably seen them in the applications you use - GPL v3, BSD, Apache License v2, OSI/OSD. These are all open source license options, but they are very different from one another.</p>
+<p>So if you've written a piece of software, which one should you use? Let's go over some of the pros and cons of a few different licensing options.</p>
+<h3>GNU Public License (GPL) V3</h3>
+<p>Easily one of the most well known open source licenses, you'll often see GPL associated with Linux distributions as well as many Linux packages, RPMs, utilities, and the like. <a href="http://www.gnu.org/licenses/gpl.html" target="_blank">Here's the full text of the license.</a> Here are some of the key points:</p>
+<ul>
+<li>The GPL protects you (within reason) from <a href="http://en.wikipedia.org/wiki/Tort" target="_blank">tort lawsuits</a> by declaring that the product is provided with no warranty, expressed or implied.</li>
+<li>You can give your product away for free or for a fee under the GPL BUT</li>
+<li>Whoever you sell it to is also subject to the terms, meaning they have the right to distribute it for free (or for a fee) without giving you any of the proceeds</li>
+<li>Allows you, as the author, to copyright your code (which future distributors must include) and gives you all of the protection that goes along with copyright law</li>
+<li>The software cannot be patented, unless altered</li>
+<li>If you create or modify software covered by the GPL, then you are obligated to make it available. The idea here is that if you improve the software, that improvement should be made available to everyone else. Of course, this doesn't mean you have to provide it for free, but you couldn't patent it and shouldn't withhold the information for business value. Some people argue that this is why many open source applications aren't used at the enterprise level, because large companies don't have the incentive to expand on the application.</li>
+</ul>
+<p>If you really want your application to be free forever, use the GPL. If your application can cure cancer, and you want to squeeze the world for every dime, don't use the GPL.</p>
+<p>If you do want to use the GPL, simply include this text at the top of each of your source files (taken from gnu.org):</p>
+<p>[sourcecode language="text"]</p>
+<p>Copyright (C) &lt;year&gt; &lt;name of author&gt;</p>
+<p>This program is free software: you can redistribute it and/or modify<br />
+it under the terms of the GNU General Public License as published by<br />
+the Free Software Foundation, either version 3 of the License, or<br />
+(at your option) any later version.</p>
+<p>This program is distributed in the hope that it will be useful,<br />
+but WITHOUT ANY WARRANTY; without even the implied warranty of<br />
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the<br />
+GNU General Public License for more details.<br />
+[/sourcecode]</p>
+<h2>Berkeley Software Distribution (BSD) License</h2>
+<p>[sourcecode language="text"]<br />
+Copyright (c) &lt;year&gt;, &lt;owner&gt;<br />
+All rights reserved.</p>
+<p>Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:</p>
+<p>Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.<br />
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.<br />
+Neither the name of the  nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.<br />
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.[/sourcecode]</p>

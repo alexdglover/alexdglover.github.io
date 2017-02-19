@@ -1,0 +1,34 @@
+---
+layout: post
+title: Execute Command with Powershell Without Waiting for Completion
+date: 
+type: post
+published: false
+status: pending
+categories:
+- Utilities And Other Useful Things
+tags:
+- automation
+- powershell
+- vbs
+meta:
+  _edit_last: '1'
+  _s2mail: 'yes'
+  _wpas_done_all: '1'
+author:
+  login: AlexDGlover
+  email: alex@alexdglover.com
+  display_name: AlexDGlover
+  first_name: Alex
+  last_name: Glover
+---
+<p>Automation is not a new thing. In my current role, I design the automation to provision fully configured IaaS and PaaS environments. In many cases, my code has to play nice with scripts that have been written by other teams. When all is said and done, to provide a fully configured Windows environment involves <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd835506(v=vs.85).aspx" target="_blank">PowerShell</a>, <a href="http://msdn.microsoft.com/en-us/library/t0aew7h6(v=vs.84).aspx" target="_blank">VBScript</a>, <a href="http://www.opscode.com/chef/" target="_blank">Chef</a> (Ruby), <a href="http://www.perl.org/" target="_blank">Perl</a>, and VMware's <a href="http://www.vmware.com/products/vcenter-orchestrator/" target="_blank">vCenter Orchestrator</a>.</p>
+<p>For a typical Windows provision, Chef calls a PowerShell script that adds Active Directory groups to the server and subsequently calls a VBScript file that installs other applications (AV, Opsware) necessary in our environment.</p>
+<p>This all worked fine until Murphy's Law kicked in. Something in the environment changed; the VBScript still executed successfully, but would never exit. A new unexpected dialog was opening that wasn't addressed by the script. Again, the VBScript succeeded in installing all of the applications, but since it never exited Chef would hang indefinitely. I needed Chef to complete that execution so that it could move on to other configurations and app installs. Unfortunately I couldn't edit the VBScript since it belongs to a different technology team and is part of a qualified image.</p>
+<h2>TL;DR</h2>
+<p>Anyways, enough context. Basically I needed to modify the PowerShell script so it would start the VBScript and then continue executing without waiting for an exit code, without waiting for the script to complete. The original line of code was</p>
+<pre class="lang:ps decode:true">Invoke-Command -script { c:\Windows\Sysnative\wscript.exe "C:\path\to\script.vbs" }</pre>
+<p>Be advised -  if you are running this locally, as opposed to a remote host, do not try to use the "-AsJob" option as it will fail. It's not obvious in the documentation but the "-AsJob" is specifically for execution on remote hosts.</p>
+<p>Instead you should use the "start-job" function to execute the script as a background operation like this:</p>
+<pre class="lang:default decode:true">start-job -scriptblock {Invoke-Command -script { c:\Windows\Sysnative\wscript.exe "C:\path\to\script.vbs" }}</pre>
+<p>As always, hope this helps.</p>

@@ -1,0 +1,65 @@
+---
+layout: post
+title: No Excuses - Free Resources For Your Next Project
+date: 
+type: post
+published: false
+status: draft
+categories:
+- Utilities And Other Useful Things
+tags: []
+meta:
+  _edit_last: '1'
+  _s2mail: 'yes'
+  _publicize_twitter_user: "@alexdglover"
+  _oembed_e5161f044324c907841d1dc764ac0840: "{{unknown}}"
+author:
+  login: AlexDGlover
+  email: alex@alexdglover.com
+  display_name: AlexDGlover
+  first_name: Alex
+  last_name: Glover
+---
+<p>When I first started working on these web application projects, it seemed like I couldn't do much without shelling out some cash for hosting, DNS names, et cetera. Sometimes this would deter me from starting a project. Since then, I've found tons of free resources, and so I want to share these with everyone in case there's someone out there holding back on a project just because of the cost.</p>
+<h2>Free Hosting</h2>
+<h3><a href="https://www.openshift.com/" target="_blank">OpenShift</a></h3>
+<p>OpenShift is a Platform-as-a-Service offering from RedHat. It's based on Linux containers, so there's no .NET application support, but you can host almost anything else there. They have pre-built images (which they refer to as cartridges) for hosting applications written in Java, server-side JavaScript (e.g. NodeJS), Ruby, Python, PHP, and more. If everything i just wrote sounds alien to you and you just want to host a simple website, don't fret - they also have pre-built images for WordPress, Drupal, Jekyll, and other content management systems. They also have a number of database-as-a-service offerings. OpenShift also provides a custom sub-domain for your web applications, hosts your git repository, and handles automatic deployment of your code every time you push an update. OpenShift applications can be managed through the OpenShift website or through the OpenShift CLI.</p>
+<p>You can get started with up to 3 containers for free.</p>
+<p>If you're interested, check out my <a title="Introduction to OpenShift" href="http://alexdglover.com/introduction-to-openshift/">Introduction to OpenShift</a> post.</p>
+<h3><a href="https://www.heroku.com/" target="_blank">Heroku</a></h3>
+<p>Heroku is very similar to OpenShift - it's based on Linux containers, they host your git repo, they handle your code deployment via git hooks, and offer several pre-built platforms for you to deploy your application to. Heroku applications can be managed through the Heroku website or through the Heroku CLI.</p>
+<p>Surprisingly, even though Heroku (founded 2007) has been around for longer than OpenShift (available 2014), they offer fewer platforms and database-as-a-service offerings.</p>
+<p>Heroku allows you to use 1 container for free.</p>
+<h3><a href="https://pages.github.com/" target="_blank">GitHub Pages</a></h3>
+<p>Quick disclaimer - this is strictly for hosting static HTML pages or client-side JavaScript applications.</p>
+<p>GitHub Pages is simple - create a repository, create a branch called gh-pages, drop in your HTML files and commit. Done - your web site is accessible at http://&lt;your_username&gt;.github.io/&lt;repository_name&gt; within a few minutes. You never have to worry about uptime, load balancing, maintenance, et cetera - GitHub takes care of all of it for you. This hosting will also work for client-side JavaScript applications (e.g. traditional JavaScript, AngularJS).</p>
+<p>Don't like the DNS name? You can easily get a free DNS name, then simply add a CNAME file to the gh-pages repository.</p>
+<h3><a href="http://aws.amazon.com/free/" target="_blank">Amazon Web Services (AWS) Free Tier</a></h3>
+<p>I was initially going to break this section down and talk about S3, CloudFront, EC2, and Elastic Beanstalk individually, but that would be a small novel itself. Here's the short version - whether you want to host a static website or a full blown 3-tier application, you can get everything you need for free for the first 12 months from AWS.</p>
+<h2>Free Domain Names</h2>
+<p>You have to be a little careful with free DNS names. If you really want to secure your DNS name, purchase it from a reputable reseller. If you need a .COM specifically, purchase it from a reputable reseller. If you do get a free DNS name, read the fine print - some services reserve the right to redirect traffic to other pages or to advertisements. Other free domain names are practically useless because they are associated with spam, malevolent software/spyware, and other unsavory traffic. For example, .CC domains are so untrusted that Twitter's URL shortener won't even redirect traffic there.</p>
+<p>Alright, now that you've been warned - you can get a free .GA, .ML, .TK, or .GQ domain from <a href="http://freenom.com/en/index.html" target="_blank">FreeNom.com</a>. Simply register, and you can get a domain name for up to one year at no cost. Certain keywords and domain names aren't available for free, but the majority are. If you build tons of traffic on your site/app, you can then pay to keep the domain name for longer than a year.</p>
+<h2>Free Version Control/Code Repositories</h2>
+<p>If you're working on a project with friends/colleagues/classmates, the first thing you should do is set up a Git repo somewhere. These services are free and offer a ton of ancillary supporting services.</p>
+<h3><a href="https://github.com/" target="_blank">GitHub</a></h3>
+<p>The archetypal hosted Git repository, GitHub gives you unlimited public repositories for free, as well as the use of their wikis (for documentation), gists (for code snippets), and GitHub Pages. Working on a secret project or a closed source project, and you need private repositories? Unfortunately that'll cost you a minimum of $7/month. Alternatively, you could use...</p>
+<h3><a href="https://bitbucket.org/" target="_blank">BitBucket</a></h3>
+<p>BitBucket is very similar to GitHub as far as basic usage goes. BitBucket offers two differentiating features: private repos and integrated code review. For example, you can create a pull request in both GitHub and BitBucket. In GitHub, one or more people would review the changes, and if they had the proper permissions, they could merge the code. The code 'approval' is implied by the fact that they merged it. With BitBucket, you can specify reviewers, those reviewers individually and explicitly approve or deny the pull request. If all of the reviewers approve, the new code can be merged. This is a VERY nice feature, especially when working with distributed teams.</p>
+<p>Overall, I think BitBucket does a better job with UI and actions, making the use of Git more intuitive and enjoyable.</p>
+<p>To summarize, BitBucket offers these differentiating features:</p>
+<ul>
+<li>Unlimited private repos</li>
+<li>Code reviews</li>
+<li>JIRA integration</li>
+</ul>
+<p>All of this is free to use for up to 5 users.</p>
+<h3><a href="http://www.sourcetreeapp.com/" target="_blank">SourceTree</a></h3>
+<p>Are you scared of Git? Does the Git CLI just confuse you? Try SourceTree - it will work with any Git repo, hosted or local, and makes Git significantly easier to use and understand. It's a free tool for Windows and Mac.</p>
+<p>Also, do yourself a favor - spend some time reading the <a href="http://git-scm.com/book/en/v2/Getting-Started-About-Version-Control" target="_blank">Git bible</a>.</p>
+<h2>Free SSL Certificates</h2>
+<p>If you're building a project with authentication or sending payment information, you should probably be using HTTPS with an SSL certificate.</p>
+<h3><a href="https://www.startssl.com/" target="_blank">StartSSL</a></h3>
+<p>&nbsp;</p>
+<h3>Self-signed Certificates</h3>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
