@@ -40,11 +40,13 @@ meta:
 <li>the blue line represents the "data" connection and should be connected to pin 4 on the Arduino</li>
 <li>the green line represents the "clock" connection and should be connected to pin 5 on the Arduino</li>
 </ul>
-<p>[caption id="attachment_101" align="aligncenter" width="402"]<a href="http://alexdglover.files.wordpress.com/2012/07/mlx90614_hookup.png"><img class="size-full wp-image-101" title="MLX90614 Wiring" src="{{ site.baseurl }}/assets/mlx90614_hookup.png" alt="" width="402" height="586" /></a> Courtesy of bildr.org[/caption]</p>
+<p><a href="http://alexdglover.files.wordpress.com/2012/07/mlx90614_hookup.png"><img class="size-full wp-image-101" title="MLX90614 Wiring" src="{{ site.baseurl }}/assets/mlx90614_hookup.png" alt="" width="402" height="586" /></a> Courtesy of bildr.org</p>
 <p>You'll also notice that the data and clock connections are connected to the V-in wire via 4.7 K Ohm resistors; these are called "<a href="http://en.wikipedia.org/wiki/Pull-up_resistor">pull up resistors</a>". Last, the good folks at bildr included a small capacitor between the V-in and ground, but the thermometer should work without it. You'll probably want to do all of these connections on your bread board, since we're prototyping and don't want to do any soldering yet. Check out my build here:</p>
-<p>[caption id="attachment_102" align="aligncenter" width="600"]<a href="http://alexdglover.files.wordpress.com/2012/07/imag0002.jpg"><img class="size-full wp-image-102" title="IR Thermometer on Bread Board" src="{{ site.baseurl }}/assets/imag0002.jpg" alt="" width="600" height="358" /></a> IR Thermometer on Bread Board[/caption]</p>
+<p><a href="http://alexdglover.files.wordpress.com/2012/07/imag0002.jpg"><img class="size-full wp-image-102" title="IR Thermometer on Bread Board" src="{{ site.baseurl }}/assets/imag0002.jpg" alt="" width="600" height="358" /></a> IR Thermometer on Bread Board</p>
 <p>Notice the bands on the resistor - yellow, purple, red, gold. This is resistor shorthand. Yellow represents 40, purple/violet is 7, red is a multiplier of 100, and gold indicates the tolerance. So these resistors are (40+7)*100 Ohms, or 4700 Ohms, or 4.7K Ohms, with a +/- 5% tolerance. I tried to replicate the colors used in the bildr example for clarity.</p>
 <p>Alright, the IR thermometer is all wired up and connected to Arduino, the hardware portion is complete. Download all the files, including the sketch and the I2C master library from the <a href="http://bildr.org/2011/02/mlx90614-arduino/">bildr post</a>. Don't forget to place the I2C master files in your Arduino libraries directory and restart your <a href="http://arduino.cc/hu/Main/Software">Arduino IDE</a>. Now for a quick test:</p>
-<p>[vimeo http://www.vimeo.com/46072409 w=400&amp;h=300]</p>
+
+{% include video id="46072409" provider="vimeo" %}
+
 <p>Awesome! Basic temperature reading functionality established!</p>
 <p>In Part 2, we'll incorporate the motor shield, the servo, and the chassis kit to finish the heat seeking vehicle.</p>
