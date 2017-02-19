@@ -40,7 +40,7 @@ function getSearchResults(val) {
 <input type="text" onkeyup="getSearchResults(this.value)">
 
 <div id="results">
-  {% for post in site.posts reversed %}
+  {% for post in site.posts %}
   <div id="{{ post.title }}" class="result" style="display: none;"> 
     <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
     {% if post.header.teaser %}
