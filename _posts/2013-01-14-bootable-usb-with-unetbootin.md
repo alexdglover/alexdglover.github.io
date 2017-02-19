@@ -30,8 +30,8 @@ meta:
 <li>Go to <a href="http://unetbootin.sourceforge.net/" target="_blank">UNetbootin's page</a> and download the correct version for your OS.</li>
 <li>If you have a particular ISO you want to use, download it. Otherwise if you want to use one of the included ISOs, skip this step.</li>
 <li>Open UNetbootin. If you want to use one of the ISOs they provide, check the "Distribution" radio button and choose an ISO from the dropdown
-<p>[caption id="" align="aligncenter" width="549"]<a href="http://unetbootin.sourceforge.net/"><img alt="" src="{{ site.baseurl }}/assets/unetbootin-windows7.png" width="549" height="399" /></a> Thanks to UNetbootin for this image.[/caption]</p>
-<p>If you want to use your own ISO, click the "Diskimage" radio button, click the browse button " ... " and find your ISO that you downloaded.</li>
+<p>If you want to use your own ISO, click the "Diskimage" radio button, click the browse button " ... " and find your ISO that you downloaded.</p>
+</li>
 <li>Change the drive to correspond with your USB flash drive. If you can't find your drive, make sure it's mounted and then restart UNetbootin.</li>
 <li>Click OK. If you chose a distribution provided by UNetbootin, it will take a fair amount of time to download the ISO before it can write to your USB drive. This is normal.</li>
 <li>Once the USB has been formatted and the ISO written to it, UNetbootin will restart your computer in an attempt to boot from the USB drive. If it doesn't work, go into your BIOS settings and try changing the boot order.</li>

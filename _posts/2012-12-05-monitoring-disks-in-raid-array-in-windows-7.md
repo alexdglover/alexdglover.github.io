@@ -29,11 +29,14 @@ meta:
 <ol>
 <li><span style="line-height:13px;">After installing, open DiskCheckup. Note - by default, it doesn't start the application after installation or after a reboot. Something to keep in mind if  you want it running all the time</span></li>
 <li>Click Configuration in the bottom left
-<p><a href="http://alexdglover.wordpress.com/?attachment_id=292" rel="attachment wp-att-292"><img class="aligncenter size-medium wp-image-292" alt="alexdglover_DiskCheckup_1" src="{{ site.baseurl }}/assets/alexdglover_diskcheckup_1.png?w=300" height="231" width="300" /></p>
-<p></a></li>
+<p style="text-align: center;"><a href="http://alexdglover.wordpress.com/?attachment_id=292" rel="attachment wp-att-292"><img class="aligncenter size-medium wp-image-292" alt="alexdglover_DiskCheckup_1" src="{{ site.baseurl }}/assets/alexdglover_diskcheckup_1.png?w=300" height="231" width="300" /></a>
+</p>
+</li>
 <li>Choose the Send e-mail notification radio button and click Settings
-<p><a href="http://alexdglover.wordpress.com/?attachment_id=293" rel="attachment wp-att-293"><img class="aligncenter size-medium wp-image-293" alt="alexdglover_DiskCheckup_2" src="{{ site.baseurl }}/assets/alexdglover_diskcheckup_2.png?w=216" height="300" width="216" /></p>
-<p></a></li>
+<p style="text-align: center;"><a href="http://alexdglover.wordpress.com/?attachment_id=293" rel="attachment wp-att-293"><img class="aligncenter size-medium wp-image-293" alt="alexdglover_DiskCheckup_2" src="{{ site.baseurl }}/assets/alexdglover_diskcheckup_2.png?w=216" height="300" width="216" /></a></p>
+</li>
 <li>Enter the email address where you want notifications sent in the top right and click Add. For outgoing mail server settings, use your ISPs SMTP relay information. For example, here's a <a href="http://www.realifewebdesigns.com/web-resources/pop3-smtp-news-servers/timewarner.asp" target="_blank">good list of Time Warner Cable SMTP relay servers</a>. With a little bit of Googling, you should be able to find your relay. With my ISPs SMTP relay, I do not have to provide credentials. Also note, this screen allows you to specify a port - don't bother trying to use SMTP relays with TLS enforced, DiskCheckup doesn't support it. You can also optionally add a "From" address if you want, although that may cause issues with your SMTP relay.
-<p><a href="http://alexdglover.wordpress.com/?attachment_id=294" rel="attachment wp-att-294"><img class="aligncenter size-medium wp-image-294" alt="alexdglover_DiskCheckup_3" src="{{ site.baseurl }}/assets/alexdglover_diskcheckup_3.png?w=300" height="248" width="300" /></a>That's it - fire off a test email to make sure it works, and click OK! An email will be sent if any of the S.M.A.R.T. values or the temperature exceeds their respective thresholds. You now have a vigilant application looking after your hard drives!</li>
+<p style="text-align: center;"><a href="http://alexdglover.wordpress.com/?attachment_id=294" rel="attachment wp-att-294"><img class="aligncenter size-medium wp-image-294" alt="alexdglover_DiskCheckup_3" src="{{ site.baseurl }}/assets/alexdglover_diskcheckup_3.png?w=300" height="248" width="300" /></a></p>
+<p>That's it - fire off a test email to make sure it works, and click OK! An email will be sent if any of the S.M.A.R.T. values or the temperature exceeds their respective thresholds. You now have a vigilant application looking after your hard drives!</p>
+</li>
 </ol>

@@ -29,7 +29,9 @@ meta:
 <p>Basically, the tone/pitch of the audio signal would get higher as the operator moves closer to a wall or object, indicating to the operator that they are getting closer. Similarly, as the operator moves away from the wall the tone will drop until it's almost inaudible.</p>
 <p>Let me provide some context to make this more clear. Let's imagine our operator is blindfolded. If the operator pointed the device down an empty hallway for example, they would hear almost no tone, telling them it's safe to walk forward. As they approached a wall, the tone would increase. The operator would then scan around them with the device, find another path that was unobstructed, and could continue walking.</p>
 <p>This video is all but unwatchable (quality is IMPRESSIVELY<i> </i>bad), but it will at least give you an idea of how it works. And of course I disassembled the project before I realized the video was botched.</p>
-<p>[vimeo http://www.vimeo.com/56793658 w=400&amp;h=300]</p>
+
+{% include video id="56793658" provider="vimeo" %}
+
 <p>Alright, let's open up the enclosure and start breaking down the project. The entire project can be broken down into just a few components. Here's a view inside of the enclosure.</p>
 <p><a href="http://alexdglover.files.wordpress.com/2013/01/imag0361.jpg"><img class="aligncenter size-full wp-image-312" alt="alexdglover_audible_eye" src="{{ site.baseurl }}/assets/imag0361.jpg" width="595" height="355" /></a></p>
 <p>Component List:</p>
@@ -51,8 +53,10 @@ meta:
 #include "WProgram.h"</p>
 <p>with this:<br />
 #include "Arduino.h"</p>
-<p>Once you've downloaded it, add the entire directory (should contain Ultrasonic.h, Ultrasonic.cpp, keywords.txt, and an examples directory) to your Arduino's libraries directory. I'm being lazy and have the Arduino install on my desktop, so my library directory is here:<br />
-C:UsersAlexDesktoparduino-1.0.1libraries</p>
+<p>Once you've downloaded it, add the entire directory (should contain Ultrasonic.h, Ultrasonic.cpp, keywords.txt, and an examples directory) to your Arduino's libraries directory. I'm being lazy and have the Arduino install on my desktop, so my library directory is here:</p>
+
+`C:\Users\Alex\Desktop\arduino-1.0.1\libraries\`
+
 <p>Once that's done, open up the Arduino IDE. Click on the "Sketch" dropdown menu, click "Import Library" and verify that Ultrasonic is a listed library. If it's there, you're in good shape.</p>
 <p>Visit <a href="http://arduino-info.wikispaces.com/UltraSonicDistance" target="_blank">http://arduino-info.wikispaces.com/UltraSonicDistance</a> and check out the Arduino Sketch provided there. Edit the TRIG_PIN and ECHO_PIN variables to coincide with the pins you used (remember I used 2 and 7 in my case). Connect your Arduino via USB and upload the Sketch. Finally, open the serial monitor (Tools dropdown --> Serial Monitor). You should see readings in inches and centimeters being reported back to the serial monitor.</p>
 <p>Awesome - this is our first building block.</p>
@@ -61,4 +65,4 @@ C:UsersAlexDesktoparduino-1.0.1libraries</p>
 <p><a href="http://alexdglover.files.wordpress.com/2013/01/imag0374.jpg"><img class="aligncenter size-full wp-image-317" alt="alexdglover_audible_eye_headphone_connections" src="{{ site.baseurl }}/assets/imag0374.jpg" width="595" height="355" /></a></p>
 <p>Now to test! Conveniently, the Arduino IDE (at least version 1.01) includes a few audio output sketches. Go to File --> Examples -->2. Digial --> Tone Melody. Search the Sketch for the tone() function - change the pin number in each of these functions to coincide with the pin you connected your headphones/speaker to. Now upload the Sketch to your Arduino - if everything is working, you should hear some the melody of "Shave and a haircut, two bits."</p>
 <p>Awesome - now we have two of our building blocks completed.</p>
-<p>Cliffhanger! In <a title="Arduino Project 2: The Audible Eye Part 2" href="http://alexdglover.wordpress.com/2013/01/09/arduino-project-2-the-audible-eye-part-2/">part 2</a>, we'll wire up the toggle switch and battery, as well as write the code to combine the rangefinder and the headphones to complete "The Audible Eye."</p>
+<p>Cliffhanger! In <a title="Arduino Project 2: The Audible Eye Part 2" href="{{ site.baseurl }}/arduino-project-2-the-audible-eye-part-2/">part 2</a>, we'll wire up the toggle switch and battery, as well as write the code to combine the rangefinder and the headphones to complete "The Audible Eye."</p>

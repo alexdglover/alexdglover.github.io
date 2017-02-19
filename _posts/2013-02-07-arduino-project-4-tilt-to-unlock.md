@@ -30,7 +30,9 @@ meta:
   reddit: a:2:{s:5:"count";i:0;s:4:"time";i:1361201105;}
 ---
 <p>This is my favorite Arduino project to date. After some basic experimenting with an accelerometer, I had an idea. What if you used the accelerometer to look for a combination of movements? Instead of using a combination lock or a traditional key lock, you could just tilt the object in a set pattern to unlock it. Here's what I ended up with:</p>
-<p>[vimeo http://vimeo.com/59062708]</p>
+
+{% include video id="59062708" provider="vimeo" %}
+
 <p>Pretty sweet if you ask me.</p>
 <p><!--more--></p>
 <p>Note - in spite of my terrible, coffee-fueled, shakey-handed videography, a lot of this post will be in video form.</p>
@@ -44,7 +46,9 @@ meta:
 </ul>
 <h3>Phase 1 - Adapting the Primer To Recognize a Combination</h3>
 <p>Before we try to add any new hardware, let's modify the Accelerometer Primer code to look for a pattern of movements. We've already got the mechanism for recognizing simple single movements, so all we need is to add some code to track multiple movements relative to each other. I just added a new integer variable called "currentMove." currentMove will get incremented each time a correct move in the sequence is made. To thwart people from just shaking the box or trying random patterns, each incorrect move will reset currentMove to 1. Let's see it in action:</p>
-<p>[vimeo http://vimeo.com/59029783]</p>
+
+{% include video id="59029783" provider="vimeo" %}
+
 <p>Here's my code:</p>
 <blockquote><p><code><br />
 /*####################################################################<br />
@@ -145,7 +149,9 @@ resetTrigger=0; //set the resetTrigger back to 0 so it can start another iterati
 <p>Now might be a good time to mount your 12v door latch. Once mounted, take the ground wire from the door latch and solder/connect it directly to the ground of your 12v power supply. Next, take the voltage-in wire from the door latch and connect it to the middle 'port' of one of your relays. This middle port is the 'common' connection, and it is always connected to the circuit. The other two 'ports' are normally open (NO) and normally closed (NC). Normally open means that the circuit is open (no current flowing through) when the relay is not powered; once the relay is powered by the 5v connection from the Arduino, the circuit closes and current flows through. The normally closed port is the opposite - current is flowing through until the relay gets a 5v signal, at which point it breaks (opens) the circuit. In our case, we want to connect the positive wire from the 12v power supply to the normally open contact. Here's a quick diagram to help:</p>
 <p><a href="http://alexdglover.files.wordpress.com/2013/02/relay_wiring.jpg"><img class="aligncenter size-full wp-image-403" alt="alexdglover_tiltToUnlock_relay_wiring" src="{{ site.baseurl }}/assets/relay_wiring.jpg" width="595" height="446" /></a></p>
 <p>We've just covered a lot so here's a quick recap video to bring it all together:</p>
-<p>[vimeo http://vimeo.com/59029784]</p>
+
+{% include video id="59029784" provider="vimeo" %}
+
 <p>Alright, if you've managed to get all of the hardware put together, all you need is a little more code to interact with the relay and door latch. Here's my code:</p>
 <blockquote><p><code><br />
 /*####################################################################<br />

@@ -32,7 +32,7 @@ meta:
 <p>Here's a quick example of what the syntax highlighting looks like for HTML, just for kicks:</p>
 
 **Note** The snippet below was supposed to demonstrate the WordPress syntax plugin, but this site is now hosted on Jekyll. Do not expect the result below to resemble WordPress's syntax highlighting. 
-{: .notice--info}
+{: .notice--warning}
 
 ```html
 <html>
