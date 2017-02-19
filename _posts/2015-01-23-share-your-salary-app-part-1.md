@@ -46,7 +46,7 @@ meta:
 <p>A quick disclaimer - I have a hard time thinking in object-oriented terms, I generally write functional programs. I tried to push myself to write more object-oriented with some simple classes to represent objects but I'm sure I botched it. Any criticisms or corrections are welcome.</p>
 <p>Now, with any good OO program, you'll want to create a database class that can be instantiated by other classes. This allows you to write the basic database code once and re-use it elsewhere, instead of having a separate set of database connection code in every class that needs it.</p>
 <p>Let's go over the code with some extra comments:</p>
-<pre class="lang:php decode:true " title="classes/database.php">&lt;?php
+```<?php
 
 // Here we are defining a constant variable, OPENSHIFT_DB with the name
 // of the MongoDB database we'll be connecting to, 'shareyoursalary'
@@ -58,7 +58,7 @@ class Database{
 	// Database class is instantiated. In this case, we're just going
 	// to call the get_db_connection() function
 	function __construct(){
-		$this-&gt;get_db_connection();
+		$this->get_db_connection();
 	}
 
 	// Since I used OpenShift for this project, all of the database
@@ -77,23 +77,23 @@ class Database{
 	
 	// Returns a database object based on a database name input parameter ($dbname)
 	function get_database($dbname) {
-		$conn = $this-&gt;get_db_connection();
-		return $conn-&gt;$dbname;
+		$conn = $this->get_db_connection();
+		return $conn->$dbname;
 	}
 	
 	// Returns a collection object based on a collection name input ($collection)
 	function get_collection($collection) {
-		$db = $this-&gt;get_database(OPENSHIFT_DB);
-		return $db-&gt;$collection;
+		$db = $this->get_database(OPENSHIFT_DB);
+		return $db->$collection;
 	}
 	
 }
-?&gt;</pre>
+?>```
 <p>This class is pretty straightforward and does little in the way of error handling. Basically we're just connecting to the database and abstracting some basic MongoDB functions to make them available as class functions.</p>
 <h5>The 'Survey' Class</h5>
 <p>The Survey object is the only real object in this program from an object-oriented programming perspective. This object (the survey) is the core of the application, and so most of the relevant data exists as properties of this class.</p>
 <p>Let's walk through the source with some comments:</p>
-<pre class="lang:php decode:true " title="classes/survey.php">&lt;?php
+```<?php
 
 class Survey {
 
@@ -108,29 +108,29 @@ class Survey {
 
     // This is the constructor function. It instantiates the database class and sets it to the local db property
 	public function __construct(){
-		$this-&gt;db = new Database();
+		$this->db = new Database();
 	}
 
 
     // Simple getter functions for each of the properties. These aren't actually used anywhere, but I created them as a standard practice
 	public function get_name(){
-		return $this-&gt;surveyName;
+		return $this->surveyName;
 	}
 
 	public function get_url_name(){
-		return $this-&gt;URLName;
+		return $this->URLName;
 	}
 
     public function get_currency(){
-        return $this-&gt;currency;
+        return $this->currency;
     }
 
 	public function get_period(){
-		return $this-&gt;period;
+		return $this->period;
 	}
 
 	public function get_minentries(){
-		return $this-&gt;minentries;
+		return $this->minentries;
 	}
 
     // This function will take the human-readable name as an input, then convert and return the URL-friendly version
@@ -153,17 +153,17 @@ class Survey {
     // If found, the survey will be echo'd in JSON format (this
     // allows it to be consumed as an API) 
 	public function getByName($f3,$args) { 
-		$surveys = $this-&gt;db-&gt;get_collection('surveys');
+		$surveys = $this->db->get_collection('surveys');
 
         // Convert name to URL friendly name
-		$URLName = $this-&gt;convertNameToURLName($args['name']);
+		$URLName = $this->convertNameToURLName($args['name']);
 
-		$query = array('URLName' =&gt; $URLName);
-        $cursor = $surveys-&gt;find($query);
+		$query = array('URLName' => $URLName);
+        $cursor = $surveys->find($query);
         foreach ($cursor as $doc){
-			if(count($doc['responses']) &lt; $doc['minEntries'])
+			if(count($doc['responses']) < $doc['minEntries'])
 			{
-				for($i=0; $i &lt; (count($doc['responses'])); $i++)
+				for($i=0; $i < (count($doc['responses'])); $i++)
 				{
 					$doc['responses'][$i] = '0';
 				}
@@ -178,20 +178,20 @@ class Survey {
     // function attempts to find the survey and echo it in JSON format (this allows it to be consumed as an API)
 	public function addSurvey($f3,$args) {
 		// Get surveys collection		
-		$surveys	= $this-&gt;db-&gt;get_collection('surveys');
+		$surveys	= $this->db->get_collection('surveys');
 		$surveyName 	= $_REQUEST['surveyName'];
 		// Convert name to URL friendly name
-		$URLName = $this-&gt;convertNameToURLName($surveyName); 
+		$URLName = $this->convertNameToURLName($surveyName); 
 		$currency	= $_REQUEST['currency'];
 		$period		= $_REQUEST['period'];
 		$minEntries 	= $_REQUEST['minEntries'];
 
 		// Insert new data sent via API call
-		$surveys-&gt;insert(array('name' =&gt; $surveyName, 'URLName' =&gt; $URLName, 'currency' =&gt; $currency, 'period'=&gt;$period, 'minEntries'=&gt;$minEntries, 'responses'=&gt;(array())));
+		$surveys->insert(array('name' => $surveyName, 'URLName' => $URLName, 'currency' => $currency, 'period'=>$period, 'minEntries'=>$minEntries, 'responses'=>(array())));
 		// Build a query object, basically a single item array with the name of the new survey input value
-		$query = array('URLName' =&gt; $URLName);
+		$query = array('URLName' => $URLName);
 		// Attempt to find the survey we just created
-        $cursor = $surveys-&gt;find($query);
+        $cursor = $surveys->find($query);
 		// For each object that matches the query, echo the data as JSON
         foreach ($cursor as $doc){
             echo json_encode($doc);
@@ -204,23 +204,23 @@ class Survey {
     // embedded response array with the response value sent. Once updated, the function
     // returns the newly updated survey in JSON format
 	public function addResponse($f3,$args) {
-		$surveys = $this-&gt;db-&gt;get_collection('surveys');
+		$surveys = $this->db->get_collection('surveys');
 		$response = $_REQUEST["response"];
 		
         // Convert name to URL friendly name
-        $URLName = $this-&gt;convertNameToURLName($args['name']);
+        $URLName = $this->convertNameToURLName($args['name']);
 
-		$surveys-&gt;update(array('URLName' =&gt; $URLName),array('$push' =&gt; array('responses' =&gt; $response)));
-		$query = array('URLName' =&gt; $URLName);
-        $cursor = $surveys-&gt;find($query);
+		$surveys->update(array('URLName' => $URLName),array('$push' => array('responses' => $response)));
+		$query = array('URLName' => $URLName);
+        $cursor = $surveys->find($query);
         foreach ($cursor as $doc){
             echo json_encode($doc);
         }
 	}
 }
 
-?&gt;
-</pre>
+?>
+```
 <p>Looking back, this Survey class contains aspects of both a model and a controller. In a proper MVC project, this probably should have been split into two classes, a 'Survey' object (with just the basic properties and getters/setters) and a 'SurveyController' (with the addSurvey and addResponse).</p>
 <p>These classes might seem a bit abstract right now, but it'll make more sense once I explain the API routes in F3.</p>
 <p>At 1400+ words, this is a good place to take a break. Check out Part 2 for the PageGenerator class, the F3 routes, and a how-to for Swagger UI.</p>

@@ -42,21 +42,21 @@ meta:
 </ul>
 <h3>Testing</h3>
 <p>Before you do anything with the box, we want to test and calibrate the flame sensor. I followed <a href="http://www.instructables.com/id/Arduino-Modules-Flame-Sensor/?ALLSTEPS" target="_blank">this Instructable</a> to get acquainted with the flame sensor and what kind of values it returns. Note that the author is mapping the full range of values (0-1024) to just 4 values to match his sketch. Start by modifying this block:</p>
-<pre class="lang:default decode:true">void loop() {
+```void loop() {
   // read the sensor on analog A0:
   int sensorReading = analogRead(A0);
   // map the sensor range (four options):
   // ex: 'long int map(long int, long int, long int, long int, long int)'
-  int range = map(sensorReading, sensorMin, sensorMax, 0, 3);</pre>
+  int range = map(sensorReading, sensorMin, sensorMax, 0, 3);```
 <p>by adding a line for logging the raw sensor reading, like this:</p>
-<pre class="lang:default decode:true ">void loop() {
+```void loop() {
   // read the sensor on analog A0:
   int sensorReading = analogRead(A0);
   Serial.println(sensorReading);
   
   // map the sensor range (four options):
   // ex: 'long int map(long int, long int, long int, long int, long int)'
-  int range = map(sensorReading, sensorMin, sensorMax, 0, 3);</pre>
+  int range = map(sensorReading, sensorMin, sensorMax, 0, 3);```
 <p>Now you can wire up the sensor, upload your sketch, and experiment with what kind of values you get with an open flame at different distances.</p>
 <p>One quick clarification - I refer to this device as a "flame sensor" because that's how its marketed, but in reality it's just a photoresistor that has a filtering film around it that only allows infrared light to pass through. The voltage in the photoresistor circuit will change with the amount of light, and the Arduino analog pin will convert that voltage value to an integer between 0 and 1024. This means any infrared light will affect the sensor, including sunlight, TV remotes that use infrared, even something that is very hot could theoretically give off enough infrared to affect the sensor. If you're getting strange values while testing your sensor, be sure that you don't have another source of infrared throwing you off.</p>
 <p>Once you're confident your sensor works and you have some idea of what values it returns, you're ready to build out the lock box components.</p>

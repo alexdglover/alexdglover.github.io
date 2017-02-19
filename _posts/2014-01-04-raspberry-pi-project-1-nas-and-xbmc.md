@@ -30,9 +30,9 @@ meta:
 <h3>Part 1.1 - NTFS-3G</h3>
 <p>If you don't plan to use NTFS as your filesystem for your Pi storage, you can skip this step!</p>
 <p>If you do want to use NTFS, and you want to be able to read AND write to the drive, you need to install NTFS support:</p>
-<pre class="lang:sh decode:true">sudo apt-get install ntfs-3g</pre>
+```
 <p>If you're starting with a brand new external hard drive, you'll need to create the partition and filesystem.</p>
-<pre class="lang:sh decode:true">pi@raspberrypi ~ $ sudo fdisk /dev/sda
+```pi@raspberrypi ~ $ sudo fdisk /dev/sda
 
 Command (m for help): n
 Partition type:
@@ -47,25 +47,25 @@ Command (m for help): w
 ...
 (disk is formatted)
 ...
-pi@raspberrypi ~ $ mkfs.ntfs /dev/sda1</pre>
+pi@raspberrypi ~ $ mkfs.ntfs /dev/sda1```
 <h3>Part 1.2 - Automounting with fstab</h3>
 <p>In Raspbian (and every flavor of Linux I've worked with so far), all filesystems that should be mounted at boot are identified in the fstab file (/etc/fstab). The fstab file can be configured a million ways, so I'll just share my configuration and explain.</p>
-<pre class="lang:sh decode:true">proc            /proc           proc    defaults          0       0
+```proc            /proc           proc    defaults          0       0
 /dev/mmcblk0p5  /boot           vfat    defaults          0       2
 /dev/mmcblk0p6 /               ext4    defaults,noatime  0       1
 # a swapfile is not a swap partition, so no using swapon|off from here on, use  dphys-swapfile swap[on|off]  for that
 
 #/dev/sda1 - the 2TB Fantom Drive
-/dev/sda1       /media/1TB      ntfs-3g defaults        0       0</pre>
+/dev/sda1       /media/1TB      ntfs-3g defaults        0       0```
 <p>The first four lines were created automatically by the Raspbian install, we'll leave those alone. We're only interested in the last line that starts with /dev/sda1, that's the line I've manually added to the configuration.</p>
 <p>BUT WHAT DOES IT ALL MEAN???  The columns of the fstab file (courtesy of the <a href="https://wiki.archlinux.org/index.php/fstab" target="_blank">ArchLinux wiki</a>) are</p>
-<pre class="lang:default decode:true"># &lt;file system&gt;        &lt;dir&gt;         &lt;type&gt;    &lt;options&gt;             &lt;dump&gt; &lt;pass&gt;</pre>
-<p><b>&lt;file system&gt;</b> - the partition or storage device to be mounted. In my case, "/dev/sda1"<br />
-<b>&lt;dir&gt;</b> - the mountpoint where &lt;file system&gt; is mounted to. In my case, "/media/1TB"<br />
-<b>&lt;type&gt;</b> - the file system type of the partition or storage device to be mounted. In my case, it is "ntfs-3g"<br />
-<b>&lt;options&gt; - </b>mount options for the filesystem. In my case, I chose "defaults" which includes mounting the filesystem as read-write with no <a href="http://en.wikipedia.org/wiki/Umask" target="_blank">umasks</a> for permissions/access<br />
-<b>&lt;dump&gt; - </b>not needed in our case, just use 0 (zero)<b><br />
-<b>&lt;pass&gt;</b> - </b>used by <a title="Fsck" href="https://wiki.archlinux.org/index.php/Fsck">fsck</a> to decide which order filesystems are to be checked. You can set this to 0 (zero)</p>
+```
+<p><b><file system></b> - the partition or storage device to be mounted. In my case, "/dev/sda1"<br />
+<b><dir></b> - the mountpoint where <file system> is mounted to. In my case, "/media/1TB"<br />
+<b><type></b> - the file system type of the partition or storage device to be mounted. In my case, it is "ntfs-3g"<br />
+<b><options> - </b>mount options for the filesystem. In my case, I chose "defaults" which includes mounting the filesystem as read-write with no <a href="http://en.wikipedia.org/wiki/Umask" target="_blank">umasks</a> for permissions/access<br />
+<b><dump> - </b>not needed in our case, just use 0 (zero)<b><br />
+<b><pass></b> - </b>used by <a title="Fsck" href="https://wiki.archlinux.org/index.php/Fsck">fsck</a> to decide which order filesystems are to be checked. You can set this to 0 (zero)</p>
 <p>So my configuration file says to mount /dev/sda1 on /media/1TB as an NTFS filesystem, using default mount options, and never run fsck on this drive.</p>
 <p>Now that you have an example, implementing is pretty easy.</p>
 <ol>
@@ -88,23 +88,23 @@ sudo apt-get install samba</li>
 <li>Open the samba config file in your favorite text editor<br />
 sudo vim /etc/samba/smb.conf</li>
 <li>Find the line that says "security = user" and update the file with the following lines
-<pre class="lang:sh decode:true"># "security = user" is always a good idea. This will require a Unix account
+```# "security = user" is always a good idea. This will require a Unix account
 # in this server for every user accessing the server. See
 # /usr/share/doc/samba-doc/htmldocs/Samba3-HOWTO/ServerType.html
 # in the samba-doc package for details.
    security = share
-   guest account = nobody</pre>
+   guest account = nobody```
 </li>
 <li>Scroll to the bottom of the Samba configuration file and add a new section for your new share. See my configuration for example
-<pre class="lang:sh decode:true">[shared]
+```[shared]
         comment = Shared 1TB drive on Raspberry Pi
         path = /media/1TB/
         browseable = yes
         read only = no
-        guest ok = yes</pre>
+        guest ok = yes```
 </li>
 <li>Test your configuration by executing 'testparm' and examining the output
-<pre class="lang:sh decode:true">pi@raspberrypi ~ $ testparm
+```pi@raspberrypi ~ $ testparm
 Load smb config files from /etc/samba/smb.conf
 rlimit_max: increasing rlimit_max (1024) to minimum Windows limit (16384)
 Processing section "[homes]"
@@ -114,10 +114,10 @@ Processing section "[shared]"
 WARNING: The security=share option is deprecated
 Loaded services file OK.
 Server role: ROLE_STANDALONE
-Press enter to see a dump of your service definitions</pre>
+Press enter to see a dump of your service definitions```
 </li>
 <li>Assuming your test went well, reload samba
-<pre class="lang:sh decode:true">sudo /etc/init.d/samba reload</pre>
+```
 </li>
 <li>On another device, try to mount the share. On Windows, you can just open the start menu and type "\\yourservername" or "\\your.server.IP.address" On a Mac, open Finder, go to the "Go" dropdown menu at the top, and choose connect to server
 <p>[caption id="" align="aligncenter" width="478"]<img alt="" src="{{ site.baseurl }}/assets/mac_finder_connect_to_server.gif" width="478" height="422" /> Courtesy of Mobilefish.com[/caption]</p>
@@ -132,10 +132,10 @@ Press enter to see a dump of your service definitions</pre>
 <p>The <a href="http://wiki.xbmc.org/index.php?title=Main_Page" target="_blank">XBMC Wiki</a> has a good article for <a href="http://wiki.xbmc.org/index.php?title=HOW-TO:Install_XBMC_for_Linux#Add_a_new_init_script" target="_blank">how to set up XBMC as a service</a>, but I want to expand on it a little bit.</p>
 <ol>
 <li>Create the init script file
-<pre>vim /etc/init.d/xbmc</pre>
+```
 </li>
 <li>Paste the following code into your vim session:
-<pre class="lang:default decode:true">#! /bin/sh
+```#! /bin/sh
 
 ### BEGIN INIT INFO
 # Provides:          xbmc
@@ -188,7 +188,7 @@ case "$1" in
         PID=$(cat $PID_FILE)
         # This line is for debugging purposes only
         # echo "PID is $PID"
-        if ps -p $PID &gt; /dev/null ; then
+        if ps -p $PID > /dev/null ; then
                 echo "XBMC is running with PID $PID"
         else
                 echo "XBMC doesn't seem to be running"
@@ -203,18 +203,18 @@ case "$1" in
         ;;
   *)
         N=/etc/init.d/$NAME
-        echo "Usage: $N {start|stop|restart|force-reload}" &gt;&amp;2
+        echo "Usage: $N {start|stop|restart|force-reload}" >&amp;2
         exit 1
         ;;
 esac
 
-exit 0</pre>
+exit 0```
 <p>Save and quit out of vim. There are a few differences between my init script and the one provided on the XBMC wiki. For one, my "runas" user is set to "pi" - you'll want to set this to whatever user you installed XBMC with to avoid permissions issues. Additionally, my init script will take "status" as an argument to the init script and will return information about whether or not XBMC is running.</li>
 <li>Change the script's permissions to make it executable
-<pre>chmod a+x /etc/init.d/xbmc</pre>
+```
 </li>
 <li>Test that the init script is working:
-<pre class="lang:sh decode:true">pi@raspberrypi ~ $ sudo /etc/init.d/xbmc start
+```pi@raspberrypi ~ $ sudo /etc/init.d/xbmc start
 Starting XBMC
 pi@raspberrypi ~ $ /etc/init.d/xbmc status
 Checking status of XBMC...
@@ -223,17 +223,17 @@ pi@raspberrypi ~ $ /etc/init.d/xbmc stop
 Stopping XBMC
 pi@raspberrypi ~ $ /etc/init.d/xbmc status
 Checking status of XBMC...
-XBMC doesn't seem to be running</pre>
+XBMC doesn't seem to be running```
 </li>
 <li>If you want XBMC to start when the OS boots, update the rc.d scripts. Unless you have a specific use case, using the "defaults" argument will work for you.
-<pre class="lang:sh decode:true">sudo update-rc.d xbmc defaults</pre>
+```
 </li>
 <li>If you want to be thorough, restart your Raspberry Pi and verify that your disk has been mounted (via fstab from Part 1) and that XBMC has started.</li>
 <li>You're done. Time to enjoy.</li>
 </ol>
 <p><a href="http://alexdglover.com/wp-content/uploads/2014/01/abedcoolcoolcoo.gif"><img class="aligncenter size-medium wp-image-757" alt="abed_cool_cool_cool" src="{{ site.baseurl }}/assets/abedcoolcoolcoo-300x133.gif" width="300" height="133" /></a></p>
 <h3>Part 2.3 - XBMC Remote</h3>
-<p>If you're going to manage your XBMC/NAS/Pi remotely, I would also suggest downloading the <a href="http://wiki.xbmc.org/index.php?title=Official_XBMC_Remote" target="_blank">XBMC Remote App</a> for your Adroid or iPhone. To enable remote control on XBMC, go to System -&gt; Settings -&gt; Services -&gt; Remote Control and enable both "Allow programs on this system to control XBMC" and "Allow programs on other systems to control XBMC."</p>
-<p>[caption id="attachment_759" align="aligncenter" width="500"]<a href="http://alexdglover.com/wp-content/uploads/2014/01/500px-Settings.services.remote_control.png"><img class="size-full wp-image-759" alt="XBMC Settings-&gt;Services Screen" src="{{ site.baseurl }}/assets/500px-Settings.services.remote_control.png" width="500" height="313" /></a> Courtesy of xbmc.org[/caption]</p>
+<p>If you're going to manage your XBMC/NAS/Pi remotely, I would also suggest downloading the <a href="http://wiki.xbmc.org/index.php?title=Official_XBMC_Remote" target="_blank">XBMC Remote App</a> for your Adroid or iPhone. To enable remote control on XBMC, go to System -> Settings -> Services -> Remote Control and enable both "Allow programs on this system to control XBMC" and "Allow programs on other systems to control XBMC."</p>
+<p>[caption id="attachment_759" align="aligncenter" width="500"]<a href="http://alexdglover.com/wp-content/uploads/2014/01/500px-Settings.services.remote_control.png"><img class="size-full wp-image-759" alt="XBMC Settings->Services Screen" src="{{ site.baseurl }}/assets/500px-Settings.services.remote_control.png" width="500" height="313" /></a> Courtesy of xbmc.org[/caption]</p>
 <p>Assuming you're on the same wireless network, you should be able to connect to the XBMC with your remote app using your Pi's IP address and the default username and password of 'xbmc.'</p>
 <p>Well at nearly 2000 words, this has been a whopper of a post. Hopefully this write up has helped you one way or another, and let me know if you have any questions. Enjoy your new combination NAS and HTPC.</p>

@@ -84,10 +84,10 @@ myAccelerometer.calibrate();</p>
 delay(20);//delay for readability<br />
 resetTrigger++; //increment the reset trigger<br />
 myAccelerometer.read();<br />
-if(myAccelerometer._Zgs &lt;= -0.9){ digitalWrite(zPin, HIGH); } else if(myAccelerometer._Zgs &gt; -0.9){<br />
+if(myAccelerometer._Zgs <= -0.9){ digitalWrite(zPin, HIGH); } else if(myAccelerometer._Zgs > -0.9){<br />
 digitalWrite(zPin, LOW);<br />
 }<br />
-if(myAccelerometer._Xgs &gt;= 0.5){<br />
+if(myAccelerometer._Xgs >= 0.5){<br />
 digitalWrite(xPosPin, HIGH);<br />
 if(currentMove==2){<br />
 Serial.println("Second move successful");<br />
@@ -104,13 +104,13 @@ Serial.println("WRONG MOVE!");<br />
 currentMove=1;<br />
 }<br />
 }</p>
-<p>else if(myAccelerometer._Xgs &lt; 0.5){<br />
+<p>else if(myAccelerometer._Xgs < 0.5){<br />
 digitalWrite(xPosPin, LOW);<br />
 }<br />
-if(myAccelerometer._Xgs &lt;= -0.5){ digitalWrite(xNegPin, HIGH); if(currentMove==4){ Serial.println("Fourth move successful"); currentMove++; delay(1000); } else{ Serial.println("WRONG MOVE!"); currentMove=1; } } else if(myAccelerometer._Xgs &gt; -0.5){<br />
+if(myAccelerometer._Xgs <= -0.5){ digitalWrite(xNegPin, HIGH); if(currentMove==4){ Serial.println("Fourth move successful"); currentMove++; delay(1000); } else{ Serial.println("WRONG MOVE!"); currentMove=1; } } else if(myAccelerometer._Xgs > -0.5){<br />
 digitalWrite(xNegPin, LOW);<br />
 }<br />
-if(myAccelerometer._Ygs &gt;= 0.5){<br />
+if(myAccelerometer._Ygs >= 0.5){<br />
 digitalWrite(yPosPin, HIGH);<br />
 if(currentMove==1){<br />
 Serial.println("First move successful");<br />
@@ -127,10 +127,10 @@ Serial.println("WRONG MOVE!");<br />
 currentMove=1;<br />
 }<br />
 }<br />
-else if(myAccelerometer._Ygs &lt; 0.5){<br />
+else if(myAccelerometer._Ygs < 0.5){<br />
 digitalWrite(yPosPin, LOW);<br />
 }<br />
-if(myAccelerometer._Ygs &lt;= -0.5){ digitalWrite(yNegPin, HIGH); Serial.println("WRONG MOVE!"); currentMove=1; } else if(myAccelerometer._Ygs &gt; -0.5){<br />
+if(myAccelerometer._Ygs <= -0.5){ digitalWrite(yNegPin, HIGH); Serial.println("WRONG MOVE!"); currentMove=1; } else if(myAccelerometer._Ygs > -0.5){<br />
 digitalWrite(yNegPin, LOW);<br />
 }</p>
 <p>if(resetTrigger==3000){ //do this every minute (3000 iterations * 0.02 seconds = 60 seconds)<br />
@@ -194,7 +194,7 @@ myAccelerometer.read();<br />
 if(myAccelerometer._Zgs -0.9){<br />
 //digitalWrite(zPin, LOW);<br />
 }<br />
-if(myAccelerometer._Xgs &gt;= 0.5){<br />
+if(myAccelerometer._Xgs >= 0.5){<br />
 //digitalWrite(xPosPin, HIGH);<br />
 if(currentMove==2){<br />
 Serial.println("Second move successful");<br />
@@ -214,13 +214,13 @@ Serial.println("WRONG MOVE!");<br />
 currentMove=1;<br />
 }<br />
 }</p>
-<p>else if(myAccelerometer._Xgs &lt; 0.5){<br />
+<p>else if(myAccelerometer._Xgs < 0.5){<br />
 //digitalWrite(xPosPin, LOW);<br />
 }<br />
 if(myAccelerometer._Xgs -0.5){<br />
 //digitalWrite(xNegPin, LOW);<br />
 }<br />
-if(myAccelerometer._Ygs &gt;= 0.5){<br />
+if(myAccelerometer._Ygs >= 0.5){<br />
 //digitalWrite(yPosPin, HIGH);<br />
 if(currentMove==1){<br />
 Serial.println("First move successful");<br />
@@ -237,7 +237,7 @@ Serial.println("WRONG MOVE!");<br />
 currentMove=1;<br />
 }<br />
 }<br />
-else if(myAccelerometer._Ygs &lt; 0.5){<br />
+else if(myAccelerometer._Ygs < 0.5){<br />
 //digitalWrite(yPosPin, LOW);<br />
 }<br />
 if(myAccelerometer._Ygs -0.5){<br />

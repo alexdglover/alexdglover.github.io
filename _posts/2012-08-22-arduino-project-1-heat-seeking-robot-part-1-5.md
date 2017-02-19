@@ -22,18 +22,45 @@ meta:
 ---
 <p>I've procrastinated on this project post far too long! I've had the Heat Seeking Robot working at a <em>very </em> primitive level for over a month now, and posted NOTHING. For this, I am sorry.</p>
 <p>So this is Part 1.5, where Part 2 was supposed to be the ultimate conclusion to the project. Here's where we're at so far: we have a working IR Thermometer reporting temperature readings to an Arduino board from <a title="Arduino Project 1: Heat Seeking Robot (Part 1)" href="http://alexdglover.wordpress.com/2012/07/20/arduino-project-1-heat-seeking-robot-part-1/" target="_blank">Part 1</a>. From there, I removed the IR thermometer from the breadboard, and pushed the four pins through one of the servo armatures (the white plus sign shaped object on top of the blue servo). As a throw-away proof-of-concept build, I just used double sided tape to attach the servo to the bread board (this will make more sense later).</p>
-<p><a href="http://alexdglover.files.wordpress.com/2012/08/imag0118.jpg"><img class="size-full wp-image-116" title="Servo and IR Thermometer Mounted on Breadboard" src="{{ site.baseurl }}/assets/imag0118.jpg" alt="Servo and IR Thermometer Mounted on Breadboard" width="600" height="358" /></a> Servo and IR Thermometer Mounted on Breadboard</p>
+
+
+<figure>
+  <a href="http://alexdglover.files.wordpress.com/2012/08/imag0118.jpg"><img class="size-full wp-image-116" title="Servo and IR Thermometer Mounted on Breadboard" src="{{ site.baseurl }}/assets/imag0118.jpg" alt="Servo and IR Thermometer Mounted on Breadboard" width="600" height="358" /></a>
+  <figcaption><a href="http://alexdglover.files.wordpress.com/2012/08/imag0118.jpg">Servo and IR Thermometer Mounted on Breadboard</a></figcaption>
+</figure>
+
 <p>I then pushed the jumper wires into the same servo armatures, originally intending to solder the wires, but it's actually a pretty good connection! I wired up the servo and then combined the IR thermometer sketch with the example sketch 'sweep.' Sweep is a simple servo sketch that makes a servo turn back and forth. Now I could get temperature readings as the thermometer turned back and forth. Not bad so far.</p>
-<p><a href="http://29.media.tumblr.com/tumblr_lltzgnHi5F1qzib3wo1_400.jpg"><img class="aligncenter" title="Not Bad" src="{{ site.baseurl }}/assets/tumblr_lltzgnHi5F1qzib3wo1_400.jpg" alt="Not Bad" width="288" height="288" /></a></p>
-<p><!--more--></p>
+<p style="text-align: center;"><a href="http://29.media.tumblr.com/tumblr_lltzgnHi5F1qzib3wo1_400.jpg"><img class="aligncenter" title="Not Bad" src="http://i.imgur.com/BNrEdQ8.png" alt="Not Bad" width="288" height="288" /></a></p>
+
 <p>I assembled the Tamiya Tracked Chassis and the double gearbox (with a 37.5x1 gear ratio). The Tamiya chassis kit includes a battery mount for two AA batteries, but I used two 9v batteries instead for space-saving reasons. The battery mount is mounted in the middle of the chassis, which uses up a fair amount of space. By using 2 9v batteries sitting side by side, I got a simple and efficient way to have two mobile power supplies. I also attached some jumper wires to the two motors (two wires per motor, ground and positive; see the white and black wires on the top motor, blue and orange wires on the bottom motor).</p>
-<p><a href="http://alexdglover.files.wordpress.com/2012/08/imag0064.jpg"><img class="size-full wp-image-115" title="Assembled Tamiya Tracked Vehicle Chassis" src="{{ site.baseurl }}/assets/imag0064.jpg" alt="Assembled Tamiya Tracked Vehicle Chassis" width="600" height="358" /></a> Assembled Tamiya Tracked Vehicle Chassis</p>
+
+<figure>
+  <a href="http://alexdglover.files.wordpress.com/2012/08/imag0064.jpg"><img class="size-full wp-image-115" title="Assembled Tamiya Tracked Vehicle Chassis" src="{{ site.baseurl }}/assets/imag0064.jpg" alt="Assembled Tamiya Tracked Vehicle Chassis" width="600" height="358" /></a>
+  <figcaption><a href="http://alexdglover.files.wordpress.com/2012/08/imag0064.jpg">Assembled Tamiya Tracked Vehicle Chassis</a></figcaption>
+</figure>
+
 <p>Attached the DF Robot motor shield to the Arduino board. Keep in mind that our connections for the IR thermometer from Part 1 will have to plugged into the corresponding connections on the motor shield. The motor shield transparently connects to the Arduino for all of the analog slots, as well as the 5v, 3v3, and GND connections on the DC connection side of the board (as opposed to the ethernet connection side of the board). Black circuit board is the motor shield, blue board is the Arduino. The pink foam is some packaging foam I got when I ordered these supplies that I use to make sure the board doesn't get shorted when touching the metal battery exterior. May not be necessary, but hey, better safe than sorry.</p>
-<p><a href="http://alexdglover.files.wordpress.com/2012/08/imag0139.jpg"><img class="size-full wp-image-117" title="Arduino and Motor Shield" src="{{ site.baseurl }}/assets/imag0139.jpg" alt="Arduino and Motor Shield" width="600" height="358" /></a> Arduino and Motor Shield</p>
+
+<figure>
+  <a href="http://alexdglover.files.wordpress.com/2012/08/imag0139.jpg"><img class="size-full wp-image-117" title="Arduino and Motor Shield" src="{{ site.baseurl }}/assets/imag0139.jpg" alt="Arduino and Motor Shield" width="600" height="358" /></a>
+  <figcaption><a href="http://alexdglover.files.wordpress.com/2012/08/imag0139.jpg">Arduno and Motor Shield</a></figcaption>
+</figure>
+
 <p>As you can see in the above picture, we're using mostly the same pins, just on the motor shield now and not directly on the Arduino. One thing I should have mentioned much much earlier: generally, when you have motors or other devices that consume a fair amount of power (relative to the Arduino), you will want two (or more) separate power sources, one specifically for the Arduino, and separate power sources for the motors. I used one of the male DC plug to 9v battery clips I bought to connect the Arduino and one of the 9v batteries. I used the other 9v battery to power the two DC motors. See the picture below; you'll need to connect your secondary power source (for the motors in this case) to the power-in connections you see on the right. Similarly, each AC motor needs to have a V-in and GND connected to the two green connection blocks in the middle of the picture.</p>
-<p><a href="http://alexdglover.files.wordpress.com/2012/08/imag0123.jpg"><img class="size-full wp-image-118" title="Motor Shield Power and Motor Connections" src="{{ site.baseurl }}/assets/imag0123.jpg" alt="Motor Shield Power and Motor Connections" width="600" height="1003" /></a> Motor Shield Power and Motor Connections</p>
+
+<figure>
+  <a href="http://alexdglover.files.wordpress.com/2012/08/imag0123.jpg"><img class="size-full wp-image-118" title="Motor Shield Power and Motor Connections" src="{{ site.baseurl }}/assets/imag0123.jpg" alt="Motor Shield Power and Motor Connections" width="600" height="1003" /></a>
+  <figcaption><a href="http://alexdglover.files.wordpress.com/2012/08/imag0123.jpg">Motor Shield Power and Motor Connections</a></figcaption>
+</figure>
+
 <p>Alright, so we've got all of the building blocks in place, let's assemble and see what we've got.</p>
-<p><a href="http://alexdglover.files.wordpress.com/2012/08/imag0141.jpg"><img class="size-full wp-image-120" title="Heat Seeking Robot In Progress" src="{{ site.baseurl }}/assets/imag0141.jpg" alt="Heat Seeking Robot In Progress" width="600" height="358" /></a> Heat Seeking Robot In Progress</p>
+
+<figure>
+  <a href="http://alexdglover.files.wordpress.com/2012/08/imag0141.jpg"><img class="size-full wp-image-120" title="Heat Seeking Robot In Progress" src="{{ site.baseurl }}/assets/imag0141.jpg" alt="Heat Seeking Robot In Progress" width="600" height="358" /></a>
+  <figcaption><a href="http://alexdglover.files.wordpress.com/2012/08/imag0141.jpg">Heat Seeking Robot in Progress</a></figcaption>
+</figure>
+
+
 <p>Alright, so I attached the bread board to the top of the gear box, again by cheating and using double sided tape. The Arduino/motor shield is sitting on top of the two 9v batteries, which I strapped down using a velcro strap (normally used for cable management).</p>
 <p>Fast forward through some serious trial and error on writing the application, and voila! We've got... a robot that sort of heat seeks. The idea is simple - the IR thermometer moves back and forth, scanning a room for humans (or anything warmer than 80 degrees fahrenheit). It records the direction of the heat source relative to the direction the robot is facing. The robot should take that direction and adjust until the object is straight ahead of the robot, then drive forward. Heat seeking, at a primitive level.</p>
 <p>My robot currently works, except that it has a fixed turn for course correction. In short, if you're 45 degrees left of the robot, the robot will turn left (as intended!) but too far left. So then the target is to the right, and it turns right (as intended!) but too far right. Since it is a static course correction, the robot never lines up perfectly with the target. Getting so close to completing the project took some of the wind out of my sails.  So I hope you enjoyed this as an interim post, and I promise to finish the robot and post the sketch as well. Please comment, or feel free to share your ideas for improvements!</p>

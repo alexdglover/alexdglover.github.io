@@ -9,7 +9,7 @@ tags:
 - wordpress
 ---
 
-**Be advised** This post is from 2012 and may be out of date. Proceed with caution. 
+**Be advised** This post is from 2012 and any code may be out of date. Proceed with caution. 
 {: .notice--warning}
 
 <p>Recently I have been helping Make a Difference Wisconsin, a local non-profit, with their Wordpress website. Without going into details as to why,  I needed to create a simple 'page of posts' for menu hierarchy reasons. It needed to be a page, but I wanted it to display all of the posts from a particular category. Google took me to many solutions, including the <a href="http://codex.wordpress.org/Pages#A_Page_of_Posts" target="_blank">Wordpress Codex</a>, but none of them worked. Some used out of date or deprecated query functions and some didn't work with the custom theme that was already in place. This should have been a very easy task, but took me several  days to pin down my solution.</p>
@@ -53,4 +53,3 @@ foreach( $myposts as $post ) : setup_postdata($post); ?>
 
 <p>Here's a quick preview of what the 'page of posts' code looks like, but obviously aspects of this will be very different based on the theme that you are using.</p>
 <p><a href="http://alexdglover.files.wordpress.com/2012/11/page_of_posts_screenshot.png"><img class="aligncenter size-full wp-image-152" title="page_of_posts_screenshot" alt="" src="{{ site.baseurl }}/assets/page_of_posts_screenshot.png" width="595" height="477" /></a></p>
-<p>You can check out the full page and see the code in action at <a href="http://www.makeadifferencewisconsin.org/investment-conference/past-conferences">http://www.makeadifferencewisconsin.org/investment-conference/past-conferences</a></p>

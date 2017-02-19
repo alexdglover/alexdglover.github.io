@@ -29,37 +29,37 @@ meta:
 <p style="text-align: center;"><a class="button" href="http://experimental.alexdglover.com/html5canvas.html?item1Label=iPhone&amp;item1Rev=237&amp;item1Cos=43&amp;item2Label=iPad&amp;item2Rev=148&amp;item2Cos=94&amp;item3Label=Software&amp;item3Rev=94&amp;item3Cos=75&amp;opEx=103&amp;scaleLabel=million" target="_blank"><input class="button" type="button" value="Demo" /></a></p>
 <p style="text-align: left;">In case you didn't notice it right away (I didn't either), Horace Dediu's chart uses the same colors to represent both a product's revenues as well as their cost of goods sold, giving you an at-a-glance idea of what a product's margin is. I replicated this feature in my tool as well.</p>
 <p style="text-align: left;">Instead of a long-winded walk through of how I built the tool, I'm just going to share the source here and add some extra commenting for clarity.</p>
-<pre class="lang:js decode:true">&lt;!DOCTYPE HTML&gt;
-&lt;html&gt;
-  &lt;head&gt;
-  &lt;title&gt;Finance Chart&lt;/title&gt;
-    &lt;style&gt;
+```
+<html>
+  <head>
+  <title>Finance Chart</title>
+    <style>
       body {
         margin: 20px;
         padding: 20px;
       }
-    &lt;/style&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-  &lt;!-- A basic HTML form for getting custom inputs from users. All of these values will be sent as HTTP GET variables in the URL--&gt;
-  &lt;!-- From there, the JavaScript will fetch these variables out of the URL--&gt;
-  &lt;form method="GET" action="html5canvas.html"&gt;
-	  &lt;label&gt;Item 1 Label&lt;/label&gt;&lt;input type="text" name="item1Label" /&gt;&lt;br/&gt;
-	  &lt;label&gt;Item 1 Revenues&lt;/label&gt;&lt;input type="number" name="item1Rev" /&gt;&lt;br/&gt;
-	  &lt;label&gt;Item 1 COGS&lt;/label&gt;&lt;input type="number" name="item1Cos" /&gt;&lt;br/&gt;
-	  &lt;label&gt;Item 2 Label&lt;/label&gt;&lt;input type="text" name="item2Label" /&gt;&lt;br/&gt;
-	  &lt;label&gt;Item 2 Revenues&lt;/label&gt;&lt;input type="number" name="item2Rev" /&gt;&lt;br/&gt;
-	  &lt;label&gt;Item 2 COGS&lt;/label&gt;&lt;input type="number" name="item2Cos" /&gt;&lt;br/&gt;
-	  &lt;label&gt;Item 3 Label&lt;/label&gt;&lt;input type="text" name="item3Label" /&gt;&lt;br/&gt;
-	  &lt;label&gt;Item 3 Revenues&lt;/label&gt;&lt;input type="number" name="item3Rev" /&gt;&lt;br/&gt;
-	  &lt;label&gt;Item 3 COGS&lt;/label&gt;&lt;input type="number" name="item3Cos" /&gt;&lt;br/&gt;
-	  &lt;label&gt;Operating Expense&lt;/label&gt;&lt;input type="number" name="opEx" /&gt;&lt;br/&gt;
-	  &lt;label&gt;Scale ($M, $k, etc)&lt;/label&gt;&lt;input type="text" name="scaleLabel" /&gt;&lt;br/&gt;
-	  &lt;input type="Submit" value="Submit" /&gt;&lt;br/&gt;
-  &lt;/form&gt;
-	&lt;!-- The canvas tag - the only important thing here is to set your width and height as necessary--&gt;
-    &lt;canvas id="myCanvas" width="1000" height="1200"&gt;&lt;/canvas&gt;
-	&lt;script&gt;
+    </style>
+  </head>
+  <body>
+  <!-- A basic HTML form for getting custom inputs from users. All of these values will be sent as HTTP GET variables in the URL-->
+  <!-- From there, the JavaScript will fetch these variables out of the URL-->
+  <form method="GET" action="html5canvas.html">
+	  <label>Item 1 Label</label><input type="text" name="item1Label" /><br/>
+	  <label>Item 1 Revenues</label><input type="number" name="item1Rev" /><br/>
+	  <label>Item 1 COGS</label><input type="number" name="item1Cos" /><br/>
+	  <label>Item 2 Label</label><input type="text" name="item2Label" /><br/>
+	  <label>Item 2 Revenues</label><input type="number" name="item2Rev" /><br/>
+	  <label>Item 2 COGS</label><input type="number" name="item2Cos" /><br/>
+	  <label>Item 3 Label</label><input type="text" name="item3Label" /><br/>
+	  <label>Item 3 Revenues</label><input type="number" name="item3Rev" /><br/>
+	  <label>Item 3 COGS</label><input type="number" name="item3Cos" /><br/>
+	  <label>Operating Expense</label><input type="number" name="opEx" /><br/>
+	  <label>Scale ($M, $k, etc)</label><input type="text" name="scaleLabel" /><br/>
+	  <input type="Submit" value="Submit" /><br/>
+  </form>
+	<!-- The canvas tag - the only important thing here is to set your width and height as necessary-->
+    <canvas id="myCanvas" width="1000" height="1200"></canvas>
+	<script>
 	// A handy little function that I picked up at http://papermashup.com/read-url-get-variables-withjavascript/
 	// The function simply parses a GET variable out of the URL using REGEX and returns it
 	function getUrlVars() {
@@ -69,8 +69,8 @@ meta:
 		});
 		return vars;
 	}
-	&lt;/script&gt;
-    &lt;script&gt;
+	</script>
+    <script>
 		// Grabbing all of the user form variables out of the URL. For integer values, we need to cast them as an int datatype
 		// because by default, as part of the URL string, they exist as strings
 		var item1Label	=(getUrlVars()["item1Label"]);
@@ -146,7 +146,7 @@ meta:
 		//for debugging only 
 		//alert("revenues array has "+length+" items");
 
-		for (var i = 0; i &lt; length; i++) {
+		for (var i = 0; i < length; i++) {
 			//debugging code
 			//for debugging only 
 			//alert("global vert adj"+globalVerticalAdjustment);
@@ -227,7 +227,7 @@ meta:
 		//for debugging only 
 		//alert("expense category array has "+length+" items");
 
-		for (var i = 0; i &lt; length; i++) {
+		for (var i = 0; i < length; i++) {
 			//for debugging only 
 			//alert("global vert adj "+globalVerticalAdjustment);
 
@@ -284,7 +284,7 @@ meta:
 		//for debugging only 
 		//alert("expense category array has "+length+" items");
 
-		for (var i = 0; i &lt; length; i++) {
+		for (var i = 0; i < length; i++) {
 			//for debugging only 
 			//alert("global vert adj "+globalVerticalAdjustment);
 
@@ -351,8 +351,8 @@ meta:
 		// Set the scale label to line up with the scale rectangle
 		context.fillText(scaleValue, 450, totalRevScaled+160);
 
-    &lt;/script&gt;
-  &lt;/body&gt;
-&lt;/html&gt;</pre>
+    </script>
+  </body>
+</html>```
 <p>It could still use some polish and pizzazz, but overall I'm pretty pleased with the tool. I've also learned with some time, math skills, and trial and error, you can draw just about anything in HTML5's canvas tag. If you are looking to build something using canvas, I'd highly recommend checking out <a href="http://www.html5canvastutorials.com/" target="_blank">HTML5 Canvas Tutorials</a>. With almost zero knowledge of the canvas tag, I was able to knock out this project in just a few hours with the help of their tutorials.</p>
 <p>As always, hope you enjoyed the post and let me know if you have any questions!</p>

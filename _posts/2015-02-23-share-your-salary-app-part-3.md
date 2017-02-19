@@ -65,27 +65,27 @@ meta:
 <p>Now we have the components that we need to start building pages. Let's start by building a layout.htm file - this will be the base HTML file (with a common header, footer, styles and script tags) that will be populated with content for each page. These types of pages/files are referred to as templates.</p>
 <p><!--more--></p>
 <p>Again... I'm a terrible UI developer so I blatantly 'borrowed' the majority of this page from one of the <a href="http://getbootstrap.com/2.3.2/examples/justified-nav.html" target="_blank">Bootstrap examples</a>.</p>
-<pre class="lang:default decode:true">&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
-  &lt;head&gt;
-    &lt;meta charset="utf-8"&gt;
-    &lt;title&gt;ShareYourSalary.Info&lt;/title&gt;
-    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
-    &lt;meta name="description" content=""&gt;
-    &lt;meta name="author" content=""&gt;
-    &lt;script src="/ui/js/jquery.js"&gt;&lt;/script&gt;
-    &lt;script src="/ui/js/bootstrap.js"&gt;&lt;/script&gt;
-    &lt;script type="text/javascript"&gt;
+```
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>ShareYourSalary.Info</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <script src="/ui/js/jquery.js"></script>
+    <script src="/ui/js/bootstrap.js"></script>
+    <script type="text/javascript">
       $(document).ready(function(){
         $('[data-toggle="popover"]').popover({
 	  placement : 'top'
         });
       });
-    &lt;/script&gt;
+    </script>
 
-    &lt;!-- Le styles --&gt;
-    &lt;link href="/ui/css/bootstrap.css" rel="stylesheet"&gt;
-    &lt;style type="text/css"&gt;
+    <!-- Le styles -->
+    <link href="/ui/css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
       body {
         padding-top: 20px;
         padding-bottom: 60px;
@@ -95,7 +95,7 @@ meta:
         margin: 0 auto;
         max-width: 1000px;
       }
-      .container &gt; hr {
+      .container > hr {
         margin: 60px 0;
       }
       /* Main marketing message and sign up button */
@@ -150,120 +150,120 @@ meta:
         border-right: 0;
         border-radius: 0 3px 3px 0;
       }
-    &lt;/style&gt;
-    &lt;link href="/ui/css/bootstrap-responsive.css" rel="stylesheet"&gt;
+    </style>
+    <link href="/ui/css/bootstrap-responsive.css" rel="stylesheet">
 
-    &lt;!-- HTML5 shim, for IE6-8 support of HTML5 elements --&gt;
-    &lt;!--[if lt IE 9]&gt;
-      &lt;script src="ui/js/html5shiv.js"&gt;&lt;/script&gt;
-    &lt;![endif]--&gt;
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="ui/js/html5shiv.js"></script>
+    <![endif]-->
 
-    &lt;!-- Fav and touch icons --&gt;
-    &lt;link rel="apple-touch-icon-precomposed" sizes="144x144" href="/ui/ico/apple-touch-icon-144-precomposed.png"&gt;
-    &lt;link rel="apple-touch-icon-precomposed" sizes="114x114" href="/ui/ico/apple-touch-icon-114-precomposed.png"&gt;
-      &lt;link rel="apple-touch-icon-precomposed" sizes="72x72" href="/ui/ico/apple-touch-icon-72-precomposed.png"&gt;
-                    &lt;link rel="apple-touch-icon-precomposed" href="/ui/ico/apple-touch-icon-57-precomposed.png"&gt;
-                                   &lt;link rel="shortcut icon" href="/ui/ico/favicon.png"&gt;
-  &lt;/head&gt;
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/ui/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/ui/ico/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/ui/ico/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="/ui/ico/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="/ui/ico/favicon.png">
+  </head>
 
-  &lt;body&gt;
+  <body>
 
-    &lt;div class="container"&gt;
+    <div class="container">
 
-      &lt;div class="masthead"&gt;
-        &lt;h1 class="muted"&gt;ShareYourSalary&lt;/h1&gt;
-        &lt;div class="navbar"&gt;
-          &lt;div class="navbar-inner"&gt;
-            &lt;div class="container"&gt;
-              &lt;ul class="nav"&gt;
-                &lt;li class="active"&gt;&lt;a href="/"&gt;Home&lt;/a&gt;&lt;/li&gt;
-                &lt;li&gt;&lt;a href="/swagger/dist/index.html"&gt;API Documentation&lt;/a&gt;&lt;/li&gt;
-                &lt;li&gt;&lt;a href="https://github.com/alexdglover/shareyoursalary"&gt;Github Project&lt;/a&gt;&lt;/li&gt;
-              &lt;/ul&gt;
-            &lt;/div&gt;
-          &lt;/div&gt;
-        &lt;/div&gt;&lt;!-- /.navbar --&gt;
-      &lt;/div&gt;
+      <div class="masthead">
+        <h1 class="muted">ShareYourSalary</h1>
+        <div class="navbar">
+          <div class="navbar-inner">
+            <div class="container">
+              <ul class="nav">
+                <li class="active"><a href="/">Home</a></li>
+                <li><a href="/swagger/dist/index.html">API Documentation</a></li>
+                <li><a href="https://github.com/alexdglover/shareyoursalary">Github Project</a></li>
+              </ul>
+            </div>
+          </div>
+        </div><!-- /.navbar -->
+      </div>
 
-	&lt;!-- Put content here --&gt;
-	&lt;?php echo $this-&gt;render(Base::instance()-&gt;get('content')); ?&gt;
+	<!-- Put content here -->
+	<?php echo $this->render(Base::instance()->get('content')); ?>
 
-      &lt;hr&gt;
+      <hr>
 
-      &lt;div class="footer"&gt;
-        &lt;p&gt;&amp;copy; alexdglover 2014&lt;/p&gt;
-      &lt;/div&gt;
+      <div class="footer">
+        <p>&amp;copy; alexdglover 2014</p>
+      </div>
 
-    &lt;/div&gt; &lt;!-- /container --&gt;
+    </div> <!-- /container -->
 
-    &lt;!-- Le javascript
-    ================================================== --&gt;
-    &lt;!-- Placed at the end of the document so the pages load faster --&gt;
-    &lt;script src="/ui/js/jquery.js"&gt;&lt;/script&gt;
-    &lt;script src="/ui/js/bootstrap.js"&gt;&lt;/script&gt;
-  &lt;/body&gt;
-&lt;/html&gt;</pre>
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/ui/js/jquery.js"></script>
+    <script src="/ui/js/bootstrap.js"></script>
+  </body>
+</html>```
 <p>Now the important piece we've added here is between the 'masthead' and 'footer' divs:</p>
-<pre class="lang:default decode:true ">&lt;!-- Put content here --&gt;
-&lt;?php echo $this-&gt;render(Base::instance()-&gt;get('content')); ?&gt;</pre>
+```
+<?php echo $this->render(Base::instance()->get('content')); ?>```
 <p>Now we can just set the 'content' variable in our F3 code to populate the body of the template and we will get consistent and clean looking pages. That's the whole purpose of templates and template engines - build a solid base page (or pages) and just populate the contents dynamically. This makes for great code re-use and you don't have to propagate changes across dozens of files.</p>
 <h3>Static Pages</h3>
 <p>For populating the content with a static page, we don't really need a Controller class, we just need F3's routing functionality to set the 'content' variable to a static HTML file. The ShareYourSalary app home page is going to be static, so let's use that as an example.</p>
 <p>For the home page, we'll want a simple explanation of what the site/app does and an entry form for users to create a new survey. Our entry form will POST values to the API using jQuery and route us to a result page if it's successful. Remember, we don't have to worry about JavaScript or CSS references because our layout.htm already includes all of that. Let's take a look at the home page (welcome.htm):</p>
-<pre class="lang:default decode:true" title="welcome.htm">&lt;div class="row"&gt;
-        &lt;div class="span5"&gt;
-		&lt;h2&gt;Share your salary!&lt;/h2&gt;
-		&lt;p&gt;Have you ever worried that your colleagues, doing the same job, make more money than you? According to a recent Glassdoor survey, 39% of Americans feel they're underpaid.&lt;/p&gt;
-		&lt;p&gt;Or maybe you're curious how you rank compared to your high school class?&lt;/p&gt;
-		&lt;p&gt;Maybe someone on your team is getting underpaid, but you're not comfortable talking about salaries.&lt;/p&gt;
-		&lt;p&gt;Then create a free, anonymous salary survey!&lt;/p&gt;
-	&lt;/div&gt;
-	&lt;div class="span5"&gt;
-		&lt;form&gt;
-			&lt;fieldset&gt;
-			&lt;legend&gt;Create a survey&lt;/legend&gt;
-			&lt;label&gt;Survey Name&lt;/label&gt;	
-			&lt;input class="input-xlarge" name="surveyName" type="text" placeholder="Employer, team name, or totally arbitratry" /&gt;
-			&lt;label&gt;Currency&lt;/label&gt;
-			&lt;select class="input-medium" name="currency"&gt;
-				&lt;option value="" disabled=""&gt;Select Currency&lt;/option&gt;
-				&lt;option value="AUD"&gt;Australian Dollar&lt;/option&gt;
-				&lt;option value="BRL"&gt;Brazilian Real &lt;/option&gt;
-				&lt;option value="CAD"&gt;Canadian Dollar&lt;/option&gt;
-				&lt;option value="CZK"&gt;Czech Koruna&lt;/option&gt;
-				&lt;option value="DKK"&gt;Danish Krone&lt;/option&gt;
-				&lt;option value="EUR"&gt;Euro&lt;/option&gt;
-				&lt;option value="HKD"&gt;Hong Kong Dollar&lt;/option&gt;
-				&lt;option value="HUF"&gt;Hungarian Forint &lt;/option&gt;
-				&lt;option value="ILS"&gt;Israeli New Sheqel&lt;/option&gt;
-				&lt;option value="JPY"&gt;Japanese Yen&lt;/option&gt;
-				&lt;option value="MYR"&gt;Malaysian Ringgit&lt;/option&gt;
-				&lt;option value="MXN"&gt;Mexican Peso&lt;/option&gt;
-				&lt;option value="NOK"&gt;Norwegian Krone&lt;/option&gt;
-				&lt;option value="NZD"&gt;New Zealand Dollar&lt;/option&gt;
-				&lt;option value="PHP"&gt;Philippine Peso&lt;/option&gt;
-				&lt;option value="PLN"&gt;Polish Zloty&lt;/option&gt;
-				&lt;option value="GBP"&gt;Pound Sterling&lt;/option&gt;
-				&lt;option value="SGD"&gt;Singapore Dollar&lt;/option&gt;
-				&lt;option value="SEK"&gt;Swedish Krona&lt;/option&gt;
-				&lt;option value="CHF"&gt;Swiss Franc&lt;/option&gt;
-				&lt;option value="TWD"&gt;Taiwan New Dollar&lt;/option&gt;
-				&lt;option value="THB"&gt;Thai Baht&lt;/option&gt;
-				&lt;option value="TRY"&gt;Turkish Lira&lt;/option&gt;
-				&lt;option value="USD" selected="YES"&gt;U.S. Dollar&lt;/option&gt;
-			&lt;/select&gt;
-			&lt;label&gt;Period&lt;/label&gt;
-		        &lt;select class="input-medium" name="period"&gt;
-	                	&lt;option value="Per Year"&gt;Per Year&lt;/option&gt;
-        	        	&lt;option value="Per Hour"&gt;Per Hour&lt;/option&gt;
-	        	&lt;/select&gt;
-			&lt;label&gt;Minimum number of responses &lt;i class="icon-question-sign" data-toggle="popover" data-placement="top" title="Miniumum number of responses" data-content="In order to ensure anonymity, salary survey results won't be published until a minimum number of salary responses are submitted. Set this to '0' if you don't care about anonymity."&gt;&lt;/i&gt;&lt;/label&gt;
-			&lt;input class="input-mini" name="minEntries" type="number" value=5 /&gt;
-			&lt;p&gt;&lt;input id="submit" type="submit" class="btn btn-success" value="Submit" /&gt;&lt;/p&gt;
-		&lt;/form&gt;
-	&lt;/div&gt;
-&lt;/div&gt;
-&lt;script&gt;
+```
+        <div class="span5">
+		<h2>Share your salary!</h2>
+		<p>Have you ever worried that your colleagues, doing the same job, make more money than you? According to a recent Glassdoor survey, 39% of Americans feel they're underpaid.</p>
+		<p>Or maybe you're curious how you rank compared to your high school class?</p>
+		<p>Maybe someone on your team is getting underpaid, but you're not comfortable talking about salaries.</p>
+		<p>Then create a free, anonymous salary survey!</p>
+	</div>
+	<div class="span5">
+		<form>
+			<fieldset>
+			<legend>Create a survey</legend>
+			<label>Survey Name</label>	
+			<input class="input-xlarge" name="surveyName" type="text" placeholder="Employer, team name, or totally arbitratry" />
+			<label>Currency</label>
+			<select class="input-medium" name="currency">
+				<option value="" disabled="">Select Currency</option>
+				<option value="AUD">Australian Dollar</option>
+				<option value="BRL">Brazilian Real </option>
+				<option value="CAD">Canadian Dollar</option>
+				<option value="CZK">Czech Koruna</option>
+				<option value="DKK">Danish Krone</option>
+				<option value="EUR">Euro</option>
+				<option value="HKD">Hong Kong Dollar</option>
+				<option value="HUF">Hungarian Forint </option>
+				<option value="ILS">Israeli New Sheqel</option>
+				<option value="JPY">Japanese Yen</option>
+				<option value="MYR">Malaysian Ringgit</option>
+				<option value="MXN">Mexican Peso</option>
+				<option value="NOK">Norwegian Krone</option>
+				<option value="NZD">New Zealand Dollar</option>
+				<option value="PHP">Philippine Peso</option>
+				<option value="PLN">Polish Zloty</option>
+				<option value="GBP">Pound Sterling</option>
+				<option value="SGD">Singapore Dollar</option>
+				<option value="SEK">Swedish Krona</option>
+				<option value="CHF">Swiss Franc</option>
+				<option value="TWD">Taiwan New Dollar</option>
+				<option value="THB">Thai Baht</option>
+				<option value="TRY">Turkish Lira</option>
+				<option value="USD" selected="YES">U.S. Dollar</option>
+			</select>
+			<label>Period</label>
+		        <select class="input-medium" name="period">
+	                	<option value="Per Year">Per Year</option>
+        	        	<option value="Per Hour">Per Hour</option>
+	        	</select>
+			<label>Minimum number of responses <i class="icon-question-sign" data-toggle="popover" data-placement="top" title="Miniumum number of responses" data-content="In order to ensure anonymity, salary survey results won't be published until a minimum number of salary responses are submitted. Set this to '0' if you don't care about anonymity."></i></label>
+			<input class="input-mini" name="minEntries" type="number" value=5 />
+			<p><input id="submit" type="submit" class="btn btn-success" value="Submit" /></p>
+		</form>
+	</div>
+</div>
+<script>
 	$( "form" ).on( "submit", function( event ) {
 		event.preventDefault();
 		var datastring = $( "form" ).serialize();
@@ -280,17 +280,17 @@ meta:
 		    }
 		});		
 	});
-&lt;/script&gt;</pre>
+</script>```
 <p>Perfect. The default index.php that's included in the F3 package will include a route for "GET /" that we can use. This section should already exist in the index.php if you're using the default file that came with the F3 zip file, but just confirm that these lines exist in your index.php:</p>
-<pre class="lang:default decode:true ">$f3-&gt;route('GET /',
+```route('GET /',
 	function($f3) {
             ...
             // lots of default F3 code
             ...
-            $f3-&gt;set('content','welcome.htm');
-            echo View::instance()-&gt;render('layout.htm');
+            $f3->set('content','welcome.htm');
+            echo View::instance()->render('layout.htm');
 	}
-);</pre>
+);```
 <p>If you want to use a different file name for your home page (instead of welcome.htm) just change it in this line of the index.php file. Now if we browse to our site, we should see our home page:</p>
 <p><a href="http://alexdglover.com/wp-content/uploads/2015/02/ShareYourSalary-HomePage.png"><img class="aligncenter size-large wp-image-914" src="{{ site.baseurl }}/assets/ShareYourSalary-HomePage-1024x654.png" alt="ShareYourSalary Home Page" width="860" height="549" /></a></p>
 <p>Now we can partially test this form if we want. If we submit a survey and the API processes it successfully, we'll get routed to a page that doesn't exist yet (that's OK, that's expected behavior). But how do we know the submission worked? We can go back to our API test page we created in <a title="Share Your Salary App Part 2" href="http://alexdglover.com/share-your-salary-app-part-2/">Part 2</a> and execute a getByName API call.</p>
@@ -306,7 +306,7 @@ meta:
 <li>A page for users (both invitees and the original survey creator) to review the results of the survey. We'll call this 'report'</li>
 </ol>
 <p>First, let's construct our controller that will get all of the relevant variables for these pages and then set the content. Let's review the code:</p>
-<pre class="lang:php decode:true ">&lt;?php
+```<?php
 class PageGenerator {
 	// Instantiate variables
 	var $surveyName;
@@ -317,7 +317,7 @@ class PageGenerator {
 
 	// Construct the PageGenerator object with a Database object
 	public function __construct(){
-		$this-&gt;db = new Database();
+		$this->db = new Database();
 	}
 	
 	// Utility function to convert survey names to a URL-friendly name
@@ -337,62 +337,62 @@ class PageGenerator {
 	// Function for populating the 'thanks' page (after a user creates a survey). This collects all of the relevant survey information into the 'survey' JSON object and sets the 'content' variable to the code in the thanks.htm file
 
 	public function thanks($f3,$args){
-		$surveys = $this-&gt;db-&gt;get_collection('surveys');
+		$surveys = $this->db->get_collection('surveys');
 		// Convert name to URL friendly name
-                $URLName = $this-&gt;convertNameToURLName($args['name']);
-		$query = array('URLName' =&gt; $URLName);
-                $cursor = $surveys-&gt;find($query);
+                $URLName = $this->convertNameToURLName($args['name']);
+		$query = array('URLName' => $URLName);
+                $cursor = $surveys->find($query);
                 foreach ($cursor as $doc){
-			$f3-&gt;set('survey',$doc);                	
+			$f3->set('survey',$doc);                	
                 }
-		$f3-&gt;set('content','thanks.htm');
-		echo View::instance()-&gt;render('layout.htm');
+		$f3->set('content','thanks.htm');
+		echo View::instance()->render('layout.htm');
 	}
 
 
 	// Function for populating the 'addResponse' page (the page invited users see). This collects all of the relevant survey information into the 'survey' JSON object and sets the 'content' variable to the code in the addResponse.htm file
 
 	public function addResponse($f3,$args){
-		$surveys = $this-&gt;db-&gt;get_collection('surveys');
+		$surveys = $this->db->get_collection('surveys');
 		// Convert name to URL friendly name
-                $URLName = $this-&gt;convertNameToURLName($args['name']);
-                $query = array('URLName' =&gt; $URLName);
-                $cursor = $surveys-&gt;find($query);
+                $URLName = $this->convertNameToURLName($args['name']);
+                $query = array('URLName' => $URLName);
+                $cursor = $surveys->find($query);
                 foreach ($cursor as $doc){
-			$f3-&gt;set('survey',$doc);                	
+			$f3->set('survey',$doc);                	
                 }
-		$f3-&gt;set('content','addResponse.htm');
-		echo View::instance()-&gt;render('layout.htm');
+		$f3->set('content','addResponse.htm');
+		echo View::instance()->render('layout.htm');
 	}
 
 
 	// Function for populating the 'report' page. This collects all of the relevant survey information into the 'survey' JSON object and sets the 'content' variable to the code in the report.htm file
 
 	public function report($f3,$args){
-		$surveys = $this-&gt;db-&gt;get_collection('surveys');
+		$surveys = $this->db->get_collection('surveys');
 		// Convert name to URL friendly name
-                $URLName = $this-&gt;convertNameToURLName($args['name']);
-                $query = array('URLName' =&gt; $URLName);		
-                $cursor = $surveys-&gt;find($query);
+                $URLName = $this->convertNameToURLName($args['name']);
+                $query = array('URLName' => $URLName);		
+                $cursor = $surveys->find($query);
 		foreach ($cursor as $doc)
 		{
-                	if (count($doc['responses']) &lt; $doc['minEntries'])
+                	if (count($doc['responses']) < $doc['minEntries'])
 			{
-				$f3-&gt;set('minEntriesMet', false);
+				$f3->set('minEntriesMet', false);
 			}
 			else
 			{
 				asort($doc['responses']);
-				$f3-&gt;set('minEntriesMet', true);
+				$f3->set('minEntriesMet', true);
 				$averageSalary = round((array_sum($doc['responses']))/(count($doc['responses'])),2);
-				$f3-&gt;set('averageSalary',$averageSalary);
+				$f3->set('averageSalary',$averageSalary);
 				$percentDeltas = [];
 				foreach($doc['responses'] as $response)
 				{
 					array_push($percentDeltas, (round((($response-$averageSalary)/$averageSalary),2) ) );
 				}
 				asort($percentDeltas);
-				$f3-&gt;set('percentDeltas',$percentDeltas);
+				$f3->set('percentDeltas',$percentDeltas);
 				// Median code borrowed from http://www.mdj.us/web-development/php-programming/calculating-the-median-average-values-of-an-array-with-php/			
 				sort($doc['responses']);
 				$count = count($doc['responses']); //total numbers in array
@@ -404,59 +404,59 @@ class PageGenerator {
 					$high = $doc['responses'][$middleval+1];
 					$median = (($low+$high)/2);
 				}
-				$f3-&gt;set('median',$median);
+				$f3->set('median',$median);
 			} //End of minEntriesMet==true block
-			$f3-&gt;set('survey',$doc);			
+			$f3->set('survey',$doc);			
 		}
-		$f3-&gt;set('content','report.htm');
-		echo View::instance()-&gt;render('layout.htm');
+		$f3->set('content','report.htm');
+		echo View::instance()->render('layout.htm');
 	}
 }
-?&gt;</pre>
+?>```
 <p>As you can see, the functions follow a very similar pattern - we get a survey name input (via F3's $args variable), grab the relevant survey data from the DB, set one (or more) JSON objects to be consumed in the page, and set the 'content' variable to the appropriate page. From inside of the View, we'll grab the individual elements out of the array and use it in the display or JavaScript.</p>
 <p>Now for the Views. Let's walk through the app as a user would, just for intuitiveness. Our user has created a survey successfully, so let's thank them for creating it and show them the details of the survey so they can confirm everything is right. Let's also add a mechanism for the user to invite their friends and colleagues through social media. Our survey creator might also be participating, so let's enable them to add a response right away as well. Finally, we need to provide a link to the survey report where users can view the results. Remember, our PageGenerator controller is going to pass us all of the data we need in one array object titled $survey. Let's take a look at the HTML:</p>
-<pre class="lang:default decode:true" title="thanks.htm">&lt;h2&gt;Thanks for creating a survey!&lt;/h1&gt;
-&lt;div class="row"&gt;
-        &lt;div class="span5"&gt;
-		&lt;legend&gt;Survey Details&lt;/legend&gt;
-		&lt;p&gt;&lt;strong&gt;Survey name&lt;/strong&gt;&lt;br /&gt;&lt;?php echo $survey['name']; ?&gt;&lt;/p&gt;
-		&lt;p&gt;&lt;strong&gt;Salary currency&lt;/strong&gt;&lt;br /&gt;&lt;?php echo $survey['currency']; ?&gt;&lt;/p&gt;
-		&lt;p&gt;&lt;strong&gt;Salary period&lt;/strong&gt;&lt;br /&gt;&lt;?php echo $survey['period']; ?&gt;&lt;/p&gt;
-		&lt;p&gt;&lt;strong&gt;Minimum number of responses before results published&lt;/strong&gt;&lt;br /&gt;&lt;?php echo $survey['minEntries']; ?&gt;&lt;/p&gt;
-		&lt;p&gt;&lt;strong&gt;Current number of responses&lt;/strong&gt;&lt;br /&gt;&lt;?php echo count($survey['responses']); ?&gt;&lt;/p&gt;
-	&lt;/div&gt;
-	&lt;div class="span5"&gt;
-		&lt;legend&gt;Next Steps&lt;/legend&gt;
-		&lt;ol&gt;
-			&lt;li&gt;Invite others to participate by sharing&lt;br /&gt;
-			&lt;a target="_blank" href="&lt;?php echo "http://www.facebook.com/sharer/sharer.php?u=" . "http://$_SERVER[HTTP_HOST]" . "/addResponse/" . $survey['URLName']; ?&gt;"&gt;&lt;img src="/ui/img/facebook_001.jpg" style="width:32px; height:32px;" /&gt;&lt;/a&gt;
-			&lt;a target="_blank" href="&lt;?php echo "https://twitter.com/intent/tweet?text=How%20much%20do%20you%20make%3F&amp;url=" . "http://$_SERVER[HTTP_HOST]" . "/addResponse/" . $survey['URLName']; ?&gt;"&gt;&lt;img src="/ui/img/Twitter_001.jpg" style="width:32px; height:32px;" /&gt;&lt;/a&gt;
-			&lt;a target="_blank" href="&lt;?php echo "http://www.linkedin.com/shareArticle?mini=true&amp;url=" . "http://$_SERVER[HTTP_HOST]" . "/addResponse/" . $survey['URLName'] . "&amp;title=Salary%20Survey"; ?&gt;"&gt;&lt;img src="/ui/img/Linkedin_001.jpg" style="width:32px; height:32px;" /&gt;&lt;/a&gt;
-			&lt;a href="&lt;?php echo "http://pinterest.com/pin/create/button/?url=" . "http://$_SERVER[HTTP_HOST]" . "/addResponse/" . $survey['URLName']; ?&gt;"  class="pin-it-button" count-layout="horizontal"&gt;&lt;img src="/ui/img/Pinterest_001.jpg" style="width:32px; height:32px;" /&gt;&lt;/a&gt;
-&lt;br /&gt;
-			Or by sending them this link:&lt;br /&gt;&lt;a href="&lt;?php echo "http://$_SERVER[HTTP_HOST]" . "/addResponse/" . $survey['URLName']; ?&gt;"&gt;&lt;?php echo "http://$_SERVER[HTTP_HOST]" . "/addResponse/" . $survey['URLName']; ?&gt;&lt;/a&gt;&lt;/li&gt;
-			&lt;li&gt;Enter your salary&lt;br /&gt;
-				&lt;form&gt;
-				&lt;div class="input-append"&gt;
-					&lt;input name="response" type="text" pattern="[1-9]{1}[0-9]*\.?[0-9]{0,2}" placeholder="Enter your salary" /&gt;
-					&lt;span class="add-on"&gt;&lt;?php echo $survey['currency'] ?&gt;&amp;nbsp;&lt;?php echo $survey['period'] ?&gt;&lt;/span&gt;
-				&lt;/div&gt;
-				&lt;input id="submit" type="submit" class="btn btn-success" value="Submit" /&gt;
-				&lt;/form&gt;
-			&lt;/li&gt;
-			&lt;li&gt;
-				Once the minimum number of entries are met, see the salary analysis report here: &lt;a href="&lt;?php echo "http://$_SERVER[HTTP_HOST]" . "/report/" . $survey['URLName']; ?&gt;"&gt;&lt;?php echo "http://$_SERVER[HTTP_HOST]" . "/report/" . $survey['URLName']; ?&gt;&lt;/a&gt;
-			&lt;/li&gt;
-		&lt;/ol&gt;
-	&lt;/div&gt;
-&lt;/div&gt;
-&lt;script&gt;
+```
+<div class="row">
+        <div class="span5">
+		<legend>Survey Details</legend>
+		<p><strong>Survey name</strong><br /><?php echo $survey['name']; ?></p>
+		<p><strong>Salary currency</strong><br /><?php echo $survey['currency']; ?></p>
+		<p><strong>Salary period</strong><br /><?php echo $survey['period']; ?></p>
+		<p><strong>Minimum number of responses before results published</strong><br /><?php echo $survey['minEntries']; ?></p>
+		<p><strong>Current number of responses</strong><br /><?php echo count($survey['responses']); ?></p>
+	</div>
+	<div class="span5">
+		<legend>Next Steps</legend>
+		<ol>
+			<li>Invite others to participate by sharing<br />
+			<a target="_blank" href="<?php echo "http://www.facebook.com/sharer/sharer.php?u=" . "http://$_SERVER[HTTP_HOST]" . "/addResponse/" . $survey['URLName']; ?>"><img src="/ui/img/facebook_001.jpg" style="width:32px; height:32px;" /></a>
+			<a target="_blank" href="<?php echo "https://twitter.com/intent/tweet?text=How%20much%20do%20you%20make%3F&amp;url=" . "http://$_SERVER[HTTP_HOST]" . "/addResponse/" . $survey['URLName']; ?>"><img src="/ui/img/Twitter_001.jpg" style="width:32px; height:32px;" /></a>
+			<a target="_blank" href="<?php echo "http://www.linkedin.com/shareArticle?mini=true&amp;url=" . "http://$_SERVER[HTTP_HOST]" . "/addResponse/" . $survey['URLName'] . "&amp;title=Salary%20Survey"; ?>"><img src="/ui/img/Linkedin_001.jpg" style="width:32px; height:32px;" /></a>
+			<a href="<?php echo "http://pinterest.com/pin/create/button/?url=" . "http://$_SERVER[HTTP_HOST]" . "/addResponse/" . $survey['URLName']; ?>"  class="pin-it-button" count-layout="horizontal"><img src="/ui/img/Pinterest_001.jpg" style="width:32px; height:32px;" /></a>
+<br />
+			Or by sending them this link:<br /><a href="<?php echo "http://$_SERVER[HTTP_HOST]" . "/addResponse/" . $survey['URLName']; ?>"><?php echo "http://$_SERVER[HTTP_HOST]" . "/addResponse/" . $survey['URLName']; ?></a></li>
+			<li>Enter your salary<br />
+				<form>
+				<div class="input-append">
+					<input name="response" type="text" pattern="[1-9]{1}[0-9]*\.?[0-9]{0,2}" placeholder="Enter your salary" />
+					<span class="add-on"><?php echo $survey['currency'] ?>&amp;nbsp;<?php echo $survey['period'] ?></span>
+				</div>
+				<input id="submit" type="submit" class="btn btn-success" value="Submit" />
+				</form>
+			</li>
+			<li>
+				Once the minimum number of entries are met, see the salary analysis report here: <a href="<?php echo "http://$_SERVER[HTTP_HOST]" . "/report/" . $survey['URLName']; ?>"><?php echo "http://$_SERVER[HTTP_HOST]" . "/report/" . $survey['URLName']; ?></a>
+			</li>
+		</ol>
+	</div>
+</div>
+<script>
 	$( "form" ).on( "submit", function( event ) {
 		event.preventDefault();
 		var datastring = $( "form" ).serialize();
 		$.ajax({
 		    type: "POST",
-		    url: "/api/v1/survey/addResponse/&lt;?php echo $survey['URLName'] ?&gt;",
+		    url: "/api/v1/survey/addResponse/<?php echo $survey['URLName'] ?>",
 		    data: datastring,
 		    dataType: "json",
 		    success: function(data) {
@@ -467,7 +467,7 @@ class PageGenerator {
 		    }
 		});		
 	});
-&lt;/script&gt;</pre>
+</script>```
 <p>One point of interest - you may have noticed the "pattern" property set on the one ofthe HTML inputs. This is a regular expression that tells the input field what valuesare allowed. Let's examine this pattern by breaking it up:<br />
 pattern="[1-9]{1}[0-9]*\.?[0-9]{0,2}"</p>
 <p>[1-9]{1} - this means we want one and only one character, and it has to be a digit 1-9. This prevents users from submitting a value that starts with a leading zero.</p>
@@ -476,41 +476,41 @@ pattern="[1-9]{1}[0-9]*\.?[0-9]{0,2}"</p>
 <p>[0-9]{0,2} - this means we'll accept zero, one, or two of any characters between 0 and 9.</p>
 <p>What this all boils down to is a user can enter any number with no decimal places, a single decimal place, or two decimal places, and nothing else. No symbols, letters, or illegitimate formats. This ensures we have clean valid numbers to do mathematical operations on later for the 'report' page.</p>
 <p>The 'addResponse' page is simpler and re-uses a lot of the same code as the 'thanks' page, so let's jut jump right into it.</p>
-<pre class="lang:default decode:true" title="addResponse.htm">&lt;h2&gt;You've been invited!&lt;/h1&gt;
-&lt;div class="row"&gt;
-        &lt;div class="span5"&gt;
-		&lt;legend&gt;Wait, what's going on?&lt;/legend&gt;
-		&lt;p&gt;You've been invited to participate in an anonymous survey about salaries. Someone has already created the survey and invited you and others to participate. Your salary information is totally anonymous - no login or email address is required. To ensure anonymity, the results of the survey aren't published until a minimum number of responses are made (see below).&lt;/p&gt; 
+```
+<div class="row">
+        <div class="span5">
+		<legend>Wait, what's going on?</legend>
+		<p>You've been invited to participate in an anonymous survey about salaries. Someone has already created the survey and invited you and others to participate. Your salary information is totally anonymous - no login or email address is required. To ensure anonymity, the results of the survey aren't published until a minimum number of responses are made (see below).</p> 
 
-		&lt;p&gt;&lt;strong&gt;Survey name&lt;/strong&gt;&lt;br /&gt;&lt;?php echo $survey['name']; ?&gt;&lt;/p&gt;
-		&lt;p&gt;&lt;strong&gt;Minimum number of responses before results published&lt;/strong&gt;&lt;br /&gt;&lt;?php echo $survey['minEntries']; ?&gt;&lt;/p&gt;
-		&lt;p&gt;&lt;strong&gt;Current number of responses&lt;/strong&gt;&lt;br /&gt;&lt;?php echo count($survey['responses']); ?&gt;
-	&lt;/div&gt;
-	&lt;div class="span5"&gt;
-		&lt;legend&gt;Next Steps&lt;/legend&gt;
-		&lt;ol&gt;
-			&lt;li&gt;Enter your salary&lt;br /&gt;
-				&lt;form&gt;
-				&lt;div class="input-append"&gt;
-					&lt;input name="response" type="text" pattern="[1-9]{1}[0-9]*\.?[0-9]{0,2}" placeholder="Enter your salary" /&gt;
-					&lt;span class="add-on"&gt;&lt;?php echo $survey['currency'] ?&gt;&amp;nbsp;&lt;?php echo $survey['period'] ?&gt;&lt;/span&gt;
-				&lt;/div&gt;
-				&lt;p&gt;&lt;input id="submit" type="submit" class="btn btn-success" value="Submit" /&gt;&lt;/p&gt;
-				&lt;/form&gt;
-			&lt;/li&gt;
-			&lt;li&gt;
-				Once the minimum number of entries are met, see the salary analysis report here: &lt;a href="&lt;?php echo "http://$_SERVER[HTTP_HOST]" . "/report/" . $survey['URLName']; ?&gt;"&gt;&lt;?php echo "http://$_SERVER[HTTP_HOST]" . "/report/" . $survey['URLName']; ?&gt;&lt;/a&gt;
-			&lt;/li&gt;
-		&lt;/ol&gt;
-	&lt;/div&gt;
-&lt;/div&gt;
-&lt;script&gt;
+		<p><strong>Survey name</strong><br /><?php echo $survey['name']; ?></p>
+		<p><strong>Minimum number of responses before results published</strong><br /><?php echo $survey['minEntries']; ?></p>
+		<p><strong>Current number of responses</strong><br /><?php echo count($survey['responses']); ?>
+	</div>
+	<div class="span5">
+		<legend>Next Steps</legend>
+		<ol>
+			<li>Enter your salary<br />
+				<form>
+				<div class="input-append">
+					<input name="response" type="text" pattern="[1-9]{1}[0-9]*\.?[0-9]{0,2}" placeholder="Enter your salary" />
+					<span class="add-on"><?php echo $survey['currency'] ?>&amp;nbsp;<?php echo $survey['period'] ?></span>
+				</div>
+				<p><input id="submit" type="submit" class="btn btn-success" value="Submit" /></p>
+				</form>
+			</li>
+			<li>
+				Once the minimum number of entries are met, see the salary analysis report here: <a href="<?php echo "http://$_SERVER[HTTP_HOST]" . "/report/" . $survey['URLName']; ?>"><?php echo "http://$_SERVER[HTTP_HOST]" . "/report/" . $survey['URLName']; ?></a>
+			</li>
+		</ol>
+	</div>
+</div>
+<script>
 	$( "form" ).on( "submit", function( event ) {
 		event.preventDefault();
 		var datastring = $( "form" ).serialize();
 		$.ajax({
 		    type: "POST",
-		    url: "/api/v1/survey/addResponse/&lt;?php echo $survey['URLName'] ?&gt;",
+		    url: "/api/v1/survey/addResponse/<?php echo $survey['URLName'] ?>",
 		    data: datastring,
 		    dataType: "json",
 		    success: function(data) {
@@ -523,42 +523,42 @@ pattern="[1-9]{1}[0-9]*\.?[0-9]{0,2}"</p>
 
 
 	});
-&lt;/script&gt;</pre>
+</script>```
 <p>Easy right? OK, the last page is the 'report' page where we'll give some basic statistics from the survey results and a nice little chart. The statistics are pretty easy to calculate, and for the chart we'll use Google Charts API via JavaScript. Let's take a look.</p>
-<pre class="lang:default decode:true " title="report.htm">&lt;h2&gt;Salary Analysis for Survey '&lt;?php echo $survey['name']; ?&gt;'&lt;/h1&gt;
-&lt;div class="row"&gt;
-	&lt;?php if($minEntriesMet) { ?&gt;
-        &lt;div class="span5"&gt;
-		&lt;legend&gt;Survey Details&lt;/legend&gt;
-		&lt;p&gt;&lt;strong&gt;Survey name&lt;/strong&gt;&lt;br /&gt;&lt;?php echo $survey['name']; ?&gt;&lt;/p&gt;
-		&lt;p&gt;&lt;strong&gt;Average salary&lt;/strong&gt;&lt;br /&gt;&lt;?php echo $averageSalary ?&gt; &lt;?php echo $survey['currency']; ?&gt; &lt;?php echo $survey['period']; ?&gt;&lt;/p&gt;
-		&lt;p&gt;&lt;strong&gt;Median salary&lt;/strong&gt;&lt;br /&gt;&lt;?php echo $median ?&gt; &lt;?php echo $survey['currency']; ?&gt; &lt;?php echo $survey['period']; ?&gt;&lt;/p&gt;
-		&lt;!--&lt;p&gt;&lt;strong&gt;Salary currency&lt;/strong&gt;&lt;br /&gt;&lt;?php echo $survey['currency']; ?&gt;&lt;/p&gt;
-		&lt;p&gt;&lt;strong&gt;Salary period&lt;/strong&gt;&lt;br /&gt;&lt;?php echo $survey['period']; ?&gt;&lt;/p&gt;--&gt;
-		&lt;p&gt;&lt;strong&gt;Minimum number of responses before results published&lt;/strong&gt;&lt;br /&gt;&lt;?php echo $survey['minEntries']; ?&gt;&lt;/p&gt;
-		&lt;p&gt;&lt;strong&gt;Current number of responses&lt;/strong&gt;&lt;br /&gt;&lt;?php echo count($survey['responses']); ?&gt;
-	&lt;/div&gt;
-	&lt;div class="span5"&gt;
-		&lt;legend&gt;Relative Salary Comparison&lt;/legend&gt;
-		&lt;div id="chart_div" style="width: 100%; height: 300px;"&gt;&lt;/div&gt;
-	&lt;/div&gt;
-	&lt;?php } else { ?&gt;
-	&lt;div class="span12"&gt;
-		Uh oh, minimum number of responses haven't been met yet. Minimum number of responses is &lt;?php echo $survey['minEntries']; ?&gt; and there have been &lt;?php echo count($survey['responses']); ?&gt; responses so far.&lt;br /&gt;&lt;br /&gt;No report data available.
-	&lt;/div&gt;
-	&lt;?php } ?&gt;
-&lt;/div&gt;
-&lt;script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['corechart']}]}"&gt;&lt;/script&gt;
-&lt;!--&lt;div id="chart_div" style="width: 100%; height: 500px;"&gt;&lt;/div&gt;--&gt;
-&lt;script&gt;
+```
+<div class="row">
+	<?php if($minEntriesMet) { ?>
+        <div class="span5">
+		<legend>Survey Details</legend>
+		<p><strong>Survey name</strong><br /><?php echo $survey['name']; ?></p>
+		<p><strong>Average salary</strong><br /><?php echo $averageSalary ?> <?php echo $survey['currency']; ?> <?php echo $survey['period']; ?></p>
+		<p><strong>Median salary</strong><br /><?php echo $median ?> <?php echo $survey['currency']; ?> <?php echo $survey['period']; ?></p>
+		<!--<p><strong>Salary currency</strong><br /><?php echo $survey['currency']; ?></p>
+		<p><strong>Salary period</strong><br /><?php echo $survey['period']; ?></p>-->
+		<p><strong>Minimum number of responses before results published</strong><br /><?php echo $survey['minEntries']; ?></p>
+		<p><strong>Current number of responses</strong><br /><?php echo count($survey['responses']); ?>
+	</div>
+	<div class="span5">
+		<legend>Relative Salary Comparison</legend>
+		<div id="chart_div" style="width: 100%; height: 300px;"></div>
+	</div>
+	<?php } else { ?>
+	<div class="span12">
+		Uh oh, minimum number of responses haven't been met yet. Minimum number of responses is <?php echo $survey['minEntries']; ?> and there have been <?php echo count($survey['responses']); ?> responses so far.<br /><br />No report data available.
+	</div>
+	<?php } ?>
+</div>
+<script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['corechart']}]}"></script>
+<!--<div id="chart_div" style="width: 100%; height: 500px;"></div>-->
+<script>
       google.setOnLoadCallback(drawChart);
       function drawChart() {
 	var dataTable =	new google.visualization.DataTable();
 	dataTable.addColumn('number', 'Salary');
 	dataTable.addColumn('number', '% Delta');
-	&lt;?php for($i=0; $i &lt; count($survey['responses']); $i++){
+	<?php for($i=0; $i < count($survey['responses']); $i++){
 		echo 'dataTable.addRow(['. $survey['responses'][$i]. ',' . $percentDeltas[$i] . ']);';
-	};?&gt;
+	};?>
 
 	var formatter = new google.visualization.NumberFormat({
 	    fractionDigits: 2,
@@ -585,24 +585,24 @@ pattern="[1-9]{1}[0-9]*\.?[0-9]{0,2}"</p>
 
         chart.draw(dataTable, options);
       }
-&lt;/script&gt;</pre>
+</script>```
 <p>OK, so theoretically our PageController and our four Views should all be working at this point, we just need to add routes to our index.php for these pages. Much like our API routes, we'll specify a URL that includes variables in the URL string itself. Let's create a route for each of our three new Views:</p>
-<pre class="lang:php decode:true" title="index.php">// Page generator - class of functions for populating pages
-$f3-&gt;route('GET /thanks/@name','PageGenerator-&gt;thanks');
-$f3-&gt;route('GET /report/@name','PageGenerator-&gt;report');
-$f3-&gt;route('GET /addResponse/@name','PageGenerator-&gt;addResponse');</pre>
-<p>Since these are normal web pages, we'll use the default GET method. Next we specify the path including the variable prefixed with the @ sign, and finally we tell F3 which class and function to map the route to (in the format of ClassName-&gt;functionName). Now we can hit those URLs with 'demo' as the name argument and we should see the pages populated with the details of the 'demo' survey object.</p>
+```// Page generator - class of functions for populating pages
+$f3->route('GET /thanks/@name','PageGenerator->thanks');
+$f3->route('GET /report/@name','PageGenerator->report');
+$f3->route('GET /addResponse/@name','PageGenerator->addResponse');```
+<p>Since these are normal web pages, we'll use the default GET method. Next we specify the path including the variable prefixed with the @ sign, and finally we tell F3 which class and function to map the route to (in the format of ClassName->functionName). Now we can hit those URLs with 'demo' as the name argument and we should see the pages populated with the details of the 'demo' survey object.</p>
 <p>That's it - we now have a full working application including an API and a very decent user interface (it's even mobile friendly, thanks to Bootstrap).</p>
 <h3>Deployment Notes and 'Cloudiness'</h3>
 <p>This is already an insanely long write-up for this project, but I want to push through to make a couple important comments.</p>
 <p>Before your F3 app is live in production, we need to make one more small change. By default, F3 will log error output directly to the browser. This is great for debugging, but unfortunately it can spit out sensitive information, like the username and password for our MongoDB. To disable this level of error logging, simply modify the 'DEBUG' F3 variable to 0, like this:</p>
-<pre class="lang:php decode:true ">$f3-&gt;set('DEBUG',0);</pre>
+```
 <p>Simple.</p>
 <p>Deployment with OpenShift is trivial, as you're really doing continuous delivery - every time you push your code, OpenShift redeploys your environment with the new code. If you haven't been doing this along the way, you just need 3 commands to deploy your code:</p>
-<pre class="lang:sh decode:true"># Execute this from within your OpenShift project directory
+```# Execute this from within your OpenShift project directory
 git add -A # add all changes to the git index
 git commit -m 'add your commit message'
-git push</pre>
+git push```
 <p>Done. You can now hit the app by browsing to your OpenShift-generated DNS name. Adding your own custom DNS name is easy, and I'll cover that in a separate post.</p>
 <p>As for cloudiness - the application might not be that complex and my object-oriented skills are garbage, but from an infrastructure/hosting perspective, it's the Holy Grail. Here's why:</p>
 <ul>

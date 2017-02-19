@@ -52,11 +52,11 @@ meta:
 </li>
 </ul>
 <p>Now to create the API functionality, I created <a href="http://fatfreeframework.com/routing-engine" target="_blank">routes in F3</a>. F3 makes it really easy to make HTTP method-specific routes that then map to pages, classes, or specific functions. In my case, I wanted to create routes for the various functions I created in the Survey class. To do this, we'll need to edit the index.php file in the root of the F3 directory. I left the existing code as-is, and added the following lines:</p>
-<pre class="lang:php decode:true">$f3-&gt;route('GET /api/v1/survey/getByName/@name','Survey-&gt;getByName');
-$f3-&gt;route('POST /api/v1/survey/addResponse/@name','Survey-&gt;addResponse');
-$f3-&gt;route('POST /api/v1/survey/addSurvey','Survey-&gt;addSurvey');</pre>
+```getByName');
+$f3->route('POST /api/v1/survey/addResponse/@name','Survey->addResponse');
+$f3->route('POST /api/v1/survey/addSurvey','Survey->addSurvey');```
 <p>As you can see, the route syntax is:<br />
-'METHOD /URL/PATH/@parameter', 'Class-&gt;functionName'.</p>
+'METHOD /URL/PATH/@parameter', 'Class->functionName'.</p>
 <p>RESTful APIs should use certain methods based on what you're doing to the object (e.g. if you're reading an object, use GET, if you're creating an object, use POST). Here's a quick breakdown for reference:</p>
 <p>GET - Reading an object<br />
 POST - Creating a new object (or overwriting an entire object)<br />
@@ -65,15 +65,15 @@ DELETE - I'll give you three guesses.</p>
 <p>There are other methods, but these are the four main methods you'll encounter with APIs.</p>
 <p><!--more--></p>
 <p>Back to the F3 routes - you'll notice the @parameters in the URL. This tells F3 to pick up this portion of the URL and set it as a variable. You can then reference these parameters/variables in templates:</p>
-<pre class="lang:php decode:true">echo $f3-&gt;get('PARAMS.parameterName');</pre>
+```
 <p>or you can use them inside of your classes/functions:</p>
-<pre class="lang:php decode:true">// Remember the route from index.php:
-// $f3-&gt;route('GET /api/v1/survey/getByName/@name','Survey-&gt;getByName');
+```// Remember the route from index.php:
+// $f3->route('GET /api/v1/survey/getByName/@name','Survey->getByName');
 public function getByName($f3,$args) { 
 ...
- $URLName = $this-&gt;convertNameToURLName($args['name']);
+ $URLName = $this->convertNameToURLName($args['name']);
 ...
-</pre>
+```
 <p>OK, so now I can hit <a href="http://shareyoursalary-alexdglover.rhcloud.com/api/v1/survey/getByName/test" target="_blank">http://shareyoursalary-alexdglover.rhcloud.com/api/v1/survey/getByName/test</a> in a browser, and I'll get some JSON output in response (unless 'test' doesn't exist, in which case I'll get an HTTP 200 OK response but no output).</p>
 <p>What about the other two routes? If you try to hit them in a browser, you'll get a nasty HTTP 405 Error - Method Not Allowed. Remember, a browser by default is GETting web pages, and F3 enforces the HTTP method you've assigned. So how are we going to test our API routes? We could install some browser plugin or execute cURL commands against it... but let's do something friendly for our API consumers, let's make it easy for people to explore the API. Enter Swagger UI.</p>
 <p><a href="http://swagger.io/"><img class="aligncenter size-full wp-image-888" src="{{ site.baseurl }}/assets/SwaggerUILogo.png" alt="SwaggerUILogo" width="567" height="204" /></a>I already gave an overview of Swagger UI in <a title="Share Your Salary App Part 1" href="http://alexdglover.com/share-your-salary-app-part-1/" target="_blank">Part 1</a>, now for the implementation details. To start, I downloaded the <a href="https://github.com/swagger-api/swagger-ui/archive/master.zip">Swagger UI package</a>, unzipped it the root of the project directory and renamed the directory 'swagger' leaving our new file structure like this:</p>
@@ -113,25 +113,25 @@ public function getByName($f3,$args) {
 </li>
 </ul>
 <p>Since swagger won't be managed by F3's template engine, I kept it outside of the ui directory. To make the Swagger web pages available, I add a new route in the F3 index.php file:</p>
-<pre class="lang:default decode:true">$f3-&gt;route('GET /swagger/',
+```route('GET /swagger/',
         function($f3) {
     		echo F3::serve('/swagger/dist/index.html');
         }
-);</pre>
+);```
 <p>Now we can browse to /swagger/dist/index.html and we should see the Swagger UI page with the PetStore example. We're off to a good start.</p>
 <p>Next, we need to modify /swagger/dist/index.html to refer to our new API JSON document (which we haven't created yet). On line 31, we need to provide the full URL path to the JSON file:</p>
-<pre class="lang:default decode:true">url = window.location.protocol + "//" + window.location.host + "/swagger/dist/shareyoursalary.json";</pre>
+```
 <p>Note that this URL variable will work regardless of what DNS name the app is using (more on this later). Alright, now we'll create the shareyoursalary.json file to describe the API. Let's take a look at a few snippets and then break each one down:</p>
-<pre class="lang:js decode:true">{
+```{
     "swagger": "2.0",
     "info": {
         "version": "0.0.1",
         "title": "Share Your Salary"
     },
     "basePath": "/api/v1",
-...</pre>
+...```
 <p>Pretty easy right? Just providing some version numbers, a title, and a base path. The base path is the most important piece here - this will be pre-pended to all of the other API URLs/path. Next, let's take a look at the first path:</p>
-<pre class="lang:zsh decode:true ">"paths": {
+```"paths": {
         "/survey/getByName/{name}": {
             "get": {
                 "description": "Gets `Survey` objects.\nRequired query param of **name** will be used as s
@@ -176,7 +176,7 @@ e included in return data.\n",
                 }
             }
         }
-...</pre>
+...```
 <p>Each path is identified by a key, which is the actual URL/path ("/survey/getByName/{name}" in this example). Each URL can have multiple functions based on what HTTP method is used, so we'll provide a description, parameters, and a response definition for each method. In this example, we are only dealing with GET. The parameter attributes are fairly straightforward except for the "in" attribute - the "in" attribute defines how the parameters are passed to this API. APIs can have parameter values passed in one of two ways:</p>
 <ol>
 <li>As part of the URL <strong>path</strong> (e.g. /object/function/value)</li>

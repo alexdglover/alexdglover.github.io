@@ -27,7 +27,7 @@ meta:
 <h2>Preparation</h2>
 <p>If you want to jump right into the project, you can download <a href="http://experimental.alexdglover.com/downloads/BootstrapScrollspyWorkaroundStarter.zip" target="_blank">the starter kit</a> (it's just Boostrap 2.3, a modified Hero Unit example page, and a very slightly modified Bootstrap CSS).</p>
 <p>If you want to start from a 100% clean version of Bootstrap 2.3, go <a href="http://getbootstrap.com/2.3.2/getting-started.html#download-bootstrap" target="_blank">download the source</a> and extract it. Keep your top-level folder name whatever you want it to be, but rename the 'bootstrap' folder assets (we are matching the existing folder structure in the source code we are going to borrow from one of their examples. Feel free to build your folder structure however you see fit). Create a sibling folder to contain your HTML files and create an index.html inside. Finally, go download <a href="http://jquery.com/download/" target="_blank">jQuery</a>, place it in your assets/js folder, and rename it 'jquery.js' (for simplicity). Your folder structure should look like this:</p>
-<pre class="lang:default decode:true">topLevelFolder
+```topLevelFolder
 ├── assets/
 │   ├── css/
 │   │   ├── bootstrap.css
@@ -41,107 +41,107 @@ meta:
 │       └── glyphicons-halflings-white.png
 ├── html/
 │   ├── index.html
-</pre>
+```
 <p>Perfect. Now browse to the <a href="http://getbootstrap.com/2.3.2/examples/hero.html" target="_blank">Hero example</a> and <span style="text-decoration: line-through;">steal</span> borrow their source code (just right click anywhere, view source, Ctrl+A Ctrl+C) and paste it into your index.html file. We have to make a few minor changes here as well. Scroll to the bottom of the code and replace this:</p>
-<pre class="lang:default decode:true">&lt;!-- Le javascript
-    ================================================== --&gt;
-    &lt;!-- Placed at the end of the document so the pages load faster --&gt;
-    &lt;script src="../assets/js/jquery.js"&gt;&lt;/script&gt;
-    &lt;script src="../assets/js/bootstrap-transition.js"&gt;&lt;/script&gt;
-    &lt;script src="../assets/js/bootstrap-alert.js"&gt;&lt;/script&gt;
-    &lt;script src="../assets/js/bootstrap-modal.js"&gt;&lt;/script&gt;
-    &lt;script src="../assets/js/bootstrap-dropdown.js"&gt;&lt;/script&gt;
-    &lt;script src="../assets/js/bootstrap-scrollspy.js"&gt;&lt;/script&gt;
-    &lt;script src="../assets/js/bootstrap-tab.js"&gt;&lt;/script&gt;
-    &lt;script src="../assets/js/bootstrap-tooltip.js"&gt;&lt;/script&gt;
-    &lt;script src="../assets/js/bootstrap-popover.js"&gt;&lt;/script&gt;
-    &lt;script src="../assets/js/bootstrap-button.js"&gt;&lt;/script&gt;
-    &lt;script src="../assets/js/bootstrap-collapse.js"&gt;&lt;/script&gt;
-    &lt;script src="../assets/js/bootstrap-carousel.js"&gt;&lt;/script&gt;
-    &lt;script src="../assets/js/bootstrap-typeahead.js"&gt;&lt;/script&gt;</pre>
+```<!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="../assets/js/jquery.js"></script>
+    <script src="../assets/js/bootstrap-transition.js"></script>
+    <script src="../assets/js/bootstrap-alert.js"></script>
+    <script src="../assets/js/bootstrap-modal.js"></script>
+    <script src="../assets/js/bootstrap-dropdown.js"></script>
+    <script src="../assets/js/bootstrap-scrollspy.js"></script>
+    <script src="../assets/js/bootstrap-tab.js"></script>
+    <script src="../assets/js/bootstrap-tooltip.js"></script>
+    <script src="../assets/js/bootstrap-popover.js"></script>
+    <script src="../assets/js/bootstrap-button.js"></script>
+    <script src="../assets/js/bootstrap-collapse.js"></script>
+    <script src="../assets/js/bootstrap-carousel.js"></script>
+    <script src="../assets/js/bootstrap-typeahead.js"></script>```
 <p>with this:</p>
-<pre class="lang:default decode:true">&lt;!-- Le javascript
-    ================================================== --&gt;
-    &lt;!-- Placed at the end of the document so the pages load faster --&gt;
-    &lt;script src="../assets/js/jquery.js"&gt;&lt;/script&gt;
-    &lt;script src="../assets/js/bootstrap.js"&gt;&lt;/script&gt;</pre>
+```<!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="../assets/js/jquery.js"></script>
+    <script src="../assets/js/bootstrap.js"></script>```
 <p>For sanity testing, open index.html in your browser - it should look like the original and function without errors.</p>
 <p>Now let's strip out the 3 sub-headings and replace them with a content area and a set of links in the sidebar.</p>
 <p>Replace this:</p>
-<pre class="lang:default decode:true">&lt;!-- Example row of columns --&gt;
-      &lt;div class="row"&gt;
-        &lt;div class="span4"&gt;
-          &lt;h2&gt;Heading&lt;/h2&gt;
-          &lt;p&gt;Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. &lt;/p&gt;
-          &lt;p&gt;&lt;a class="btn" href="#"&gt;View details &amp;raquo;&lt;/a&gt;&lt;/p&gt;
-        &lt;/div&gt;
-        &lt;div class="span4"&gt;
-          &lt;h2&gt;Heading&lt;/h2&gt;
-          &lt;p&gt;Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. &lt;/p&gt;
-          &lt;p&gt;&lt;a class="btn" href="#"&gt;View details &amp;raquo;&lt;/a&gt;&lt;/p&gt;
-       &lt;/div&gt;
-        &lt;div class="span4"&gt;
-          &lt;h2&gt;Heading&lt;/h2&gt;
-          &lt;p&gt;Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.&lt;/p&gt;
-          &lt;p&gt;&lt;a class="btn" href="#"&gt;View details &amp;raquo;&lt;/a&gt;&lt;/p&gt;
-        &lt;/div&gt;
-      &lt;/div&gt;</pre>
+```
+      <div class="row">
+        <div class="span4">
+          <h2>Heading</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn" href="#">View details &amp;raquo;</a></p>
+        </div>
+        <div class="span4">
+          <h2>Heading</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn" href="#">View details &amp;raquo;</a></p>
+       </div>
+        <div class="span4">
+          <h2>Heading</h2>
+          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+          <p><a class="btn" href="#">View details &amp;raquo;</a></p>
+        </div>
+      </div>```
 <p>with this:</p>
-<pre class="lang:default decode:true">&lt;!-- Example row of columns --&gt;
-      &lt;div class="row"&gt;
-		  &lt;div class="span3 sidebar"&gt;
-		    &lt;ul class="nav nav-list nav-tabs nav-stacked sidebarNav affix-top" style="top:80px; width:255px;"&gt;
-			  &lt;li id="section1Nav"&gt;&lt;a href="#section1"&gt;Section 1&lt;i class="icon-chevron-right" style="float:right;"&gt;&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
-			  &lt;li id="section2Nav"&gt;&lt;a href="#section2"&gt;Section 2&lt;i class="icon-chevron-right" style="float:right;"&gt;&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
-			  &lt;li id="section3Nav"&gt;&lt;a href="#section3"&gt;Section 3&lt;i class="icon-chevron-right" style="float:right;"&gt;&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
-			  &lt;li id="section4Nav"&gt;&lt;a href="#section4"&gt;Section 4&lt;i class="icon-chevron-right" style="float:right;"&gt;&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
-			&lt;/ul&gt;
-		  &lt;/div&gt;
+```
+      <div class="row">
+		  <div class="span3 sidebar">
+		    <ul class="nav nav-list nav-tabs nav-stacked sidebarNav affix-top" style="top:80px; width:255px;">
+			  <li id="section1Nav"><a href="#section1">Section 1<i class="icon-chevron-right" style="float:right;"></i></a></li>
+			  <li id="section2Nav"><a href="#section2">Section 2<i class="icon-chevron-right" style="float:right;"></i></a></li>
+			  <li id="section3Nav"><a href="#section3">Section 3<i class="icon-chevron-right" style="float:right;"></i></a></li>
+			  <li id="section4Nav"><a href="#section4">Section 4<i class="icon-chevron-right" style="float:right;"></i></a></li>
+			</ul>
+		  </div>
 
-		  &lt;div class="span9"&gt;
-			&lt;section id="section1"&gt;
-				&lt;div class="page-header"&gt;
-					&lt;h1&gt;section 1&lt;/h1&gt;
-				&lt;/div&gt;
-				&lt;h2&gt;Sub Header&lt;/h2&gt;
-				&lt;p&gt;lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.&lt;/p&gt;
-				&lt;p&gt;lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.&lt;/p&gt;
-				&lt;p&gt;lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.&lt;/p&gt;
-				&lt;p&gt;lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.&lt;/p&gt;
-			&lt;/section&gt;
-			&lt;section id="section2"&gt;
-				&lt;div class="page-header"&gt;
-					&lt;h1&gt;section 2&lt;/h1&gt;
-				&lt;/div&gt;
-				&lt;h2&gt;Sub Header&lt;/h2&gt;
-				&lt;p&gt;lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.&lt;/p&gt;
-				&lt;p&gt;lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.&lt;/p&gt;
-			&lt;/section&gt;
-			&lt;section id="section3"&gt;
-				&lt;div class="page-header"&gt;
-					&lt;h1&gt;section 3&lt;/h1&gt;
-				&lt;/div&gt;
-				&lt;h2&gt;Sub Header&lt;/h2&gt;
-				&lt;p&gt;lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.&lt;/p&gt;
-				&lt;p&gt;lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.&lt;/p&gt;
-				&lt;p&gt;lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.&lt;/p&gt;
-			&lt;/section&gt;
-			&lt;section id="section4"&gt;
-				&lt;div class="page-header"&gt;
-					&lt;h1&gt;section 4&lt;/h1&gt;
-				&lt;/div&gt;
-				&lt;h2&gt;Sub Header&lt;/h2&gt;
-				&lt;p&gt;lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.&lt;/p&gt;
-				&lt;p&gt;lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.&lt;/p&gt;
-				&lt;p&gt;lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.&lt;/p&gt;
-			&lt;/section&gt;
-		  &lt;/div&gt;
-      &lt;/div&gt;</pre>
+		  <div class="span9">
+			<section id="section1">
+				<div class="page-header">
+					<h1>section 1</h1>
+				</div>
+				<h2>Sub Header</h2>
+				<p>lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.</p>
+				<p>lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.</p>
+				<p>lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.</p>
+				<p>lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.</p>
+			</section>
+			<section id="section2">
+				<div class="page-header">
+					<h1>section 2</h1>
+				</div>
+				<h2>Sub Header</h2>
+				<p>lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.</p>
+				<p>lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.</p>
+			</section>
+			<section id="section3">
+				<div class="page-header">
+					<h1>section 3</h1>
+				</div>
+				<h2>Sub Header</h2>
+				<p>lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.</p>
+				<p>lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.</p>
+				<p>lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.</p>
+			</section>
+			<section id="section4">
+				<div class="page-header">
+					<h1>section 4</h1>
+				</div>
+				<h2>Sub Header</h2>
+				<p>lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.</p>
+				<p>lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.</p>
+				<p>lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.</p>
+			</section>
+		  </div>
+      </div>```
 <p>Open this up in your browser and verify everything is kosher. If so, we're all done with prep and can move on to the custom JavaScript.</p>
 <h2>The Offset Logic</h2>
 <p>At this point, you probably clicked the links and noticed that the viewport doesn't line up quite perfectly. This is because the height of the top nav bar isn't being taken into account. Let's fix that first, then reproduce the scrollspy effect.</p>
 <p>To fix this issue, we need to 'intercept' the normal link function and replace it with our own. Once intercepted, we'll scroll to that element with an offset equal to the height of the header.</p>
-<pre class="lang:js decode:true">&lt;script&gt;
+```
     // Here we set the offset value to whatever the header height is
     var offset = 60;
     // If a user clicks on any anchor element (a) within a list item tag (li) on our sidebar with the class sidebarNav (.sidebarNav), execute this function
@@ -153,11 +153,11 @@ meta:
         // Scroll 0 pixels horizontally and -60 (really negative offset) vertically
         scrollBy(0, -offset);			
     });
-&lt;/script&gt;</pre>
+</script>```
 <p>That's it. Add this block of javascript in your index.html just after your script source declaration for jQuery and boostrap.js. Test it in your browser, and experiment with changing the offset number and its effects.</p>
 <h2>The Scrollspy Effect</h2>
 <p>To create the Scrollspy effect, all we need to do is add the 'active' class to the li tags when the viewport is lined up with the corresponding section.</p>
-<pre class="lang:js decode:true">&lt;script&gt;
+```
 $(document).ready(function () {
 	var menu = $('.sidebarNav');
 
@@ -173,7 +173,7 @@ $(document).ready(function () {
 
 		// If the window is at or below the section 1 tag, then switch the 
 		// sidebar's class from affix-top to affix so it will move with the window
-		if (currPosition &gt;= section1Position) {
+		if (currPosition >= section1Position) {
 			menu.removeClass('affix-top').addClass('affix');
 
 		}
@@ -187,25 +187,25 @@ $(document).ready(function () {
 		// If the window is at or below the section 1 tag, then add the active class
 		// to the corresponding li tag and remove the active class from all other li 
 		// tags in the side bar. Apply the same logic to all of the other sections
-		if (currPosition &gt;= section1Position &amp;&amp; currPosition &lt;= section2Position)
+		if (currPosition >= section1Position &amp;&amp; currPosition <= section2Position)
 		{
 			$('#section1Nav').addClass('active').siblings().removeClass('active');
 		}
-		else if(currPosition &gt;= section2Position &amp;&amp; currPosition &lt;= section3Position)
+		else if(currPosition >= section2Position &amp;&amp; currPosition <= section3Position)
 		{
 			$('#section2Nav').addClass('active').siblings().removeClass('active');
 		}
-		else if(currPosition &gt;= section3Position &amp;&amp; currPosition &lt;= section4Position)
+		else if(currPosition >= section3Position &amp;&amp; currPosition <= section4Position)
 		{
 			$('#section3Nav').addClass('active').siblings().removeClass('active');
 		}
-		else if(currPosition &gt;= section4Position)
+		else if(currPosition >= section4Position)
 		{
 			$('#section4Nav').addClass('active').siblings().removeClass('active');
 		}
 	});
 });
-&lt;/script&gt;</pre>
+</script>```
 <p>Again, you'll need to add this code block after the script source declarations for jQuery boostrap.js. That's it. Now you've got a dead-accurate version of the scrollspy, with complete control. Demo and source for the complete package are below. </p>
 <p style="text-align: center;"><a href="http://experimental.alexdglover.com/BootstrapScrollSpyWorkaround/html/index.html"><input class="button" type="button" value="Demo" /></a> <a href="http://experimental.alexdglover.com/downloads/BootstrapScrollspyWorkaroundFinal.zip"><input class="button" type="button" value="Source" /></a></p>
 <p>Enjoy.</p>

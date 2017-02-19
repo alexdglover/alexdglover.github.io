@@ -56,13 +56,13 @@ meta:
 <h3>Deployment Overview</h3>
 <p>Once you have the OpenShift CLI tools installed and configured, deploying code is extremely easy. To start, clone the git repository to your local filesystem. You can find the git URL in your application configuration screen labelled "Source Code":</p>
 <p><a href="http://alexdglover.com/wp-content/uploads/2015/01/OpenShift4.png"><img class="aligncenter size-full wp-image-817" src="{{ site.baseurl }}/assets/OpenShift4.png" alt="openshift-app-configuration-4" width="248" height="121" /></a>Clone the repository:</p>
-<pre class="lang:default decode:true">git clone ssh://&lt;random_hash&gt;@appname-namespace.rhcloud.com/~/git/appname.git/</pre>
+```
 <p>Change to your newly created app directory:</p>
-<pre class="lang:default decode:true">cd appname/</pre>
+```
 <p>Add your files, make changes, hack away to your heart's content in this directory. Once you're ready to re-deploy, add the files to the git index, make a commit, and push the latest source:</p>
-<pre class="lang:default decode:true">git add .
+```git add .
 git commit -m 'this is my commit message'
-git push</pre>
+git push```
 <p>When you push new code, all application cartridges will be restarted and your new application should be available in a few seconds. If you need to add additional startup commands for your application, you can add <a href="https://developers.openshift.com/en/managing-action-hooks.html" target="_blank">additional action hooks</a>.</p>
 <p>That's it - you should now be able to create and deploy an application with OpenShift with ease.</p>
 <p>Are you using OpenShift, or some other PAAS offering? What are your thoughts?</p>

@@ -26,7 +26,7 @@ meta:
     frameborder="0" allowfullscreen></iframe>
   _oembed_time_728f7dcf3facf2639e75dca26696bf4e: '1474856790'
 ---
-<p>Here's a quick and easy project you can do with minimal hardware components. I call this project/device "Buzzword" but it's basically the same game and concept as <a href="http://amzn.to/1LKt0o1" target="_blank">Catch Phrase</a>. In Catch Phrase, you have a device that shows you random words. You can say anything to help your team guess the word as long as you don't say any part of the "catch phrase" itself, say "it rhymes with &lt;blank&gt;," or otherwise cheat. Once your team correctly guesses the word, you pass the device to the opposing team. This goes on until you run out of time. Whichever team is holding the device when time is up loses.</p>
+<p>Here's a quick and easy project you can do with minimal hardware components. I call this project/device "Buzzword" but it's basically the same game and concept as <a href="http://amzn.to/1LKt0o1" target="_blank">Catch Phrase</a>. In Catch Phrase, you have a device that shows you random words. You can say anything to help your team guess the word as long as you don't say any part of the "catch phrase" itself, say "it rhymes with <blank>," or otherwise cheat. Once your team correctly guesses the word, you pass the device to the opposing team. This goes on until you run out of time. Whichever team is holding the device when time is up loses.</p>
 <p>My game is very similar, except teams compete by seeing how many points they can get rather than simply whoever is holding the device at the end of the round. In addition, since you are providing your own list of words for the game in the code, you can update it once you get bored with the words or add new pop culture references.</p>
 <p>Here's a quick demo:</p>
 <p>[embed]http://youtu.be/9fIOSbhoIIk[/embed]</p>
@@ -61,16 +61,16 @@ meta:
 <li>Open the Arduino IDE. If you don't have it already, <a href="https://www.arduino.cc/en/Main/Software" target="_blank">download it</a> and install before proceeding.</li>
 <li>Add the Seeed-Studio Touch_Screen_Driver and the TFTv2_Touch_Shield-Text_Direction libraries
 <ol>
-<li>In the Arduino IDE menu, go to Sketch --&gt; Import Library... --&gt; Add Library...</li>
+<li>In the Arduino IDE menu, go to Sketch --> Import Library... --> Add Library...</li>
 <li>Find the Touch_Screen_Driver-master library you downloaded earlier in the file system browser and select it. The directory should contain SeeedTouchScreen.cpp file, a SeeedTouchScreen.h file, and a keywords.txt file at a minimum.</li>
 <li>Repeat the above steps for the TFTv2_Touch_Sheild-Text_Direction library</li>
 </ol>
 </li>
 <li>Open the Buzzword sketch and the font.c file
 <ol>
-<li>In the Arduino IDE menu, go to File --&gt; Open...</li>
+<li>In the Arduino IDE menu, go to File --> Open...</li>
 <li>Find the Buzzword.ino file in the Buzzword directory and select it. The main editor window in the Arduino IDE should now be populated with the code</li>
-<li>In the Arduino IDE menu, go to Sketch --&gt; Add File...</li>
+<li>In the Arduino IDE menu, go to Sketch --> Add File...</li>
 <li>Find the font.c in the root of the Buzzword directory and select it. A second tab should pop up and be populated with some text.</li>
 </ol>
 </li>

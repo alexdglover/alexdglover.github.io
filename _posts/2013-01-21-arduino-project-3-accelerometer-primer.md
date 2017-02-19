@@ -79,28 +79,28 @@ myAccelerometer.calibrate();<br />
 {<br />
 delay(20);//delay for readability<br />
 myAccelerometer.read();<br />
-if(myAccelerometer._Zgs &lt;= -0.9){ digitalWrite(zPin, HIGH); } else if(myAccelerometer._Zgs &gt; -0.9){<br />
+if(myAccelerometer._Zgs <= -0.9){ digitalWrite(zPin, HIGH); } else if(myAccelerometer._Zgs > -0.9){<br />
 digitalWrite(zPin, LOW);<br />
 }<br />
-if(myAccelerometer._Xgs &gt;= 0.5){<br />
+if(myAccelerometer._Xgs >= 0.5){<br />
 digitalWrite(xPosPin, HIGH);<br />
 }<br />
-else if(myAccelerometer._Xgs &lt; 0.5){<br />
+else if(myAccelerometer._Xgs < 0.5){<br />
 digitalWrite(xPosPin, LOW);<br />
 }<br />
-if(myAccelerometer._Xgs &lt;= -0.5){ digitalWrite(xNegPin, HIGH); } else if(myAccelerometer._Xgs &gt; -0.5){<br />
+if(myAccelerometer._Xgs <= -0.5){ digitalWrite(xNegPin, HIGH); } else if(myAccelerometer._Xgs > -0.5){<br />
 digitalWrite(xNegPin, LOW);<br />
 }<br />
-if(myAccelerometer._Ygs &gt;= 0.5){<br />
+if(myAccelerometer._Ygs >= 0.5){<br />
 digitalWrite(yPosPin, HIGH);<br />
 }<br />
-else if(myAccelerometer._Ygs &lt; 0.5){<br />
+else if(myAccelerometer._Ygs < 0.5){<br />
 digitalWrite(yPosPin, LOW);<br />
 }<br />
-if(myAccelerometer._Ygs &lt;= -0.5){<br />
+if(myAccelerometer._Ygs <= -0.5){<br />
 digitalWrite(yNegPin, HIGH);<br />
 }<br />
-else if(myAccelerometer._Ygs &gt; -0.5){<br />
+else if(myAccelerometer._Ygs > -0.5){<br />
 digitalWrite(yNegPin, LOW);<br />
 }</p>
 <p>}</code></p></blockquote>

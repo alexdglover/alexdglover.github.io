@@ -30,7 +30,7 @@ meta:
 <p><!--more See the full cookbook source--></p>
 <p>To see the full cookbook or to clone, check out the repo on <a href="https://github.com/alexdglover/inline-iptables" target="_blank">Github</a>. Otherwise the bulk of the logic is in the default recipe, which you can check out here:</p>
 <p>&nbsp;</p>
-<pre class="lang:default decode:true">#
+```#
 # Cookbook Name:	inline-iptables
 # Recipe: 		default
 # Author:		Alex D Glover (alex@alexdglover.com)
@@ -54,7 +54,7 @@ outbound_ports    = node["inline-iptables"]["outbound_ports"]
 iptables_modified = false
 
 # Debug friendly logging
-Chef::Log.info &lt;&lt;-EOS
+Chef::Log.info <<-EOS
 
 Entering ondemand_base::iptables_manager {
   listen_ports        = #{listen_ports}
@@ -161,5 +161,5 @@ if iptables_modified
 else
   Chef::Log.info "No changes made, not restarting iptables"
 end
-</pre>
+```
 <p>Would greatly appreciate any feedback/criticism from the Chef community. Thanks for reading.</p>

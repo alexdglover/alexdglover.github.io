@@ -34,7 +34,7 @@ meta:
 ---
 <p>Alright, if you're following along from Part 1, you should have your headphones/speakers as well as your ultrasonic rangefinder wired up and operational. Next we have to write the code to marry these two devices.</p>
 <h3>The Code</h3>
-<pre class="lang:arduino decode:true ">/*
+```/*
 Alex Glover
 Copyright December 2012
 The Audible Eye - handheld device that utilizes an ultrasonic rangefinder to determine distance to whatever object the device is pointed at.
@@ -89,7 +89,7 @@ toneToPlay=(0);
 //Here we take whatever value toneToPlay was calculated at and pass it into the tone() function. The parameter of 200 is the number of milliseconds to play
 //the tone. The loop takes about 200 milliseconds in total, so if the loop hangs or crashes, the tone won't keep getting played indefinitely.
 tone(SOUND_PIN,toneToPlay, 200);
-}</pre>
+}```
 <p>Upload that sketch to your Arduino and test. If all's well, you should be hearing various tones coming out of your headphones depending on what's in front of your rangefinder.</p>
 <h3>The Finishing Touches</h3>
 <p>Now at this point, you could declare this project a success. The device works as intended. However, I wanted to give this project a few finishing touches that I usually skip over, so let's put it all inside an enclosure, make it portable (i.e. battery powered), and throw on a badass toggle switch for the fun of it.</p>

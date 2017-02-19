@@ -23,7 +23,7 @@ meta:
   _wpas_skip_1477650: '1'
 ---
 <p>Well it's been awhile since I've posted since I started working on <a title="HUJ" href="http://www.hireupjob.com/" target="_blank">HireUpJob</a>, but this one's good. I recently had a use case where I needed to get the virtual hardware version of a client machine provisioned through vCloud Director. Now, that information is not accessible anywhere on the client machine, so I had to look to the vCloud Director API for it. The process for querying the API also had to be automated for future provisions, so it had to be scripted. Enough back story and context, lets look at the ruby code.</p>
-<pre class="lang:ruby decode:true ">#Need to import a few ruby packages
+```#Need to import a few ruby packages
 require 'net/http'
 require 'uri'
 require 'openssl'
@@ -47,7 +47,7 @@ def fetch(uri_str, limit = 10)
   #Create an HTTP POST request to /api/sessions to authenticate
   req = Net::HTTP::Post.new('/api/sessions')
   #Set HTTP basic auth variables of username and password
-  req.basic_auth '&lt;your_username&gt;@&lt;your_org&gt;', '&lt;your_password&gt;'
+  req.basic_auth '<your_username>@<your_org>', '<your_password>'
   req.add_field 'Accept:', 'application/*+xml;version=1.5'
   #Send the request we created earlier, and capture the HTTP response
   response = http.request(req)
@@ -69,8 +69,8 @@ def fetch(uri_str, limit = 10)
 
   #Set the headers as a variable to be re-used later, including the authorization token we grabbed earlier
   headers = {
-    'Accept' =&gt; 'application/*+xml;version=1.5',
-	'x-vcloud-authorization' =&gt; "#{authKey}"
+    'Accept' => 'application/*+xml;version=1.5',
+	'x-vcloud-authorization' => "#{authKey}"
   }
 
   #Build a new request, this time an HTTP GET, to grab a value from the API. Supply both the API call and the headers variable we just put together
@@ -95,11 +95,11 @@ def fetch(uri_str, limit = 10)
   http.request(req)
 
   #Again, in my case, I wanted to confirm that the VM was using a specific virtual hardware version (vmx-08), so I did a quick string match to confirm this
-  result.include?('&lt;vssd:VirtualSystemType&gt;vmx-08&lt;/vssd:VirtualSystemType&gt;')
+  result.include?('<vssd:VirtualSystemType>vmx-08</vssd:VirtualSystemType>')
 
 end
 
-print fetch('https://&lt;your_vcloud_server&gt;:443')</pre>
+print fetch('https://<your_vcloud_server>:443')```
 <p>If you're using my code more or less verbatim and everything executes properly, you should get a simple "true" or "false" as output. Now, this script is for a fairly specific use case, but I think the real potential value here is to use this enable Opscode Chef (written in Ruby) to communicate with vCloud Director. I'll be sure to post again as I develop some use cases.</p>
 <p>In case you have a very different use case but need some help, here are some of the pages I referred to for writing this script:</p>
 <ul>
