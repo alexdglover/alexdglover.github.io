@@ -12,19 +12,22 @@ tags:
 - password generator
 ---
 <p>I've been wanting to build a thematic password generator for some time. Basically, choose some sort of "theme" and a few password strength parameters, and it will generate random passwords for you. Will come back to update this post and expand on themes shortly.</p>
+
 <p>Pick a theme:</p>
 <select id="themeSelector" onchange="populateDictionaryTextArea()">
-<option disabled="disabled" selected="selected">Choose a theme...</option>
-<option value="flowers">Flowers</option>
-<option value="starwars">Star Wars</option>
-<option value="seaAnimals">Sea Animals</option>
-<option value="jellyBellyFlavors">Jelly Belly Flavors</option>
-<option value="countries">Countries</option>
-<option value="phonetic">Phonetic (military) Alphabet</option>
+  <option disabled="disabled" selected="selected">Choose a theme...</option>
+  <option value="flowers">Flowers</option>
+  <option value="starwars">Star Wars</option>
+  <option value="seaAnimals">Sea Animals</option>
+  <option value="jellyBellyFlavors">Jelly Belly Flavors</option>
+  <option value="countries">Countries</option>
+  <option value="phonetic">Phonetic (military) Alphabet</option>
 </select>
 <p>Words that will be used for this password (editable):</p>
 <p><textarea id="dictionaryTextArea" cols="50" rows="5"></textarea></p>
-Minimum password length: <input id="passwordLength" type="text" /><br />
+<p>Minimum password length:</p>
+<input id="passwordLength" type="text" /><br />
+
 <div>
 <p class="align-left" style="padding-right:10px;">Embed numbers?</p>
 <p class="checkboxThree align-left">
@@ -113,21 +116,51 @@ Here's the code if you're interested:
 ```html
 <p>Pick a theme:</p>
 <select id="themeSelector" onchange="populateDictionaryTextArea()">
-<option disabled="disabled" selected="selected">Choose a theme...</option>
-<option value="flowers">Flowers</option>
-<option value="starwars">Star Wars</option>
-<option value="seaAnimals">Sea Animals</option>
-<option value="jellyBellyFlavors">Jelly Belly Flavors</option>
-<option value="countries">Countries</option>
-<option value="phonetic">Phonetic (military) Alphabet</option>
+  <option disabled="disabled" selected="selected">Choose a theme...</option>
+  <option value="flowers">Flowers</option>
+  <option value="starwars">Star Wars</option>
+  <option value="seaAnimals">Sea Animals</option>
+  <option value="jellyBellyFlavors">Jelly Belly Flavors</option>
+  <option value="countries">Countries</option>
+  <option value="phonetic">Phonetic (military) Alphabet</option>
 </select>
 <p>Words that will be used for this password (editable):</p>
-<p><textarea id="dictionaryTextArea" cols="50" rows="5"></textarea><br />
-Minimum password length: <input id="passwordLength" type="text" /><br />
-Embed numbers? <input id="embedNumbersChkBox" type="checkbox" /><br />
-Capitalize first letters? <input id="capitalizeChkBox" type="checkbox" /><br />
-Use exact length? <input id="exactLengthChkBox" type="checkbox" /></p>
-<p><input type="button" onclick="makePasswd()" class="button" value="Generate" /></p>
+<p><textarea id="dictionaryTextArea" cols="50" rows="5"></textarea></p>
+<p>Minimum password length:</p>
+<input id="passwordLength" type="text" /><br />
+
+<div>
+<p class="align-left" style="padding-right:10px;">Embed numbers?</p>
+<p class="checkboxThree align-left">
+	<input type="checkbox" id="embedNumbersChkBox" />
+	<label for="embedNumbersChkBox"></label>
+</p>
+</div>
+
+<div style="clear:both;"></div>
+
+<div>
+<p class="align-left" style="padding-right:10px;">Capitalize first letters?</p>
+<p class="checkboxThree align-left">
+	<input type="checkbox" id="capitalizeChkBox" />
+	<label for="capitalizeChkBox"></label>
+</p>
+</div>
+
+<div style="clear:both;"></div>
+
+<div>
+<p class="align-left" style="padding-right:10px;">Use exact length?</p>
+<p class="checkboxThree align-left">
+	<input type="checkbox" id="exactLengthChkBox" />
+	<label for="exactLengthChkBox"></label>
+</p>
+</div>
+
+<div style="clear:both;"></div>
+
+<p><input type="button" onclick="makePasswd()" class="btn btn--large btn--success" value="Generate" /></p>
+
 <p><textarea id="output" cols="50" disabled="disabled" rows="5">Password will appear here...</textarea></p>
 
 <script>
