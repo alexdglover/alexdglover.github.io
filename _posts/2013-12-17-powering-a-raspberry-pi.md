@@ -21,12 +21,12 @@ tags:
 <li><a href="http://www.newark.com/raspberry-pi/raspbrry-modb-512m/model-b-assembled-board-only/dp/43W5302?COM=raspi-group" target="_blank">Element14</a> - $35</li>
 <li><a href="http://www.alliedelec.com/lp/120626raso/" target="_blank">AlliedElec</a> - $35</li>
 <li><a href="https://www.sparkfun.com/products/11546" target="_blank">SparkFun</a> - $39.95</li>
-<li><a href="http://www.amazon.com/gp/product/B009SQQF9C/ref=as_li_ss_tl?ie=UTF8&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B009SQQF9C&amp;linkCode=as2&amp;tag=alexdgloverwo-20" target="_blank">Amazon</a> (Prime eligible) - $40.60</li>
-<li><a href="http://dx.com/p/raspberry-pi-project-board-green-267945?Utm_rid=52026082&amp;Utm_source=affiliate" target="_blank">DealExtreme</a> (free shipping) - $55.70</li>
+<li><a href="http://www.amazon.com/gp/product/B009SQQF9C/ref=as_li_ss_tl?ie=UTF8&camp=1789&creative=390957&creativeASIN=B009SQQF9C&linkCode=as2&tag=alexdgloverwo-20" target="_blank">Amazon</a> (Prime eligible) - $40.60</li>
+<li><a href="http://dx.com/p/raspberry-pi-project-board-green-267945?Utm_rid=52026082&Utm_source=affiliate" target="_blank">DealExtreme</a> (free shipping) - $55.70</li>
 </ul>
 <p>If you would rather get a starter kit, the prices are pretty reasonable and usually includes an SD card pre-loaded with the Raspberry Pi New Out Of Box Software (NOOBS). Here are two good starter kits.</p>
 <ul>
-<li><a href="http://www.amazon.com/gp/product/B008XVAVAW/ref=as_li_ss_tl?ie=UTF8&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B008XVAVAW&amp;linkCode=as2&amp;tag=alexdgloverwo-20" target="_blank">Raspberry Pi Model B, Case, Micro USB Power Supply, SD Card with NOOBS, and HDMI Cable via Amazon</a> (Prime eligible) - $61.95</li>
+<li><a href="http://www.amazon.com/gp/product/B008XVAVAW/ref=as_li_ss_tl?ie=UTF8&camp=1789&creative=390957&creativeASIN=B008XVAVAW&linkCode=as2&tag=alexdgloverwo-20" target="_blank">Raspberry Pi Model B, Case, Micro USB Power Supply, SD Card with NOOBS, and HDMI Cable via Amazon</a> (Prime eligible) - $61.95</li>
 <li><a href="http://www.canakit.com/raspberry-pi-starter-kit.html" target="_blank">Raspberry Pi Model B, Case, Micro USB Power Supply, SD Card with NOOBS, and HDMI Cable via Canakit</a> - $69.95</li>
 </ul>
 <h3>Power Consumption</h3>
@@ -46,8 +46,8 @@ tags:
 <p>&nbsp;</p>
 <p>The USB data connections do not have an inline polyfuse! If you want to run your Pi off of a powered USB hub, you'll need to do two things.</p>
 <ol>
-<li>Acquire a powered USB hub that specifically does NOT supply 'backpower' via the datalink/uplink/data port. If you want to play it safe, check out the <a href="http://elinux.org/RPi_Powered_USB_Hubs" target="_blank">list of compatible powered USB hubs</a> that have been tested by the community. I chose to use the <a href="http://www.amazon.com/gp/product/B003Z4G3I6/ref=as_li_ss_tl?ie=UTF8&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B003Z4G3I6&amp;linkCode=as2&amp;tag=alexdgloverwo-20" target="_blank">Plugable 7-port USB hub</a>.</li>
-<li>Run a <a href="http://www.amazon.com/gp/product/B002HMWQE2/ref=as_li_ss_tl?ie=UTF8&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B002HMWQE2&amp;linkCode=as2&amp;tag=alexdgloverwo-20" target="_blank">USB-to-micro-USB cable</a> from one of the outputs on your USB hub back to the power input connection on the Pi. This will properly route your +5v power through the polyfuse, protecting your Pi.</li>
+<li>Acquire a powered USB hub that specifically does NOT supply 'backpower' via the datalink/uplink/data port. If you want to play it safe, check out the <a href="http://elinux.org/RPi_Powered_USB_Hubs" target="_blank">list of compatible powered USB hubs</a> that have been tested by the community. I chose to use the <a href="http://www.amazon.com/gp/product/B003Z4G3I6/ref=as_li_ss_tl?ie=UTF8&camp=1789&creative=390957&creativeASIN=B003Z4G3I6&linkCode=as2&tag=alexdgloverwo-20" target="_blank">Plugable 7-port USB hub</a>.</li>
+<li>Run a <a href="http://www.amazon.com/gp/product/B002HMWQE2/ref=as_li_ss_tl?ie=UTF8&camp=1789&creative=390957&creativeASIN=B002HMWQE2&linkCode=as2&tag=alexdgloverwo-20" target="_blank">USB-to-micro-USB cable</a> from one of the outputs on your USB hub back to the power input connection on the Pi. This will properly route your +5v power through the polyfuse, protecting your Pi.</li>
 </ol>
 <p>See picture below for a visual explanation.</p>
 <p><a href="http://alexdglover.com/wp-content/uploads/2013/12/photo-11.jpg"><img class="aligncenter size-large wp-image-725" alt="Powering Raspberry Pi with Powered USB" src="{{ site.baseurl }}/assets/photo-11-1024x944.jpg" width="620" height="571" /></a></p>

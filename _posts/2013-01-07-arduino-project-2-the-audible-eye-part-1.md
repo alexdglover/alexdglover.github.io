@@ -22,11 +22,11 @@ header:
 <p style="text-align: center;"><a href="http://alexdglover.files.wordpress.com/2013/01/imag0361.jpg"><img class="aligncenter size-full wp-image-312" alt="alexdglover_audible_eye" src="{{ site.baseurl }}/assets/imag0361.jpg" width="595" height="355" /></a></p>
 <p>Component List:</p>
 <ul>
-<li><a href="http://rcm.amazon.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=alexdgloverwo-20&amp;o=1&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=ss_til&amp;asins=B006H06TVG" target="_blank"><span style="line-height:13px;">Arduino Uno</span></a></li>
-<li><a href="http://www.amazon.com/gp/product/B004U8TOE6/ref=as_li_ss_tl?ie=UTF8&amp;tag=alexdgloverwo-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B004U8TOE6" target="_blank">HC-SR04 Ultrasonic Rangefinder</a></li>
-<li><a href="http://www.amazon.com/gp/product/B004RXKWDQ/ref=as_li_ss_tl?ie=UTF8&amp;tag=alexdgloverwo-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B004RXKWDQ" target="_blank">Breadboard and jumper wires</a></li>
-<li><a href="http://www.amazon.com/gp/product/B005D65LEG/ref=as_li_ss_tl?ie=UTF8&amp;tag=alexdgloverwo-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B005D65LEG" target="_blank">9v Battery Adapter</a></li>
-<li><a href="http://www.amazon.com/gp/product/B0078ZAVZO/ref=as_li_ss_tl?ie=UTF8&amp;tag=alexdgloverwo-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B0078ZAVZO" target="_blank">3 Pin Toggle Switch</a></li>
+<li><a href="http://rcm.amazon.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=alexdgloverwo-20&o=1&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B006H06TVG" target="_blank"><span style="line-height:13px;">Arduino Uno</span></a></li>
+<li><a href="http://www.amazon.com/gp/product/B004U8TOE6/ref=as_li_ss_tl?ie=UTF8&tag=alexdgloverwo-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=B004U8TOE6" target="_blank">HC-SR04 Ultrasonic Rangefinder</a></li>
+<li><a href="http://www.amazon.com/gp/product/B004RXKWDQ/ref=as_li_ss_tl?ie=UTF8&tag=alexdgloverwo-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=B004RXKWDQ" target="_blank">Breadboard and jumper wires</a></li>
+<li><a href="http://www.amazon.com/gp/product/B005D65LEG/ref=as_li_ss_tl?ie=UTF8&tag=alexdgloverwo-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=B005D65LEG" target="_blank">9v Battery Adapter</a></li>
+<li><a href="http://www.amazon.com/gp/product/B0078ZAVZO/ref=as_li_ss_tl?ie=UTF8&tag=alexdgloverwo-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=B0078ZAVZO" target="_blank">3 Pin Toggle Switch</a></li>
 <li>9v Battery (stop putting it on your tongue)</li>
 <li>Headphones (or any other audio output device)</li>
 </ul>

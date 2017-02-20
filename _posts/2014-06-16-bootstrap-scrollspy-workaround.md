@@ -73,17 +73,17 @@ meta:
         <div class="span4">
           <h2>Heading</h2>
           <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn" href="#">View details &amp;raquo;</a></p>
+          <p><a class="btn" href="#">View details &raquo;</a></p>
         </div>
         <div class="span4">
           <h2>Heading</h2>
           <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn" href="#">View details &amp;raquo;</a></p>
+          <p><a class="btn" href="#">View details &raquo;</a></p>
        </div>
         <div class="span4">
           <h2>Heading</h2>
           <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p><a class="btn" href="#">View details &amp;raquo;</a></p>
+          <p><a class="btn" href="#">View details &raquo;</a></p>
         </div>
       </div>```
 <p>with this:</p>
@@ -187,15 +187,15 @@ $(document).ready(function () {
 		// If the window is at or below the section 1 tag, then add the active class
 		// to the corresponding li tag and remove the active class from all other li 
 		// tags in the side bar. Apply the same logic to all of the other sections
-		if (currPosition >= section1Position &amp;&amp; currPosition <= section2Position)
+		if (currPosition >= section1Position && currPosition <= section2Position)
 		{
 			$('#section1Nav').addClass('active').siblings().removeClass('active');
 		}
-		else if(currPosition >= section2Position &amp;&amp; currPosition <= section3Position)
+		else if(currPosition >= section2Position && currPosition <= section3Position)
 		{
 			$('#section2Nav').addClass('active').siblings().removeClass('active');
 		}
-		else if(currPosition >= section3Position &amp;&amp; currPosition <= section4Position)
+		else if(currPosition >= section3Position && currPosition <= section4Position)
 		{
 			$('#section3Nav').addClass('active').siblings().removeClass('active');
 		}

@@ -23,10 +23,10 @@ header:
 
 <p>Let's move on to the how. Here are the parts I used:</p>
 <ul>
-<li><a href="http://www.amazon.com/gp/product/B0066XLWDE/ref=as_li_ss_tl?ie=UTF8&amp;tag=alexdgloverwo-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B0066XLWDE">Virtuabotix MMA7361 Three Axis Accelerometer Module</a> - $10</li>
-<li><a href="http://www.amazon.com/gp/product/B006H06TVG/ref=as_li_ss_tl?ie=UTF8&amp;tag=alexdgloverwo-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B006H06TVG">Arduino Uno R3</a> - $26</li>
-<li><a href="http://www.amazon.com/gp/product/B004RXKWDQ/ref=as_li_ss_tl?ie=UTF8&amp;tag=alexdgloverwo-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B004RXKWDQ">400-point Breadboard with Jumper Wires</a> - $9</li>
-<li><a href="http://www.amazon.com/gp/product/B004JO2PVA/ref=as_li_ss_tl?ie=UTF8&amp;tag=alexdgloverwo-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B004JO2PVA">5mm LEDs with Resistors (5 Colors, Pack of 25)</a> - $7</li>
+<li><a href="http://www.amazon.com/gp/product/B0066XLWDE/ref=as_li_ss_tl?ie=UTF8&tag=alexdgloverwo-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=B0066XLWDE">Virtuabotix MMA7361 Three Axis Accelerometer Module</a> - $10</li>
+<li><a href="http://www.amazon.com/gp/product/B006H06TVG/ref=as_li_ss_tl?ie=UTF8&tag=alexdgloverwo-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=B006H06TVG">Arduino Uno R3</a> - $26</li>
+<li><a href="http://www.amazon.com/gp/product/B004RXKWDQ/ref=as_li_ss_tl?ie=UTF8&tag=alexdgloverwo-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=B004RXKWDQ">400-point Breadboard with Jumper Wires</a> - $9</li>
+<li><a href="http://www.amazon.com/gp/product/B004JO2PVA/ref=as_li_ss_tl?ie=UTF8&tag=alexdgloverwo-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=B004JO2PVA">5mm LEDs with Resistors (5 Colors, Pack of 25)</a> - $7</li>
 </ul>
 <p>Total project cost of $52, plus you'll have some leftover jumper wires and LEDs.</p>
 <p>Since this is just a simple primer, I won't go into great detail. Basically we need to wire up the accelerometer as outlined in the Arduino sketch and we need to wire up each LED to an output pin and ground. If you need help with the wiring, here's a rough diagram. Note - Fritzing didn't include a piece that was identical to my accelerometer, so I used two 5 pin components - they represent one piece. Also, the wire colors don't have any logical meaning, they match my real-world build.</p>

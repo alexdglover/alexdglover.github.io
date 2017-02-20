@@ -25,7 +25,7 @@ meta:
   _wpas_skip_1477650: '1'
 ---
 <p>The Raspberry Pi makes a great HTPC or media PC, whatever you want to call it, because of its low cost, low power consumption, quiet, and small form factor. As I was getting ready to start my Raspberry Pi build, I realized that the Pi could take over a few other functions that my desktop does, including NAS, at a fraction of the cost (see my previous post about <a title="Powering a Raspberry Pi" href="http://alexdglover.com/powering-a-raspberry-pi/">Powering a Pi</a> and related utility savings). But could I modify a RaspXBMC build to also run Samba or some other network file sharing? Could XBMC be installed on Raspbian with less than a thousand calls to aptitude? Could XBMC and Samba run simultaneously on a Pi without making video playback unwatchable? That's what I hoped to find out.</p>
-<p>For context, I started with a <a href="http://www.amazon.com/gp/product/B008XVAVAW/ref=as_li_ss_tl?ie=UTF8&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B008XVAVAW&amp;linkCode=as2&amp;tag=alexdgloverwo-20" target="_blank">Raspberry Pi starter kit</a> from Amazon. For storage, I am using a <a href="http://www.amazon.com/gp/product/B004IYJX16/ref=as_li_ss_tl?ie=UTF8&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B004IYJX16&amp;linkCode=as2&amp;tag=alexdgloverwo-20" target="_blank">Fantom 2TB external hard drive</a>. After some preliminary research, I decided to start with Raspbian and try to install XBMC on top. For this walk-through, I'll assume you've got your Raspberry Pi powered, connected to your router, and that you have gotten Raspbian installed. If you need help getting started, check out the <a href="http://www.raspberrypi.org/wp-content/uploads/2012/04/quick-start-guide-v2_1.pdf" target="_blank">Raspberry Pi Quick Start Guide</a>.</p>
+<p>For context, I started with a <a href="http://www.amazon.com/gp/product/B008XVAVAW/ref=as_li_ss_tl?ie=UTF8&camp=1789&creative=390957&creativeASIN=B008XVAVAW&linkCode=as2&tag=alexdgloverwo-20" target="_blank">Raspberry Pi starter kit</a> from Amazon. For storage, I am using a <a href="http://www.amazon.com/gp/product/B004IYJX16/ref=as_li_ss_tl?ie=UTF8&camp=1789&creative=390957&creativeASIN=B004IYJX16&linkCode=as2&tag=alexdgloverwo-20" target="_blank">Fantom 2TB external hard drive</a>. After some preliminary research, I decided to start with Raspbian and try to install XBMC on top. For this walk-through, I'll assume you've got your Raspberry Pi powered, connected to your router, and that you have gotten Raspbian installed. If you need help getting started, check out the <a href="http://www.raspberrypi.org/wp-content/uploads/2012/04/quick-start-guide-v2_1.pdf" target="_blank">Raspberry Pi Quick Start Guide</a>.</p>
 <h2>Part 1 - NAS</h2>
 <h3>Part 1.1 - NTFS-3G</h3>
 <p>If you don't plan to use NTFS as your filesystem for your Pi storage, you can skip this step!</p>
@@ -203,7 +203,7 @@ case "$1" in
         ;;
   *)
         N=/etc/init.d/$NAME
-        echo "Usage: $N {start|stop|restart|force-reload}" >&amp;2
+        echo "Usage: $N {start|stop|restart|force-reload}" >&2
         exit 1
         ;;
 esac

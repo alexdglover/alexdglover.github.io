@@ -60,7 +60,7 @@ header:
   // The function simply parses a GET variable out of the URL using REGEX and returns it
   function getUrlVars() {
     var vars = {};
-    var parts = window.location.href.replace(/[?&amp;]+([^=&amp;]+)=([^&amp;]*)/gi, function(m,key,value) {
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
       vars[key] = value;
     });
     return vars;

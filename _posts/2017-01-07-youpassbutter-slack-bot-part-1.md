@@ -26,7 +26,7 @@ meta:
 ---
 <h2>TL;DR Section</h2>
 <p>Just looking for the app? Just click the "Add to Slack" button to install the YouPassButter bot</p>
-<p><a href="https://slack.com/oauth/authorize?scope=commands&amp;client_id=122992570306.122925378483"><img src="{{ site.baseurl }}/assets/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" alt="Add to Slack" width="139" height="40" /></a></p>
+<p><a href="https://slack.com/oauth/authorize?scope=commands&client_id=122992570306.122925378483"><img src="{{ site.baseurl }}/assets/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" alt="Add to Slack" width="139" height="40" /></a></p>
 <p>Don't care about the context, just looking for a general guide to building a Slack bot with Ruby and Sinatra? Skip down to the "Implementation" section.</p>
 <p>Prefer to just go straight to the source? <a href="https://github.com/alexdglover/you-pass-butter-bot">Check out the code on GitHub</a>.</p>
 <p><a href="https://github.com/alexdglover/you-pass-butter-bot"><img class="aligncenter size-medium wp-image-1050" src="{{ site.baseurl }}/assets/GitHub_Logo-300x123.png" alt="GitHub_Logo" width="300" height="123" /></a></p>
@@ -217,7 +217,7 @@ def string_as_json_response message
   content_type :json
   { :text => message }.to_json
 end```
-<p>Now that we have our web service up and running, we just need to create the integration on the Slack side. If you're just creating Slash Commands for your team, this is super easy and you don't have to create a true Slack "app." Just log on to your Slack team, click on the dropdown next to your name, choose "Apps &amp; integrations," then search for "Slash Commands" (assuming you don't already have this app installed).</p>
+<p>Now that we have our web service up and running, we just need to create the integration on the Slack side. If you're just creating Slash Commands for your team, this is super easy and you don't have to create a true Slack "app." Just log on to your Slack team, click on the dropdown next to your name, choose "Apps & integrations," then search for "Slash Commands" (assuming you don't already have this app installed).</p>
 <p><a href="http://alexdglover.com/wp-content/uploads/2017/01/anim.gif"><img class="aligncenter size-full wp-image-1038" src="{{ site.baseurl }}/assets/anim.gif" alt="" width="1023" height="663" /></a></p>
 <p>Once you pull up the Slash Commands app, click on "Add Configuration." From there, you can provide whatever keyword you want for your Slash Command, then click "Add Slash Command Integration." On the next screen, provide the command name you want to use, and hit "Add Slash Command Integration."</p>
 <p><a href="http://alexdglover.com/wp-content/uploads/2017/01/anim-1.gif"><img class="aligncenter size-full wp-image-1039" src="{{ site.baseurl }}/assets/anim-1.gif" alt="" width="1023" height="663" /></a></p>

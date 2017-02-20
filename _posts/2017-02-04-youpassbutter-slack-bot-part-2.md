@@ -26,7 +26,7 @@ meta:
 ---
 <h2>TL;DR Section</h2>
 <p>Just looking for the app? Just click the "Add to Slack" button to install the YouPassButter bot</p>
-<p><a href="https://slack.com/oauth/authorize?scope=commands&amp;client_id=122992570306.122925378483"><img src="{{ site.baseurl }}/assets/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" alt="Add to Slack" width="139" height="40" /></a></p>
+<p><a href="https://slack.com/oauth/authorize?scope=commands&client_id=122992570306.122925378483"><img src="{{ site.baseurl }}/assets/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" alt="Add to Slack" width="139" height="40" /></a></p>
 <p>Prefer to just go straight to the source? <a href="https://github.com/alexdglover/you-pass-butter-bot">Check out the code on GitHub</a>.</p>
 <h2><a href="https://github.com/alexdglover/you-pass-butter-bot"><img class="aligncenter size-medium wp-image-1050" src="{{ site.baseurl }}/assets/GitHub_Logo-300x123.png" alt="GitHub_Logo" width="300" height="123" /></a>Where we left off</h2>
 <p>If you haven't ready it already, check out <a href="http://alexdglover.com/youpassbutter-slack-bot-part-1/">Part 1</a> to get the context behind the app and the initial implementation.</p>
@@ -134,8 +134,8 @@ end```
 <p>Generating a meme is fairly trivial. You just need to make an HTTP GET request to</p>
 ```http://version1.api.memegenerator.net/" +
 "Instance_Create?username=#{MEME_GENERATOR_USERNAME}" +
-"&amp;password=#{MEME_GENERATOR_PASSWORD}&amp;languageCode=en&amp;" +
-"generatorID=#{generator_id}&amp;text0=#{text0}&amp;text1=#{text1}"```
+"&password=#{MEME_GENERATOR_PASSWORD}&languageCode=en&" +
+"generatorID=#{generator_id}&text0=#{text0}&text1=#{text1}"```
 <p>where the generatorID is the ID of the meme you want to use, text0 is the top line of text, and text1 is the bottom line of text. To illustrate:</p>
 <p><a href="http://alexdglover.com/wp-content/uploads/2017/01/YPB-Part2-Meme-Text-Placement.gif"><img class="aligncenter size-large wp-image-1060" src="{{ site.baseurl }}/assets/YPB-Part2-Meme-Text-Placement-1024x531.gif" alt="YPB-Part2-Meme-Text-Placement" width="616" height="319" /></a></p>
 <p>OK, so now we just need another API route and Slash command to handle generating these memes on the fly. For our Slash Command, let's plan on sending those 3 pieces of information as a text argument. Because we'll be sending arbitrary strings of text for our dank memes, let's use '; ' (read: semi-colon, space) to separate those elements (e.g. "meme ID; top text; bottom text").</p>
@@ -157,8 +157,8 @@ end```
     # generate memes
     response = HTTParty.get("http://version1.api.memegenerator.net/" +
       "Instance_Create?username=#{MEME_GENERATOR_USERNAME}" +
-      "&amp;password=#{MEME_GENERATOR_PASSWORD}&amp;languageCode=en&amp;" +
-      "generatorID=#{generator_id}&amp;text0=#{text0}&amp;text1=#{text1}")
+      "&password=#{MEME_GENERATOR_PASSWORD}&languageCode=en&" +
+      "generatorID=#{generator_id}&text0=#{text0}&text1=#{text1}")
     if response['success']
       post_image_to_response_url response_url, response['result']['instanceImageUrl']
       status 200
@@ -186,20 +186,20 @@ end```
 <p>Now you can refer directly to those environment variables in-line, like this:</p>
 ```response = HTTParty.get("http://version1.api.memegenerator.net/" +
       "Instance_Create?username=#{ENV['MEME_GENERATOR_USERNAME']}" +
-      "&amp;password=#{ENV['MEME_GENERATOR_PASSWORD']}&amp;languageCode=...```
+      "&password=#{ENV['MEME_GENERATOR_PASSWORD']}&languageCode=...```
 <p>Excellent, now we can test our command. Let's look at the GIF demo one more time to see it in action:</p>
 <p><a href="http://alexdglover.com/wp-content/uploads/2017/01/YPB-Part2-Meme-Text-Placement.gif"><img class="aligncenter size-large wp-image-1060" src="{{ site.baseurl }}/assets/YPB-Part2-Meme-Text-Placement-1024x531.gif" alt="YPB-Part2-Meme-Text-Placement" width="616" height="319" /></a></p>
 <h2>OAuth and "Publishing"</h2>
 <p>In order to publish our Slash Command app on Slack's marketplace or share it with the "Add to Slack" button, our application needs to have an OAuth endpoint that initiates the user authentication to their team, thus authorizing our application to be installed into their Slack team.</p>
 <p>In more complex applications (like real time chat bots) we need to store information sent to us in the OAuth request from Slack. In our simple app, we just need to respond to the OAuth request by POSTing to Slack's /api/oauth endpoint.</p>
-<p>Let's start be defining our OAuth endpoint in Slack. Let's go back to <a href="https://api.slack.com/apps">https://api.slack.com/apps</a>, drill into our app by clicking the app name, and then click the "OAuth &amp; Permissions" on the left. Next, let's define our Redirect URL as 'https://<your-domain>/oauth' and save.</p>
+<p>Let's start be defining our OAuth endpoint in Slack. Let's go back to <a href="https://api.slack.com/apps">https://api.slack.com/apps</a>, drill into our app by clicking the app name, and then click the "OAuth & Permissions" on the left. Next, let's define our Redirect URL as 'https://<your-domain>/oauth' and save.</p>
 <p><a href="http://alexdglover.com/wp-content/uploads/2017/01/YouPassButter-Part2-SlackUI5.png"><img class="aligncenter size-large wp-image-1070" src="{{ site.baseurl }}/assets/YouPassButter-Part2-SlackUI5-1024x516.png" alt="YouPassButter-Part2-SlackUI5" width="616" height="310" /></a></p>
 <p>Next, let's click on the Basic Information tab, and capture the 'client ID' and 'client secret':</p>
 <p><a href="http://alexdglover.com/wp-content/uploads/2017/01/YouPassButter-Part2-SlackUI6.png"><img class="aligncenter size-large wp-image-1071" src="{{ site.baseurl }}/assets/YouPassButter-Part2-SlackUI6-1024x558.png" alt="" width="616" height="336" /></a></p>
 <p>Don't be an idiot and commit these to Git like I did. Keep these out of your repo, or put them in an environment variable file and add it to your .gitignore. If someone captured your client ID and secret, they could impersonate your application and wreak havoc.</p>
 <p>Once we've got our redirect URL set up and gathered our OAuth client keys, we can construct an easy /oauth route in our Sinatra app. Our route should trigger a POST to the Slack /api/OAuth endpoint. If that post gets an HTTP 200 response, let's just post some simple HTML to show the app was successfully installed. If not, let's dump the response.body to determine the cause of the failure.</p>
 ```get '/oauth' do
-  response = HTTParty.post("https://slack.com/api/oauth.access?client_id=#{ENV['SLACK_CLIENT_ID']}&amp;client_secret=#{ENV['SLACK_CLIENT_SECRET']}&amp;code=#{params['code']}")
+  response = HTTParty.post("https://slack.com/api/oauth.access?client_id=#{ENV['SLACK_CLIENT_ID']}&client_secret=#{ENV['SLACK_CLIENT_SECRET']}&code=#{params['code']}")
   responseBody = JSON.parse(response.body)
   if responseBody['ok'] == true
     "<h1>You've just installed the YouPassButter Slack bot! Let's get riggety wrecked!!!</h1>"
@@ -215,7 +215,7 @@ end```
 <p>Instead, we can just create the "Add to Slack" button. The process is much simpler and there's less overhead. Hell, the code is even generated for you automatically just by browsing to <a href="https://api.slack.com/docs/slack-button">https://api.slack.com/docs/slack-button</a> (assuming you're already logged in). Let's do that now. Scroll down to the "Add the Slack Button" section, select your Slash Command app in the dropdown in the top right, and then check <em>only</em> the 'commands' checkbox:</p>
 <p><a href="http://alexdglover.com/wp-content/uploads/2017/01/YPB-Part2-AddToSlackButton.gif"><img class="aligncenter size-large wp-image-1074" src="{{ site.baseurl }}/assets/YPB-Part2-AddToSlackButton-1024x579.gif" alt="YPB-Part2-AddToSlackButton" width="616" height="348" /></a></p>
 <p>Once you've got the HTML copied, you can drop it into your blog, emails, or a landing page you maintain for the app. Here's the Add to Slack button for the YouPassButter app:</p>
-<p><a href="https://slack.com/oauth/authorize?scope=commands&amp;client_id=122992570306.122925378483"><img src="{{ site.baseurl }}/assets/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" alt="Add to Slack" width="139" height="40" /></a></p>
+<p><a href="https://slack.com/oauth/authorize?scope=commands&client_id=122992570306.122925378483"><img src="{{ site.baseurl }}/assets/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" alt="Add to Slack" width="139" height="40" /></a></p>
 <p>Here's a quick demo of a user clicking the button, authenticating to their Slack team, and getting a successful response from our /oauth endpoint:</p>
 <p><a href="http://alexdglover.com/wp-content/uploads/2017/01/YPB-Part2-AddToSlack-Auth-Demo.gif"><img class="aligncenter size-large wp-image-1086" src="{{ site.baseurl }}/assets/YPB-Part2-AddToSlack-Auth-Demo-1024x616.gif" alt="YPB-Part2-AddToSlack-Auth-Demo" width="616" height="371" /></a></p>
 <p>Now obviously our confirmation page is a little plain to say the least, but whatever, it works!</p>

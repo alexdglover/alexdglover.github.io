@@ -11,6 +11,8 @@ function getSearchResults(val) {
   $( ".postContent" ).hide();
   $( ".searchResultSnippet " ).hide();
 
+  // Don't bother doing anything until at least 3 characters
+  // have been entered
   if(val.length > 2){
     // Downcase query val for case-insensitive search
     val = val.toLowerCase();
@@ -23,7 +25,7 @@ function getSearchResults(val) {
 
     // For each result based on post content, extract the surrounding text
     // and display it in the search results, bolding the search term
-   $( "div:contains('" + val + "')" ).filter( ".result").each( function( index ) {
+    $( "div:contains('" + val + "')" ).filter( ".result").each( function( index ) {
       var postText = $( this ).find( ".postContent" ).text();
       var resultPosition = postText.indexOf(val);
       if(resultPosition > -1){
@@ -47,7 +49,7 @@ function getSearchResults(val) {
     <a href="{{ post.url }}"><img src="{{ post.header.teaser }}" style="width: 150px;" class="align-left" /></a>
     {% endif %}
     <p><small><strong>{{ post.date | date: "%B %e, %Y" }}</strong> - <strong>Categories</strong> {{ post.categories | join:',' }} </small></p>
-    <div class="postContent" style="display:none;">{{ post.content | strip_html }}</div>
+    <div class="postContent" style="display:none;">Categories: {{ post.categories | join:',' | downcase}} , {{ post.content | strip_html | downcase }}</div>
     <div class="searchResultSnippet" style="display:none;"></div>
   </div>
   {% endfor %}

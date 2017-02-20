@@ -191,7 +191,7 @@ meta:
       <hr>
 
       <div class="footer">
-        <p>&amp;copy; alexdglover 2014</p>
+        <p>&copy; alexdglover 2014</p>
       </div>
 
     </div> <!-- /container -->
@@ -430,8 +430,8 @@ class PageGenerator {
 		<ol>
 			<li>Invite others to participate by sharing<br />
 			<a target="_blank" href="<?php echo "http://www.facebook.com/sharer/sharer.php?u=" . "http://$_SERVER[HTTP_HOST]" . "/addResponse/" . $survey['URLName']; ?>"><img src="/ui/img/facebook_001.jpg" style="width:32px; height:32px;" /></a>
-			<a target="_blank" href="<?php echo "https://twitter.com/intent/tweet?text=How%20much%20do%20you%20make%3F&amp;url=" . "http://$_SERVER[HTTP_HOST]" . "/addResponse/" . $survey['URLName']; ?>"><img src="/ui/img/Twitter_001.jpg" style="width:32px; height:32px;" /></a>
-			<a target="_blank" href="<?php echo "http://www.linkedin.com/shareArticle?mini=true&amp;url=" . "http://$_SERVER[HTTP_HOST]" . "/addResponse/" . $survey['URLName'] . "&amp;title=Salary%20Survey"; ?>"><img src="/ui/img/Linkedin_001.jpg" style="width:32px; height:32px;" /></a>
+			<a target="_blank" href="<?php echo "https://twitter.com/intent/tweet?text=How%20much%20do%20you%20make%3F&url=" . "http://$_SERVER[HTTP_HOST]" . "/addResponse/" . $survey['URLName']; ?>"><img src="/ui/img/Twitter_001.jpg" style="width:32px; height:32px;" /></a>
+			<a target="_blank" href="<?php echo "http://www.linkedin.com/shareArticle?mini=true&url=" . "http://$_SERVER[HTTP_HOST]" . "/addResponse/" . $survey['URLName'] . "&title=Salary%20Survey"; ?>"><img src="/ui/img/Linkedin_001.jpg" style="width:32px; height:32px;" /></a>
 			<a href="<?php echo "http://pinterest.com/pin/create/button/?url=" . "http://$_SERVER[HTTP_HOST]" . "/addResponse/" . $survey['URLName']; ?>"  class="pin-it-button" count-layout="horizontal"><img src="/ui/img/Pinterest_001.jpg" style="width:32px; height:32px;" /></a>
 <br />
 			Or by sending them this link:<br /><a href="<?php echo "http://$_SERVER[HTTP_HOST]" . "/addResponse/" . $survey['URLName']; ?>"><?php echo "http://$_SERVER[HTTP_HOST]" . "/addResponse/" . $survey['URLName']; ?></a></li>
@@ -439,7 +439,7 @@ class PageGenerator {
 				<form>
 				<div class="input-append">
 					<input name="response" type="text" pattern="[1-9]{1}[0-9]*\.?[0-9]{0,2}" placeholder="Enter your salary" />
-					<span class="add-on"><?php echo $survey['currency'] ?>&amp;nbsp;<?php echo $survey['period'] ?></span>
+					<span class="add-on"><?php echo $survey['currency'] ?>&nbsp;<?php echo $survey['period'] ?></span>
 				</div>
 				<input id="submit" type="submit" class="btn btn-success" value="Submit" />
 				</form>
@@ -493,7 +493,7 @@ pattern="[1-9]{1}[0-9]*\.?[0-9]{0,2}"</p>
 				<form>
 				<div class="input-append">
 					<input name="response" type="text" pattern="[1-9]{1}[0-9]*\.?[0-9]{0,2}" placeholder="Enter your salary" />
-					<span class="add-on"><?php echo $survey['currency'] ?>&amp;nbsp;<?php echo $survey['period'] ?></span>
+					<span class="add-on"><?php echo $survey['currency'] ?>&nbsp;<?php echo $survey['period'] ?></span>
 				</div>
 				<p><input id="submit" type="submit" class="btn btn-success" value="Submit" /></p>
 				</form>

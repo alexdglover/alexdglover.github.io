@@ -21,13 +21,13 @@ header:
 <p>I settled on a heat seeking vehicle. Simply put, a wheeled or tracked vehicle that would scan an area, look for areas above a certain temperature (to identify human bodies), and then drive towards that point (person).</p>
 <p>Here are the supplies I bought in preparation:</p>
 <ul>
-<li><a href="http://www.amazon.com/gp/product/B0006O3WNW/ref=as_li_tf_tl?ie=UTF8&amp;camp=1789&amp;creative=9325&amp;creativeASIN=B0006O3WNW&amp;linkCode=as2&amp;tag=alexdgloverwo-20" target="_blank">Hitec 31055S HS-55 Economy Sub Micro Universal Servo</a> - $11</li>
-<li><a href="http://www.amazon.com/gp/product/B006H06TVG/ref=as_li_tf_tl?ie=UTF8&amp;camp=1789&amp;creative=9325&amp;creativeASIN=B006H06TVG&amp;linkCode=as2&amp;tag=alexdgloverwo-20" target="_blank">Arduino Uno R3</a> - $21</li>
-<li><a href="http://www.amazon.com/gp/product/B005D65LEG/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&amp;camp=1789&amp;creative=9325&amp;creativeASIN=B005D65LEG&amp;linkCode=as2&amp;tag=alexdgloverwo-20">2 Male DC Plug to 9v Battery Clip</a> - $5</li>
-<li><a href="http://www.amazon.com/gp/product/B004RXKWDQ/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&amp;camp=1789&amp;creative=9325&amp;creativeASIN=B004RXKWDQ&amp;linkCode=as2&amp;tag=alexdgloverwo-20">400 point bread board and jumper wires</a> - $9</li>
-<li><a href="http://www.amazon.com/gp/product/B000C8F802/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&amp;camp=1789&amp;creative=9325&amp;creativeASIN=B000C8F802&amp;linkCode=as2&amp;tag=alexdgloverwo-20">Double gearbox with 2 DC motors</a> - $9</li>
-<li><a href="http://www.amazon.com/gp/product/B00061HHTK/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&amp;camp=1789&amp;creative=9325&amp;creativeASIN=B00061HHTK&amp;linkCode=as2&amp;tag=alexdgloverwo-20">Tamiya tracked vehicle kit</a> - $20</li>
-<li><a href="http://www.amazon.com/gp/product/B006D85PAS/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&amp;camp=1789&amp;creative=9325&amp;creativeASIN=B006D85PAS&amp;linkCode=as2&amp;tag=alexdgloverwo-20">Motor shield for Arduino, by DF Robot</a> - $17</li>
+<li><a href="http://www.amazon.com/gp/product/B0006O3WNW/ref=as_li_tf_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B0006O3WNW&linkCode=as2&tag=alexdgloverwo-20" target="_blank">Hitec 31055S HS-55 Economy Sub Micro Universal Servo</a> - $11</li>
+<li><a href="http://www.amazon.com/gp/product/B006H06TVG/ref=as_li_tf_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B006H06TVG&linkCode=as2&tag=alexdgloverwo-20" target="_blank">Arduino Uno R3</a> - $21</li>
+<li><a href="http://www.amazon.com/gp/product/B005D65LEG/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B005D65LEG&linkCode=as2&tag=alexdgloverwo-20">2 Male DC Plug to 9v Battery Clip</a> - $5</li>
+<li><a href="http://www.amazon.com/gp/product/B004RXKWDQ/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B004RXKWDQ&linkCode=as2&tag=alexdgloverwo-20">400 point bread board and jumper wires</a> - $9</li>
+<li><a href="http://www.amazon.com/gp/product/B000C8F802/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B000C8F802&linkCode=as2&tag=alexdgloverwo-20">Double gearbox with 2 DC motors</a> - $9</li>
+<li><a href="http://www.amazon.com/gp/product/B00061HHTK/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B00061HHTK&linkCode=as2&tag=alexdgloverwo-20">Tamiya tracked vehicle kit</a> - $20</li>
+<li><a href="http://www.amazon.com/gp/product/B006D85PAS/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B006D85PAS&linkCode=as2&tag=alexdgloverwo-20">Motor shield for Arduino, by DF Robot</a> - $17</li>
 <li><a href="http://www.sparkfun.com/products/9570">MLX90614 IR Thermometer</a> - $20</li>
 </ul>
 <p>For a rough total of $112. You'll also need about $2 worth of resistors, which we'll get to shortly.</p>
