@@ -37,7 +37,7 @@ Minimum password length: <input id="passwordLength" type="text" /><br />
 
 <div>
 <p class="align-left" style="padding-right:10px;">Capitalize first letters?</p>
-<p class="checkboxFour align-left">
+<p class="checkboxThree align-left">
 	<input type="checkbox" id="capitalizeChkBox" />
 	<label for="capitalizeChkBox"></label>
 </p>
@@ -47,7 +47,7 @@ Minimum password length: <input id="passwordLength" type="text" /><br />
 
 <div>
 <p class="align-left" style="padding-right:10px;">Use exact length?</p>
-<p class="checkboxFour align-left">
+<p class="checkboxThree align-left">
 	<input type="checkbox" id="exactLengthChkBox" />
 	<label for="exactLengthChkBox"></label>
 </p>
