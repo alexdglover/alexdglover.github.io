@@ -1,10 +1,6 @@
 ---
-
 title: 'Arduino Project 2: The Audible Eye Part 2'
 date: 2013-01-09 09:00:03.000000000 -06:00
-
-
-
 categories:
 - Fun Electronics Projects
 - How-to Guides
@@ -14,23 +10,8 @@ tags:
 - enclosure
 - toggle switch
 - ultrasonic rangefinder
-meta:
-  _wpas_done_all: '1'
-  _publicize_pending: '1'
-  jabber_published: '1357744075'
-  publicize_twitter_user: alexdglover
-  _wpas_done_1477652: '1'
-  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:297624509;b:1;}}
-  email_notification: '1357744078'
-  _wpas_done_1477650: '1'
-  reddit: a:2:{s:5:"count";i:0;s:4:"time";i:1357794155;}
-  _wpas_skip_1477650: '1'
-  _wpas_skip_1477652: '1'
-  _oembed_93eed62abdb5bfbba1c1b7e3c4d4e251: "{{unknown}}"
-  _edit_last: '1'
-  _s2mail: 'yes'
-  _thumbnail_id: '1007'
-  _oembed_d17b3ce3ea1e7ad527746cac6e9bb01f: "{{unknown}}"
+header:
+  teaser: /assets/imag0367.jpg
 ---
 <p>Alright, if you're following along from Part 1, you should have your headphones/speakers as well as your ultrasonic rangefinder wired up and operational. Next we have to write the code to marry these two devices.</p>
 <h3>The Code</h3>

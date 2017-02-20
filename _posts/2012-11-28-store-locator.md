@@ -1,28 +1,11 @@
 ---
-
 title: Easily Create a Store Locator
 date: 2012-11-28 08:15:41.000000000 -06:00
-
-
-
 categories:
 - Utilities And Other Useful Things
 tags:
 - store locator
 - web development
-meta:
-  _wpas_done_all: '1'
-  jabber_published: '1354114301'
-  reddit: a:2:{s:5:"count";i:0;s:4:"time";i:1354138440;}
-  publicize_twitter_user: alexdglover
-  _wpas_done_1477652: '1'
-  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:297624509;b:1;}}
-  email_notification: '1354114303'
-  _wpas_done_1477650: '1'
-  _edit_last: '1'
-  _s2mail: 'yes'
-  _wpas_skip_1477652: '1'
-  _wpas_skip_1477650: '1'
 ---
 <p>I had initially set out to build my own custom store locator (just for the learning experience) and post a how-to article for it. I quickly found that this has been done many times before, and Google has a <a href="https://developers.google.com/maps/articles/phpsqlsearch_v3" target="_blank">very good tutorial</a> if you want to build your own.</p>
 <p>But what if you don't have a database behind your website? What if you don't have any IT staff to support a custom store locator? What if you need an <em>easy </em>solution?</p>

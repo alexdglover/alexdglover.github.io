@@ -1,26 +1,12 @@
 ---
-
 title: Bootable USB with UNetbootin
 date: 2013-01-14 09:26:08.000000000 -06:00
-
-
-
 categories:
 - How-to Guides
 - Utilities And Other Useful Things
 tags:
 - bootable usb
 - unetbootin
-meta:
-  _wpas_done_all: '1'
-  _publicize_pending: '1'
-  jabber_published: '1358180074'
-  reddit: a:2:{s:5:"count";i:0;s:4:"time";i:1359220324;}
-  publicize_twitter_user: alexdglover
-  _wpas_done_1477652: '1'
-  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:297624509;b:1;}}
-  _wpas_done_1477650: '1'
-  email_notification: '1358180099'
 ---
 <p>OK, so you have a netbook or ultrabook with no optical drive. Or maybe your optical drive is dead. Or maybe you're smart enough to not use optical drives in general. Whatever the situation is, you want to run or install something from a bootable USB drive.</p>
 <p>There are lots of solutions out there, but nothing beats the Universal Netboot Installer, or UNetbootin. UNetbootin has a simple GUI and never gives any grief. You can use your own ISO that you've downloaded or use one of the 42 ISOs UNetbootin provides, including BackTrack, CentOS, Ubuntu, as well as several rescue and recovery utilities.</p>

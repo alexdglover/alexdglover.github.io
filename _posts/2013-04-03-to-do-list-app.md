@@ -1,10 +1,6 @@
 ---
-
 title: 'To Do List App'
 date: 2013-04-03 17:01:55.000000000 -05:00
-
-
-
 categories:
 - Utilities And Other Useful Things
 tags:
@@ -15,14 +11,10 @@ tags:
 - php
 - to do app
 - todomvc
-meta:
-  _edit_last: '1'
-  _s2mail: 'yes'
-  _wpas_done_all: '1'
-  _wpas_skip_1477652: '1'
-  _wpas_skip_1477650: '1'
-  _thumbnail_id: '544'
 ---
+**Be advised** This post is quite old ({{ page.date | date_to_string }}) and any code may be out of date. Proceed with caution.
+{: .notice--warning}
+
 <p>Short post, as this isn't really a tutorial. I was recently checking out <a href="http://todomvc.com/" target="_blank">ToDoMVC</a> to look at some JavaScript frameworks, and I really liked the To Do list app...</p>
 <p><a href="http://experimental.alexdglover.com/noteAppDemo/index.php"><img class="aligncenter size-full wp-image-544" alt="todosmvc" src="{{ site.baseurl }}/assets/todos.png" width="682" height="534" /></a></p>
 <p>I've been looking for something similar for awhile. Looked at Evernote and other apps, but nothing was as simple and lightweight as this app. Only problem was that the items stored in the app didn't persist, as there was not database/storage behind the app. Well I changed that - <strong><a href="http://experimental.alexdglover.com/noteAppDemo/index.php" target="_blank">check out the demo</a></strong>.</p>

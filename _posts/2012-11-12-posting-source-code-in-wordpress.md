@@ -1,29 +1,11 @@
 ---
-
 title: Posting Source Code in Wordpress
 date: 2012-11-12 09:00:41.000000000 -06:00
-
-
-
 categories:
 - How-to Guides
 tags:
 - source code
 - wordpress
-meta:
-  _wpas_done_all: '1'
-  jabber_published: '1352733191'
-  _publicize_pending: '1'
-  publicize_twitter_user: alexdglover
-  email_notification: '1352733191'
-  _wpas_done_1477652: '1'
-  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:297624509;b:1;}}
-  _wpas_done_1477650: '1'
-  _wpas_skip_1477652: '1'
-  _wpas_skip_1477650: '1'
-  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"34836694";s:7:"blog_id";s:8:"34954019";s:9:"mod_stamp";s:19:"2012-11-12
-    17:43:08";}
-  reddit: a:2:{s:5:"count";i:0;s:4:"time";i:1353505634;}
 ---
 <p>This one is pretty much a no-brainer, but I wasn't aware of it until very recently so I thought I'd share.</p>
 <p>Source code, as you've probably seen on lots of web pages, is <em>treated special</em>. And for good reasons, like readability, syntax highlighting, and to protect against the use of formatted instead of plain-text characters.</p>
@@ -31,7 +13,7 @@ meta:
 <p>But wait - what's this? Wordpress.com has integrated Alex Gorbatchev's <a href="http://wordpress.org/extend/plugins/syntaxhighlighter/" target="_blank">Syntax Highlighter</a> into their instances! So all I need to do is switch from the &lt;code&gt; tag to the [sourcecode language="language"] tag! Boom, syntax highlighting in my Wordpress posts.</p>
 <p>Here's a quick example of what the syntax highlighting looks like for HTML, just for kicks:</p>
 
-**Note** The snippet below was supposed to demonstrate the WordPress syntax plugin, but this site is now hosted on Jekyll. Do not expect the result below to resemble WordPress's syntax highlighting. 
+**Note** The snippet below was supposed to demonstrate the WordPress syntax plugin, but this site is now hosted on Jekyll. Do not expect the result below to resemble WordPress's syntax highlighting.
 {: .notice--warning}
 
 ```html

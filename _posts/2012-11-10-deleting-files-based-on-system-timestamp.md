@@ -1,10 +1,6 @@
 ---
-
 title: Deleting Files Based on System Timestamp
 date: 2012-11-10 08:07:08.000000000 -06:00
-
-
-
 categories:
 - How-to Guides
 - Utilities And Other Useful Things
@@ -13,19 +9,7 @@ tags:
 - unix
 - unix command line
 - unix find
-meta:
-  _wpas_done_all: '1'
-  _publicize_pending: '1'
-  jabber_published: '1352556429'
-  _wpas_done_1477650: '1'
-  publicize_reach: a:2:{s:7:"twitter";a:1:{i:1477652;i:25;}s:2:"wp";a:1:{i:0;i:3;}}
-  publicize_twitter_user: alexdglover
-  _wpas_done_1477652: '1'
-  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:297624509;b:1;}}
-  email_notification: '1352556429'
-  _wpas_skip_1477652: '1'
-  _wpas_skip_1477650: '1'
-  reddit: a:2:{s:5:"count";i:0;s:4:"time";i:1353505636;}
+
 ---
 <p>Recently ran into an issue at work where a single database was creating A LOT of trace files. 54 gigabytes of trace files to be specific. Well, this was a problem because the system disk was only 56GB, preventing me from building new databases. No problem, its a dev environment, I'll just delete the trace files that are older than 3 days. Except that the trace file naming convention wasn't consistent, so there was no way for me to delete the oldest files based only on file name.</p>
 <p>What about the system timestamp on each file? It seemed like a good solution, but I didn't want to write a shell script to do something so minor. Then I got lucky on Google, and found this useful little gem:</p>

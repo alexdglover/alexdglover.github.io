@@ -1,5 +1,4 @@
 ---
-
 title: 'Arduino Project 1: Heat Seeking Robot (Part 1.5)'
 date: 2012-08-22 22:25:25.000000000 -05:00
 categories:
@@ -12,14 +11,12 @@ tags:
 - motor shield
 - robot
 - robotics
-meta:
-  _wpas_done_all: '1'
-  jabber_published: '1345692328'
-  email_notification: '1345692331'
-  reddit: a:2:{s:5:"count";i:0;s:4:"time";i:1346605987;}
-  _wpas_skip_twitter: '1'
-  _wpas_skip_linkedin: '1'
+header:
+  teaser: /assets/imag0141.jpg
 ---
+**Be advised** This post is quite old ({{ page.date | date_to_string }}) and any code may be out of date. Proceed with caution.
+{: .notice--warning}
+
 <p>I've procrastinated on this project post far too long! I've had the Heat Seeking Robot working at a <em>very </em> primitive level for over a month now, and posted NOTHING. For this, I am sorry.</p>
 <p>So this is Part 1.5, where Part 2 was supposed to be the ultimate conclusion to the project. Here's where we're at so far: we have a working IR Thermometer reporting temperature readings to an Arduino board from <a title="Arduino Project 1: Heat Seeking Robot (Part 1)" href="http://alexdglover.wordpress.com/2012/07/20/arduino-project-1-heat-seeking-robot-part-1/" target="_blank">Part 1</a>. From there, I removed the IR thermometer from the breadboard, and pushed the four pins through one of the servo armatures (the white plus sign shaped object on top of the blue servo). As a throw-away proof-of-concept build, I just used double sided tape to attach the servo to the bread board (this will make more sense later).</p>
 

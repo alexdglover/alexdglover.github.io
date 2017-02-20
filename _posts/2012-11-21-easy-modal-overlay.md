@@ -1,10 +1,6 @@
 ---
-
 title: Easy Modal Overlays
 date: 2012-11-21 08:00:12.000000000 -06:00
-
-
-
 categories:
 - Fun IT Projects
 - How-to Guides
@@ -12,24 +8,14 @@ tags:
 - jQuery
 - modal overlay
 - web design
-meta:
-  _wpas_done_all: '1'
-  _publicize_pending: '1'
-  jabber_published: '1353506886'
-  publicize_twitter_user: alexdglover
-  _wpas_done_1477652: '1'
-  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:297624509;b:1;}}
-  email_notification: '1353506889'
-  _wpas_done_1477650: '1'
-  _wpas_skip_1477652: '1'
-  _wpas_skip_1477650: '1'
-  tagazine-media: a:7:{s:7:"primary";s:70:"http://alexdglover.files.wordpress.com/2012/11/modaloverlayexample.png";s:6:"images";a:1:{s:70:"http://alexdglover.files.wordpress.com/2012/11/modaloverlayexample.png";a:6:{s:8:"file_url";s:70:"http://alexdglover.files.wordpress.com/2012/11/modaloverlayexample.png";s:5:"width";i:725;s:6:"height";i:535;s:4:"type";s:5:"image";s:4:"area";i:387875;s:9:"file_path";b:0;}}s:6:"videos";a:0:{}s:11:"image_count";i:1;s:6:"author";s:8:"34836694";s:7:"blog_id";s:8:"34954019";s:9:"mod_stamp";s:19:"2012-11-21
-    15:10:21";}
-  _edit_last: '1'
-  _s2mail: 'yes'
+header:
+  teaser: /assets/modaloverlayexample.png
 ---
+**Be advised** This post is quite old ({{ page.date | date_to_string }}) and any code may be out of date. Proceed with caution.
+{: .notice--warning}
+
 <p>Modal overlays are those fancy popups, often used to display a full-sized image or some sort of form. They give the appearance of a new window within the browser, giving sites a more lively animated and interactive look.</p>
-<p><a href="http://alexdglover.files.wordpress.com/2012/11/modaloverlayexample.png"><img class="aligncenter size-medium wp-image-234" title="modalOverlayExample" alt="" src="{{ site.baseurl }}/assets/modaloverlayexample.png?w=300" width="300" height="221" /></a></p>
+<p style="text-align: center;"><a href="http://alexdglover.files.wordpress.com/2012/11/modaloverlayexample.png"><img class="aligncenter size-medium wp-image-234" title="modalOverlayExample" alt="" src="{{ site.baseurl }}/assets/modaloverlayexample.png" width="300" height="221" /></a></p>
 <p>It's a pretty sweet feature, and is actually pretty easy to implement. I'll highlight a couple options and talk about how to implement them in this post.</p>
 <h3>Lightbox</h3>
 <p><a href="http://lokeshdhakar.com/projects/lightbox2/" target="_blank">Lightbox</a> is a well known modal overlay package that uses jQuery. The implementation of Lightbox is very straightforward</p>
@@ -79,20 +65,20 @@ meta:
    ```css
    .arbitrary_class_name
    {
-   
+
    /* must be initially hidden */
    display:none;
-   
+
    /* place overlay on top of other elements */
    z-index:10000;
-   
+
    /* styling */
    background-color:#333;
-   
+
    width:675px;
    min-height:200px;
    border:1px solid #666;
-   
+
    /* CSS3 styling for latest browsers */
    -moz-box-shadow:0 0 90px 5px #000;
    -webkit-box-shadow: 0 0 90px #000;
@@ -125,4 +111,4 @@ meta:
    </script>
    ```
 
-<p>That's it!</p> 
+<p>That's it!</p>

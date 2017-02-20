@@ -1,10 +1,6 @@
 ---
-
 title: Querying vCloud Director API with Ruby Script
 date: 2013-07-31 20:28:09.000000000 -05:00
-
-
-
 categories:
 - Utilities And Other Useful Things
 tags:
@@ -15,15 +11,10 @@ tags:
 - script
 - vcloud
 - vcloud director
-meta:
-  _edit_last: '1'
-  _s2mail: 'yes'
-  _wpas_done_all: '1'
-  _wpas_skip_1477652: '1'
-  _wpas_skip_1477650: '1'
 ---
 <p>Well it's been awhile since I've posted since I started working on <a title="HUJ" href="http://www.hireupjob.com/" target="_blank">HireUpJob</a>, but this one's good. I recently had a use case where I needed to get the virtual hardware version of a client machine provisioned through vCloud Director. Now, that information is not accessible anywhere on the client machine, so I had to look to the vCloud Director API for it. The process for querying the API also had to be automated for future provisions, so it had to be scripted. Enough back story and context, lets look at the ruby code.</p>
-```#Need to import a few ruby packages
+```ruby
+#Need to import a few ruby packages
 require 'net/http'
 require 'uri'
 require 'openssl'
@@ -53,12 +44,12 @@ def fetch(uri_str, limit = 10)
   response = http.request(req)
   #Start case to handle various HTTP responses
   case response
-  #If authentication is successful, a token is returned in the response header. So if we get an HTTP 200 response from the vCloud server, then we can grab the "x-vcloud-authorization" token from the header 
-  when Net::HTTPSuccess     then 
+  #If authentication is successful, a token is returned in the response header. So if we get an HTTP 200 response from the vCloud server, then we can grab the "x-vcloud-authorization" token from the header
+  when Net::HTTPSuccess     then
 	authKey = response.header['x-vcloud-authorization']
   #if we get an HTTPfound instead, we are probably getting redirected and should try to follow it. You may need to tweak this section to suit your use case
   when Net::HTTPFound		then
-        #call the main fetch function again and decrement the overall redirect limit 
+        #call the main fetch function again and decrement the overall redirect limit
 	fetch(response['location'], limit - 1)
   #If we get an HTTP redirection, we are definitely getting redirected and should follow it
   when Net::HTTPRedirection then fetch(response['location'], limit - 1)
@@ -78,11 +69,11 @@ def fetch(uri_str, limit = 10)
   #send the new request and grab the response again
   response = http.request(req)
   case response
-  when Net::HTTPSuccess     then 
+  when Net::HTTPSuccess     then
         #In my case, the value I wanted was returned in the XML body that was returned, so if the server responds with HTTP 200 I just grab the entire response body and pass it to a variable
 	result = response.body()
   #same as previous
-  when Net::HTTPFound		then 
+  when Net::HTTPFound		then
 	fetch(response['location'], limit - 1)
   #same as previous
   when Net::HTTPRedirection then fetch(response['location'], limit - 1)
@@ -99,7 +90,9 @@ def fetch(uri_str, limit = 10)
 
 end
 
-print fetch('https://<your_vcloud_server>:443')```
+print fetch('https://<your_vcloud_server>:443')
+```
+
 <p>If you're using my code more or less verbatim and everything executes properly, you should get a simple "true" or "false" as output. Now, this script is for a fairly specific use case, but I think the real potential value here is to use this enable Opscode Chef (written in Ruby) to communicate with vCloud Director. I'll be sure to post again as I develop some use cases.</p>
 <p>In case you have a very different use case but need some help, here are some of the pages I referred to for writing this script:</p>
 <ul>
@@ -108,4 +101,3 @@ print fetch('https://<your_vcloud_server>:443')```
 <li><a href="http://stackoverflow.com/questions/6934185/ruby-net-http-following-redirects" target="_blank">Ruby - Net::HTTP - following redirects</a></li>
 </ul>
 <p>Hope this helps some of you out there and let me know if you have any questions.</p>
-<p>&nbsp;</p>

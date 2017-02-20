@@ -7,9 +7,10 @@ categories:
 tags:
 - page of posts
 - wordpress
+header:
+  teaser: /assets/page_of_posts_screenshot.png
 ---
-
-**Be advised** This post is from 2012 and any code may be out of date. Proceed with caution. 
+**Be advised** This post is quite old ({{ page.date | date_to_string }}) and any code may be out of date. Proceed with caution.
 {: .notice--warning}
 
 <p>Recently I have been helping Make a Difference Wisconsin, a local non-profit, with their Wordpress website. Without going into details as to why,  I needed to create a simple 'page of posts' for menu hierarchy reasons. It needed to be a page, but I wanted it to display all of the posts from a particular category. Google took me to many solutions, including the <a href="http://codex.wordpress.org/Pages#A_Page_of_Posts" target="_blank">Wordpress Codex</a>, but none of them worked. Some used out of date or deprecated query functions and some didn't work with the custom theme that was already in place. This should have been a very easy task, but took me several  days to pin down my solution.</p>

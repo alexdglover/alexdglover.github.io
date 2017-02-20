@@ -1,10 +1,6 @@
 ---
-
 title: 'Arduino Project 4: Tilt To Unlock'
 date: 2013-02-07 17:52:52.000000000 -06:00
-
-
-
 categories:
 - Fun Electronics Projects
 - How-to Guides
@@ -16,27 +12,16 @@ tags:
 - lock box
 - relay
 - solenoid
-meta:
-  _wpas_done_all: '1'
-  _publicize_pending: '1'
-  jabber_published: '1360281172'
-  _wpas_done_1477650: '1'
-  publicize_twitter_user: alexdglover
-  _wpas_done_1477652: '1'
-  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:297624509;b:1;}}
-  email_notification: '1360281174'
-  _wpas_skip_1477652: '1'
-  _wpas_skip_1477650: '1'
-  reddit: a:2:{s:5:"count";i:0;s:4:"time";i:1361201105;}
+header:
+  teaser: /assets/img_27691.jpg
 ---
 <p>This is my favorite Arduino project to date. After some basic experimenting with an accelerometer, I had an idea. What if you used the accelerometer to look for a combination of movements? Instead of using a combination lock or a traditional key lock, you could just tilt the object in a set pattern to unlock it. Here's what I ended up with:</p>
 
 {% include video id="59062708" provider="vimeo" %}
 
 <p>Pretty sweet if you ask me.</p>
-<p><!--more--></p>
 <p>Note - in spite of my terrible, coffee-fueled, shakey-handed videography, a lot of this post will be in video form.</p>
-<p>Now this post is based on my <a title="Arduino Project 3: Accelerometer Primer" href="http://alexdglover.wordpress.com/2013/01/21/arduino-project-3-accelerometer-primer/">Acclerometer Primer</a>, so if you're following along and want to build one of these for yourself you should go back and build the primer.</p>
+<p>Now this post is based on my <a title="Arduino Project 3: Accelerometer Primer" href="{{ site.baseurl }}/arduino-project-3-accelerometer-primer/">Acclerometer Primer</a>, so if you're following along and want to build one of these for yourself you should go back and build the primer.</p>
 <h3>Parts Used (beyond what was used in the primer)</h3>
 <ul>
 <li><a href="http://www.amazon.com/gp/product/B005FOTJF8/ref=as_li_ss_tl?ie=UTF8&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B005FOTJF8&amp;linkCode=as2&amp;tag=alexdgloverwo-20">Amico DC 12V Open Frame Type Solenoid for Electric Door Lock</a></li>
@@ -50,98 +35,115 @@ meta:
 {% include video id="59029783" provider="vimeo" %}
 
 <p>Here's my code:</p>
-<blockquote><p><code><br />
-/*####################################################################<br />
-Tilt To Unlock<br />
-Alex Glover<br />
-February 2013<br />
-Combination to unlock box is Y+ (left), X+ (forward), Y+ (left), X- (back), Y+ (forward)<br />
-Based on autoCalibration.ino, provided by virtuabotix<br />
-#######################################################################*/<br />
-#include "Accelerometer.h"</code></p>
-<p>Accelerometer myAccelerometer = Accelerometer();<br />
-int yPosPin = 11;<br />
-int yNegPin = 13;<br />
-int xPosPin = 10;<br />
-int xNegPin = 9;<br />
-int zPin = 12;<br />
-int currentMove = 1;<br />
-int resetTrigger = 0;</p>
-<p>void setup()<br />
-{<br />
-Serial.begin(9600);</p>
-<p>//Connect up the following pins and your power rail<br />
-// SL GS 0G X Y Z<br />
-myAccelerometer.begin(3, 4, 5, A0, A1, A2);</p>
-<p>pinMode(yPosPin, OUTPUT);<br />
-pinMode(yNegPin, OUTPUT);<br />
-pinMode(xPosPin, OUTPUT);<br />
-pinMode(xNegPin, OUTPUT);<br />
-pinMode(zPin, OUTPUT);</p>
-<p>//calibration performed below<br />
-Serial.println("Please place the Accelerometer on a flatnLevel surface");<br />
-delay(2000);//Give user 2 seconds to comply<br />
-myAccelerometer.calibrate();</p>
-<p>}</p>
-<p>void loop()<br />
-{<br />
-delay(20);//delay for readability<br />
-resetTrigger++; //increment the reset trigger<br />
-myAccelerometer.read();<br />
-if(myAccelerometer._Zgs <= -0.9){ digitalWrite(zPin, HIGH); } else if(myAccelerometer._Zgs > -0.9){<br />
-digitalWrite(zPin, LOW);<br />
-}<br />
-if(myAccelerometer._Xgs >= 0.5){<br />
-digitalWrite(xPosPin, HIGH);<br />
-if(currentMove==2){<br />
-Serial.println("Second move successful");<br />
-currentMove++;<br />
-delay(1000);<br />
-}<br />
-else if(currentMove==5){<br />
-Serial.println("Fifth move successful - opening");<br />
-currentMove++;<br />
-delay(1000);<br />
-}<br />
-else{<br />
-Serial.println("WRONG MOVE!");<br />
-currentMove=1;<br />
-}<br />
-}</p>
-<p>else if(myAccelerometer._Xgs < 0.5){<br />
-digitalWrite(xPosPin, LOW);<br />
-}<br />
-if(myAccelerometer._Xgs <= -0.5){ digitalWrite(xNegPin, HIGH); if(currentMove==4){ Serial.println("Fourth move successful"); currentMove++; delay(1000); } else{ Serial.println("WRONG MOVE!"); currentMove=1; } } else if(myAccelerometer._Xgs > -0.5){<br />
-digitalWrite(xNegPin, LOW);<br />
-}<br />
-if(myAccelerometer._Ygs >= 0.5){<br />
-digitalWrite(yPosPin, HIGH);<br />
-if(currentMove==1){<br />
-Serial.println("First move successful");<br />
-currentMove++;<br />
-delay(1000);<br />
-}<br />
-else if(currentMove==3){<br />
-Serial.println("Third move successful");<br />
-currentMove++;<br />
-delay(1000);<br />
-}<br />
-else{<br />
-Serial.println("WRONG MOVE!");<br />
-currentMove=1;<br />
-}<br />
-}<br />
-else if(myAccelerometer._Ygs < 0.5){<br />
-digitalWrite(yPosPin, LOW);<br />
-}<br />
-if(myAccelerometer._Ygs <= -0.5){ digitalWrite(yNegPin, HIGH); Serial.println("WRONG MOVE!"); currentMove=1; } else if(myAccelerometer._Ygs > -0.5){<br />
-digitalWrite(yNegPin, LOW);<br />
-}</p>
-<p>if(resetTrigger==3000){ //do this every minute (3000 iterations * 0.02 seconds = 60 seconds)<br />
-currentMove=1; //reset currentMove back to 1, so user can try to do the sequence again<br />
-resetTrigger=0; //set the resetTrigger back to 0 so it can start another iteration to 3000</p>
-<p>}</p>
-<p>}</p></blockquote>
+```c
+/*####################################################################
+Tilt To Unlock
+Alex Glover
+February 2013
+Combination to unlock box is Y+ (left), X+ (forward), Y+ (left), X- (back), Y+ (forward)
+Based on autoCalibration.ino, provided by virtuabotix
+#######################################################################*/
+#include "Accelerometer.h"</code>
+Accelerometer myAccelerometer = Accelerometer();
+int yPosPin = 11;
+int yNegPin = 13;
+int xPosPin = 10;
+int xNegPin = 9;
+int zPin = 12;
+int currentMove = 1;
+int resetTrigger = 0;
+void setup()
+{
+  Serial.begin(9600);
+  //Connect up the following pins and your power rail
+  // SL GS 0G X Y Z
+  myAccelerometer.begin(3, 4, 5, A0, A1, A2);
+  pinMode(yPosPin, OUTPUT);
+  pinMode(yNegPin, OUTPUT);
+  pinMode(xPosPin, OUTPUT);
+  pinMode(xNegPin, OUTPUT);
+  pinMode(zPin, OUTPUT);
+  //calibration performed below
+  Serial.println("Please place the Accelerometer on a flatnLevel surface");
+  delay(2000);//Give user 2 seconds to comply
+  myAccelerometer.calibrate();
+}
+void loop()
+{
+  delay(20);//delay for readability
+  resetTrigger++; //increment the reset trigger
+  myAccelerometer.read();
+  if(myAccelerometer._Zgs <= -0.9){ digitalWrite(zPin, HIGH); } else if(myAccelerometer._Zgs > -0.9){
+    digitalWrite(zPin, LOW);
+  }
+  if(myAccelerometer._Xgs >= 0.5){
+    digitalWrite(xPosPin, HIGH);
+    if(currentMove==2){
+      Serial.println("Second move successful");
+      currentMove++;
+      delay(1000);
+    }
+    else if(currentMove==5){
+      Serial.println("Fifth move successful - opening");
+      currentMove++;
+      delay(1000);
+    }
+    else{
+      Serial.println("WRONG MOVE!");
+      currentMove=1;
+    }
+  }
+  else if(myAccelerometer._Xgs < 0.5){
+    digitalWrite(xPosPin, LOW);
+  }
+  if(myAccelerometer._Xgs <= -0.5){
+    digitalWrite(xNegPin, HIGH);
+    if(currentMove==4){
+      Serial.println("Fourth move successful");
+      currentMove++;
+      delay(1000);
+    }
+    else{
+      Serial.println("WRONG MOVE!");
+      currentMove=1;
+    }
+  }
+  else if(myAccelerometer._Xgs > -0.5){
+    digitalWrite(xNegPin, LOW);
+  }
+  if(myAccelerometer._Ygs >= 0.5){
+    digitalWrite(yPosPin, HIGH);
+    if(currentMove==1){
+      Serial.println("First move successful");
+      currentMove++;
+      delay(1000);
+    }
+    else if(currentMove==3){
+      Serial.println("Third move successful");
+      currentMove++;
+      delay(1000);
+    }
+    else{
+      Serial.println("WRONG MOVE!");
+      currentMove=1;
+    }
+  }
+  else if(myAccelerometer._Ygs < 0.5){
+    digitalWrite(yPosPin, LOW);
+  }
+  if(myAccelerometer._Ygs <= -0.5){
+    digitalWrite(yNegPin, HIGH);
+    Serial.println("WRONG MOVE!");
+    currentMove=1;
+  } else if(myAccelerometer._Ygs > -0.5){
+    digitalWrite(yNegPin, LOW);
+  }
+  if(resetTrigger==3000){ //do this every minute (3000 iterations * 0.02 seconds = 60 seconds)
+    currentMove=1; //reset currentMove back to 1, so user can try to do the sequence again
+    resetTrigger=0; //set the resetTrigger back to 0 so it can start another iteration to 3000
+  }
+}
+```
 <p>Perfect! Now we can recognize a combination of movements. Now all we need to do is something meaningful when the combination is recognized.</p>
 <h3>Phase 2 - Incorporating The Cigar Box, Relay, and 12v Door Latch</h3>
 <p>Time for the hardware. Now, at this point we should be pretty confident in our code (we are confident in our code, right?) so we can get rid of the LEDs and all of the associated jumper wires. Next, switch your <a href="http://www.amazon.com/gp/product/B0066XLWDE/ref=as_li_ss_tl?ie=UTF8&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B0066XLWDE&amp;linkCode=as2&amp;tag=alexdgloverwo-20">Virtuabotix Accelerometer</a> from using the 5v power from the Arduino to using the 3.3v power from the Arduino (you'll need to change the connection at both ends, since the accelerometer has connections for both). We need to switch to 3.3v because our relay is going to use the 5v power from the Arduino. That being said, connect the 5v power to the VCC pin on the relay and also connect the ground from your Arduino to the relay. Next, choose one of the digital pins from your Arduino (doesn't matter which) and connect it to the relay control connections - this pin will control the opening and closing of your relay circuit. In my case, I had to use a ribbon cable as an adapter between the male pins on the relay and the male jumper wires. In the picture below, I've removed all of the LEDs and connected the relay (white wire is 5v power to relay, blue is ground, and red wire connects pin 10 to the 3rd relay control).</p>
@@ -153,107 +155,110 @@ resetTrigger=0; //set the resetTrigger back to 0 so it can start another iterati
 {% include video id="59029784" provider="vimeo" %}
 
 <p>Alright, if you've managed to get all of the hardware put together, all you need is a little more code to interact with the relay and door latch. Here's my code:</p>
-<blockquote><p><code><br />
-/*####################################################################<br />
-tiltToUnlock<br />
-Alex Glover<br />
-February 2013</code></p>
-<p>Combination to unlock box is Y+ (left), X+ (forward), Y+ (left), X- (back), Y+ (forward)</p>
-<p>Based on autoCalibration.ino, provided by virtuabotix<br />
-#######################################################################*/</p>
-<p>#include "Accelerometer.h"</p>
-<p>Accelerometer myAccelerometer = Accelerometer();<br />
-/*int yPosPin = 11;<br />
-int yNegPin = 13;<br />
-int xPosPin = 10;<br />
-int xNegPin = 9;<br />
-int zPin = 12;<br />
-We don't need any of these pins anymore, as we're not using LEDs*/<br />
-int currentMove = 1;<br />
-int resetTrigger = 0;<br />
-int relayPin = 10;</p>
-<p>void setup()<br />
-{<br />
-Serial.begin(9600);</p>
-<p>//Connect up the following pins and your power rail<br />
-// SL GS 0G X Y Z<br />
-myAccelerometer.begin(3, 4, 5, A0, A1, A2);</p>
-<p>/*pinMode(yPosPin, OUTPUT);<br />
-pinMode(yNegPin, OUTPUT);<br />
-pinMode(xPosPin, OUTPUT);<br />
-pinMode(xNegPin, OUTPUT);<br />
-pinMode(zPin, OUTPUT);<br />
-We don't need any of these pins anymore, as we're not using LEDs*/</p>
-<p>pinMode(relayPin, OUTPUT);//Set the pin that will control the relay in OUTPUT mode<br />
-digitalWrite(relayPin, HIGH);//Write a high voltage signal to the relay on startup - this will break the circuit</p>
-<p>//calibration performed below<br />
-Serial.println("Please place the Accelerometer on a flatnlevel surface");<br />
-delay(2000);//Give user 2 seconds to comply<br />
-Serial.println("Calibration complete");<br />
-myAccelerometer.calibrate();</p>
-<p>}</p>
-<p>void loop()<br />
-{<br />
-delay(20);//delay for readability<br />
-resetTrigger++; //increment the reset trigger<br />
-myAccelerometer.read();<br />
-if(myAccelerometer._Zgs -0.9){<br />
-//digitalWrite(zPin, LOW);<br />
-}<br />
-if(myAccelerometer._Xgs >= 0.5){<br />
-//digitalWrite(xPosPin, HIGH);<br />
-if(currentMove==2){<br />
-Serial.println("Second move successful");<br />
-currentMove++;<br />
-delay(1000);<br />
-}<br />
-else if(currentMove==5){<br />
-Serial.println("Fifth move successful - opening");<br />
-currentMove=1;<br />
-digitalWrite(relayPin, LOW);<br />
-delay(2000);<br />
-digitalWrite(relayPin, HIGH);<br />
-delay(1000);<br />
-}<br />
-else{<br />
-Serial.println("WRONG MOVE!");<br />
-currentMove=1;<br />
-}<br />
-}</p>
-<p>else if(myAccelerometer._Xgs < 0.5){<br />
-//digitalWrite(xPosPin, LOW);<br />
-}<br />
-if(myAccelerometer._Xgs -0.5){<br />
-//digitalWrite(xNegPin, LOW);<br />
-}<br />
-if(myAccelerometer._Ygs >= 0.5){<br />
-//digitalWrite(yPosPin, HIGH);<br />
-if(currentMove==1){<br />
-Serial.println("First move successful");<br />
-currentMove++;<br />
-delay(1000);<br />
-}<br />
-else if(currentMove==3){<br />
-Serial.println("Third move successful");<br />
-currentMove++;<br />
-delay(1000);<br />
-}<br />
-else{<br />
-Serial.println("WRONG MOVE!");<br />
-currentMove=1;<br />
-}<br />
-}<br />
-else if(myAccelerometer._Ygs < 0.5){<br />
-//digitalWrite(yPosPin, LOW);<br />
-}<br />
-if(myAccelerometer._Ygs -0.5){<br />
-//digitalWrite(yNegPin, LOW);<br />
-}</p>
-<p>if(resetTrigger==3000){ //do this every minute (3000 iterations * 0.02 seconds = 60 seconds)<br />
-currentMove=1; //reset currentMove back to 1, so user can try to do the sequence again<br />
-resetTrigger=0; //set the resetTrigger back to 0 so it can start another iteration to 3000</p>
-<p>}</p>
-<p>}</p></blockquote>
+
+```c
+/*####################################################################
+tiltToUnlock
+Alex Glover
+February 2013
+Combination to unlock box is Y+ (left), X+ (forward), Y+ (left), X- (back), Y+ (forward)
+Based on autoCalibration.ino, provided by virtuabotix
+#######################################################################*/
+#include "Accelerometer.h"
+Accelerometer myAccelerometer = Accelerometer();
+/*int yPosPin = 11;
+int yNegPin = 13;
+int xPosPin = 10;
+int xNegPin = 9;
+int zPin = 12;
+We don't need any of these pins anymore, as we're not using LEDs*/
+int currentMove = 1;
+int resetTrigger = 0;
+int relayPin = 10;
+void setup()
+{
+  Serial.begin(9600);
+  //Connect up the following pins and your power rail
+  // SL GS 0G X Y Z
+  myAccelerometer.begin(3, 4, 5, A0, A1, A2);
+  /*pinMode(yPosPin, OUTPUT);
+  pinMode(yNegPin, OUTPUT);
+  pinMode(xPosPin, OUTPUT);
+  pinMode(xNegPin, OUTPUT);
+  pinMode(zPin, OUTPUT);
+  We don't need any of these pins anymore, as we're not using LEDs*/
+  pinMode(relayPin, OUTPUT);//Set the pin that will control the relay in OUTPUT mode
+  digitalWrite(relayPin, HIGH);//Write a high voltage signal to the relay on startup - this will break the circuit
+  //calibration performed below
+  Serial.println("Please place the Accelerometer on a flatnlevel surface");
+  delay(2000);//Give user 2 seconds to comply
+  Serial.println("Calibration complete");
+  myAccelerometer.calibrate();
+}
+void loop()
+{
+  delay(20);//delay for readability
+  resetTrigger++; //increment the reset trigger
+  myAccelerometer.read();
+  if(myAccelerometer._Zgs -0.9){
+    //digitalWrite(zPin, LOW);
+  }
+  if(myAccelerometer._Xgs >= 0.5){
+    //digitalWrite(xPosPin, HIGH);
+    if(currentMove==2){
+      Serial.println("Second move successful");
+      currentMove++;
+      delay(1000);
+    }
+    else if(currentMove==5){
+      Serial.println("Fifth move successful - opening");
+      currentMove=1;
+      digitalWrite(relayPin, LOW);
+      delay(2000);
+      digitalWrite(relayPin, HIGH);
+      delay(1000);
+    }
+    else{
+      Serial.println("WRONG MOVE!");
+      currentMove=1;
+    }
+  }
+  else if(myAccelerometer._Xgs < 0.5){
+    //digitalWrite(xPosPin, LOW);
+  }
+  if(myAccelerometer._Xgs -0.5){
+    //digitalWrite(xNegPin, LOW);
+  }
+  if(myAccelerometer._Ygs >= 0.5){
+    //digitalWrite(yPosPin, HIGH);
+    if(currentMove==1){
+      Serial.println("First move successful");
+      currentMove++;
+      delay(1000);
+    }
+    else if(currentMove==3){
+      Serial.println("Third move successful");
+      currentMove++;
+      delay(1000);
+    }
+    else{
+      Serial.println("WRONG MOVE!");
+      currentMove=1;
+    }
+  }
+  else if(myAccelerometer._Ygs < 0.5){
+    //digitalWrite(yPosPin, LOW);
+  }
+  if(myAccelerometer._Ygs -0.5){
+    //digitalWrite(yNegPin, LOW);
+  }
+  if(resetTrigger==3000){ //do this every minute (3000 iterations * 0.02 seconds = 60 seconds)
+    currentMove=1; //reset currentMove back to 1, so user can try to do the sequence again
+    resetTrigger=0; //set the resetTrigger back to 0 so it can start another iteration to 3000
+  }
+}
+```
+
 <p>Awesome. One thing I almost forgot to mention - the 12v door latch needs something to latch on. You may have to get creative with this part, depending on what kind of box you are using. In my case, the cigar box lid actually slid off (rather than opening on hinges) so all I had to do was carve a notch into the lid for the latch to catch on.</p>
 <p><a href="http://alexdglover.files.wordpress.com/2013/02/img_2780.jpg"><img class="aligncenter size-full wp-image-404" alt="alexdglover_tiltToUnlock_lid" src="{{ site.baseurl }}/assets/img_2780.jpg" width="595" height="793" /></a></p>
 <p>Now when I slide the lid of the box again, it pushes the latch down until it lines up with the notch and then *click*, it latches and locks the box closed.</p>

@@ -1,10 +1,6 @@
 ---
-
 title: 'Arduino Project 3: Accelerometer Primer'
 date: 2013-01-21 09:00:21.000000000 -06:00
-
-
-
 categories:
 - Fun Electronics Projects
 - Fun IT Projects
@@ -12,16 +8,8 @@ categories:
 tags:
 - accelerometer
 - arduino
-meta:
-  _wpas_done_all: '1'
-  _publicize_pending: '1'
-  jabber_published: '1358780530'
-  email_notification: '1358780612'
-  publicize_twitter_user: alexdglover
-  _wpas_done_1477652: '1'
-  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:297624509;b:1;}}
-  _wpas_done_1477650: '1'
-  reddit: a:2:{s:5:"count";i:0;s:4:"time";i:1361201106;}
+header:
+  teaser: /assets/accelerometer_primer.png
 ---
 <p>This project is more of a warm-up than a full-blown project. I wanted to get a feel for the basic workings of an accelerometer in preparation for a larger undertaking (no spoilers!). I borrowed this project idea from a forum about Arduino and accelerometers but can't remember which forum, so I can't credit back to the original poster - sorry about that.</p>
 <p>Before we get to the how, let's take a look at the what. Basically we have an accelerometer and 5 LEDs mounted on a breadboard. Four of the LEDs are mounted to correspond with the X and Y accelerometer axes and one LED is in the middle.   When the accelerometer is level, only the middle LED is illuminated. If you tilt the accelerometer to the side, the LED on that side is illuminated.</p>

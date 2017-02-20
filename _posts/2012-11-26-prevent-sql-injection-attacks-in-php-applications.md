@@ -1,34 +1,16 @@
 ---
-
 title: Prevent SQL Injection Attacks in PHP Applications
-date: 2012-11-26 08:00:19.000000000 -06:00
-
-
-
+#date: 2012-11-26 08:00:19.000000000 -06:00
 categories:
 - How-to Guides
 - Utilities And Other Useful Things
 tags:
 - php
 - sql injection
-meta:
-  _wpas_done_all: '1'
-  _publicize_pending: '1'
-  jabber_published: '1353940605'
-  publicize_twitter_user: alexdglover
-  email_notification: '1353940606'
-  _wpas_done_1477652: '1'
-  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:297624509;b:1;}}
-  _wpas_done_1477650: '1'
-  _wpas_skip_1477652: '1'
-  _wpas_skip_1477650: '1'
-  tagazine-media: a:7:{s:7:"primary";s:65:"http://alexdglover.files.wordpress.com/2012/11/rage-classic-l.png";s:6:"images";a:1:{s:65:"http://alexdglover.files.wordpress.com/2012/11/rage-classic-l.png";a:6:{s:8:"file_url";s:65:"http://alexdglover.files.wordpress.com/2012/11/rage-classic-l.png";s:5:"width";i:1500;s:6:"height";i:1224;s:4:"type";s:5:"image";s:4:"area";i:1836000;s:9:"file_path";b:0;}}s:6:"videos";a:0:{}s:11:"image_count";i:1;s:6:"author";s:8:"34836694";s:7:"blog_id";s:8:"34954019";s:9:"mod_stamp";s:19:"2012-11-26
-    15:44:56";}
-  reddit: a:2:{s:5:"count";i:0;s:4:"time";i:1354056474;}
-  _edit_last: '1'
-  _s2mail: 'yes'
+header:
+  teaser: /assets/rage-classic-l.png
 ---
-**Be advised** This post is quite old (from 2012) and any code may be out of date. Proceed with caution.
+**Be advised** This post is quite old ({{ page.date | date_to_string }}) and any code may be out of date. Proceed with caution.
 {: .notice--warning}
 
 <p>Ok, some quick background before we get started. Let's say you have a search bar in your PHP-based web site to help people find items, which ties back to your database. Behind your search bar is some code and a query, something like</p>
@@ -48,7 +30,7 @@ DEALLOCATE PREPARE stmt1;
 ```
 
 <p>For those who can't read SQL, here's the short version - an attacker just dropped ALL of your databases, in all schemas. Whoops. This is your face right now:</p>
-<p style="text-align: center;"><a href="http://alexdglover.files.wordpress.com/2012/11/rage-classic-l.png"><img class="aligncenter size-medium wp-image-241" title="rage-classic-l" alt="" src="{{ site.baseurl }}/assets/rage-classic-l.png?w=300" width="300" height="244" /></a></p>
+<p style="text-align: center;"><a href="http://alexdglover.files.wordpress.com/2012/11/rage-classic-l.png"><img class="aligncenter size-medium wp-image-241" title="rage-classic-l" alt="" src="{{ site.baseurl }}/assets/rage-classic-l.png" width="300" height="244" /></a></p>
 <p>We're not going to let this happen to us, because losing and replacing that data seems like a lot of work, and we all have better things to do than restore backups and try to explain data loss to end users.</p>
 <p>Let's review some options.</p>
 <h3>Escape Special Characters</h3>

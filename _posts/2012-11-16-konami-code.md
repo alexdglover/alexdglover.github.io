@@ -1,10 +1,6 @@
 ---
-
 title: Konami Code
 date: 2012-11-16 07:30:38.000000000 -06:00
-
-
-
 categories:
 - Fun IT Projects
 - How-to Guides
@@ -12,18 +8,6 @@ tags:
 - easter egg
 - javascript
 - konami
-meta:
-  _wpas_done_all: '1'
-  _publicize_pending: '1'
-  jabber_published: '1353076204'
-  publicize_twitter_user: alexdglover
-  email_notification: '1353076205'
-  _wpas_done_1477652: '1'
-  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:297624509;b:1;}}
-  _wpas_done_1477650: '1'
-  reddit: a:2:{s:5:"count";i:0;s:4:"time";i:1353447702;}
-  _wpas_skip_1477650: '1'
-  _wpas_skip_1477652: '1'
 ---
 <p>The Konami code... if you were born in 1990 or earlier, and play (or played) video games, you probably already know what I'm talking about.</p>
 <p>The history of the Konami code is awesome in it's own rite. Here's the short version: the Konami code is a famous cheat code (up, up, down, down, left, right, left, right, B, A) that first appeared in NES games like Contra. Many times the code was added to video games as a tribute to the classic games or as a tribute to Kazuhisa Hashimoto, the developer who accidentally left the cheat code in the game when it was sold to the public.</p>
