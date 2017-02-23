@@ -79,16 +79,19 @@ $collection->insert(array('someUnrelatedKey' => 'someUnrelatedValue'));
 ```
 <p>You can also inserted nested arrays (which will become nested objects in JSON):</p>
 ```php
-$collection->insert(array('name' => 'bob','age' => 40, 'computers' =>(array('laptop','desktop')) ));
+$collection->insert(array('name' => 'bob','age' => 40,
+  'computers' =>(array('laptop','desktop')) ));
 ```
 <h3>Updating an existing document</h3>
 <p>Updating a document is where MongoDB shows it's flexibility as a NoSQL database. It's also the trickiest of the CRUD operations. The basic structure with psuedo-code is as follows:</p>
 ```php
-$collection->update(search_criteria, array('$set' => array("key => "value") ));
+$collection->update(search_criteria, 
+  array('$set' => array("key => "value") ));
 ```
 <p>Here's an example with legitimate values:</p>
 ```php
-$collection->update(array("name" => "alex"), array('$set' => array("name" => "bob")));
+$collection->update(array("name" => "alex"), 
+  array('$set' => array("name" => "bob")));
 ```
 <p>This query is equivalent to "UPDATE collection SET name='bob' where name='alex';" in traditional SQL.</p>
 <p>Notice the $set argument - without this, MongoDB will REPLACE the entire document with the array you passed instead of trying to update a particular element. There are several <a href="http://docs.mongodb.org/manual/reference/operator/update/">update operators for MongoDB</a> that can be very helpful. For example, let's assume we had the following document object:</p>
@@ -98,7 +101,8 @@ $collection->update(array("name" => "alex"), array('$set' => array("name" 
 <p>Notice that we have a nested array of "computers" with two values. If we wanted to add another element to the "computers" array, we'd have to fetch the entire document, strip out the nested array object, add our new element, then use the $set operator to update the array in the document.</p>
 <p>Fortunately, MongoDB provides a special update operator for this use case, $push. Let's pretend we want to update bob's record in the database and give him a VM.</p>
 ```php
-$collection->update(array('name' => 'bob'),array('$push' => array('computers' => 'vm')));
+$collection->update(array('name' => 'bob'),
+  array('$push' => array('computers' => 'vm')));
 ```
 <p>Awesome.</p>
 <p>This was a pretty elementary tutorial on MongoDB, but I'm hoping it either helped one of you get started or inspired someone to use MongoDB in their project. Everything I covered in this post and much more can be found by perusing the <a href="http://php.net/manual/en/book.mongo.php" target="_blank">Mongo Book at php.net</a> and <a href="http://docs.mongodb.org/manual/reference/" target="_blank">MongoDB's Reference</a>.</p>
