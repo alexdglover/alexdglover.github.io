@@ -15,10 +15,13 @@ tags:
 **Be advised** This post is quite old ({{ page.date | date_to_string }}) and any code may be out of date. Proceed with caution.
 {: .notice--warning}
 
+**Update Feb 2017** I've taken down the demo site and the corresponding content from this post.
+{: .notice--info}
+
 <p>Short post, as this isn't really a tutorial. I was recently checking out <a href="http://todomvc.com/" target="_blank">ToDoMVC</a> to look at some JavaScript frameworks, and I really liked the To Do list app...</p>
-<p><a href="http://experimental.alexdglover.com/noteAppDemo/index.php"><img class="aligncenter size-full wp-image-544" alt="todosmvc" src="{{ site.baseurl }}/assets/todos.png" width="682" height="534" /></a></p>
-<p>I've been looking for something similar for awhile. Looked at Evernote and other apps, but nothing was as simple and lightweight as this app. Only problem was that the items stored in the app didn't persist, as there was not database/storage behind the app. Well I changed that - <strong><a href="http://experimental.alexdglover.com/noteAppDemo/index.php" target="_blank">check out the demo</a></strong>.</p>
-<p style="text-align: center;"><a class="button" href="http://experimental.alexdglover.com/noteAppDemo/index.php" target="_blank"><input class="button" type="button" value="Demo" /></a>   <a class="button" href="http://experimental.alexdglover.com/downloads/noteApp.zip" target="_blank"><input class="button" type="button" value="Source" /></a></p>
+<p><img class="aligncenter size-full wp-image-544" alt="todosmvc" src="{{ site.baseurl }}/assets/todos.png" width="682" height="534" /></p>
+<p>I've been looking for something similar for awhile. Looked at Evernote and other apps, but nothing was as simple and lightweight as this app. Only problem was that the items stored in the app didn't persist, as there was not database/storage behind the app. So I went ahead and wrote my own.</p>
+<p style="text-align: center;"><a class="button" href="http://experimental.alexdglover.com/downloads/noteApp.zip" target="_blank"><input class="button" type="button" value="Source" /></a></p>
 <p>In my haste to modify the to do list app to save values, I skipped the part where I should have learned one of the new JavaScript frameworks highlighted on <a href="http://todomvc.com/" target="_blank">ToDoMVC</a>. I actually used the template provided in the ToDoMVC package and used the asynchronous database call setup I outlined in a <a title="Asynchronous Database Operations with PHP and jQuery" href="http://alexdglover.com/asynchronous-database-operations-with-php-and-jquery/" target="_blank">related post</a>.</p>
 <p>The bad news - this isn't a secure application, SQL injection attacks will succeed here. Also, some of the icons don't seem to work outside of Chrome.</p>
 <p>The good news - this application supports multiple clients via the use of a "poor man's pull." Basically, if User A and User B are writing to dos in the app on two separate computers, they will see each other's notes in near real time. This is possible by using JavaScript to call the DB query every X number of milliseconds. Here's a code snippet if you're having a hard time understanding:</p>
