@@ -12,6 +12,8 @@ tags:
 - pi
 - power
 - raspberry pi
+header:
+  teaser: /assets/raspberryPiPolyfuse.png
 ---
 <p>I recently started building out a combination NAS and HTPC on a Raspberry Pi and came across some interesting information about powering Raspberry Pi's. While this isn't a project post per se, I thought it was interesting enough to share and wanted to send this out as sort of a PSA for the users out there who don't know the potential danger of "backpowering" a Raspberry Pi.</p>
 <p>For those who don't already have one, here are a few suggestions for where to get a Raspberry Pi.</p>
@@ -39,10 +41,10 @@ tags:
 <p><strong>Approximate cost savings: $11.14 per month</strong></p>
 <h3>Powering the Pi and the Dangers of "Backpowering"</h3>
 <p>The Pi only has two USB ports, so obviously many folks incorporate a powered USB hub to expand its capabilities. At some point, someone discovered that the powered hubs were actually supplying power to the Pi via the uplink between the hub and the Pi. Now you can power your peripherals and the Pi from one outlet. Cool right?</p>
-<p><img class="aligncenter size-full wp-image-718" alt="no" src="{{ site.baseurl }}/assets/no.jpg" width="500" height="450" /></p>
+<p style="text-align: center;"><img class="aligncenter size-full wp-image-718" alt="no" src="{{ "/assets/no.jpg" | absolute_url }}" width="500" height="450" /></p>
 <p><!--more--></p>
 <p>It's pretty cool until you accidentally fry your Pi or start a fire. The power supply connection on the Pi includes a polyfuse to protect against overvoltages (see diagram below).</p>
-<p><a href="http://www.raspberrypi.org/wp-content/uploads/2012/10/Raspberry-Pi-R2.0-Schematics-Issue2.2_027.pdf"><img class="aligncenter size-full wp-image-720" alt="Wiring schematic showing polyfuse" src="{{ site.baseurl }}/assets/raspberryPiPolyfuse.png" width="604" height="350" /></a></p>
+<p style="text-align: center;"><a href="http://www.raspberrypi.org/wp-content/uploads/2012/10/Raspberry-Pi-R2.0-Schematics-Issue2.2_027.pdf"><img class="aligncenter size-full wp-image-720" alt="Wiring schematic showing polyfuse" src="{{ "/assets/raspberryPiPolyfuse.png" | absolute_url }}" width="604" height="350" /></a></p>
 <p>&nbsp;</p>
 <p>The USB data connections do not have an inline polyfuse! If you want to run your Pi off of a powered USB hub, you'll need to do two things.</p>
 <ol>
@@ -50,7 +52,7 @@ tags:
 <li>Run a <a href="http://www.amazon.com/gp/product/B002HMWQE2/ref=as_li_ss_tl?ie=UTF8&camp=1789&creative=390957&creativeASIN=B002HMWQE2&linkCode=as2&tag=alexdgloverwo-20" target="_blank">USB-to-micro-USB cable</a> from one of the outputs on your USB hub back to the power input connection on the Pi. This will properly route your +5v power through the polyfuse, protecting your Pi.</li>
 </ol>
 <p>See picture below for a visual explanation.</p>
-<p><a href="http://alexdglover.com/wp-content/uploads/2013/12/photo-11.jpg"><img class="aligncenter size-large wp-image-725" alt="Powering Raspberry Pi with Powered USB" src="{{ site.baseurl }}/assets/photo-11-1024x944.jpg" width="620" height="571" /></a></p>
+<p style="text-align: center;"><a href="http://alexdglover.com/wp-content/uploads/2013/12/photo-11.jpg"><img class="aligncenter size-large wp-image-725" alt="Powering Raspberry Pi with Powered USB" src="{{ "/assets/photo-11-1024x944.jpg" | absolute_url }}" width="620" height="571" /></a></p>
 <p>Obviously you still need to plug your powered USB hub into a power source. Now your Raspberry Pi will run off of the powered USB hub, allowing you to safely run your Pi and your peripherals from one power supply.</p>
 <p>Anyway, just wanted to share a couple of lessons learned while getting started and highlight the details behind "backpowering."</p>
 <p>How do you power your Pi?</p>

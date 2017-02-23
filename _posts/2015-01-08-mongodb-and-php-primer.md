@@ -1,10 +1,6 @@
 ---
-
 title: MongoDB and PHP Primer
 date: 2015-01-08 09:30:24.000000000 -06:00
-
-
-
 categories:
 - Fun IT Projects
 - How-to Guides
@@ -12,18 +8,12 @@ tags:
 - mongodb
 - nosql
 - php
-meta:
-  _edit_last: '1'
-  _s2mail: 'yes'
-  _publicize_twitter_user: "@alexdglover"
-  _wpas_done_all: '1'
-  _wpas_skip_1477652: '1'
-  _wpas_skip_1477650: '1'
 ---
 <p>I recently used MongoDB in the Share Your Salary app and had a few hiccups as I tried to blunder my way through learning how to use it. MongoDB, like many NoSQL document databases, uses JavaScript Object Notation or JSON to represent the objects/documents. JSON is great, especially when you're using JavaScript in conjunction. PHP, however, doesn't 'speak' JSON natively; it uses arrays instead, and this makes for some less than intuitive interactions. This post will go over some of the basic CRUD operations using PHP against a MongoDB.</p>
 <h3>Connecting</h3>
 <p>Connecting is pretty straight-forward:</p>
-```$host = your.mongodb.host.com;
+```php
+$host = your.mongodb.host.com;
 $user = username;
 $passwd = Sup3rS3cr3tPassword;
 $port = 27017; // 27017 is the default port
@@ -31,21 +21,25 @@ $uri = "mongodb://" . $user . ":" . $passwd . "@" . $host . ":" . $port;
 $mongo = new Mongo($uri);
 ```
 <p>If you're using <a title="Introduction to OpenShift" href="http://alexdglover.com/introduction-to-openshift/" target="_blank">OpenShift</a>, you can simply use the relevant environment variables:</p>
-```$host = $_ENV["OPENSHIFT_MONGODB_DB_HOST"];
+```php
+$host = $_ENV["OPENSHIFT_MONGODB_DB_HOST"];
 $user = $_ENV["OPENSHIFT_MONGODB_DB_USERNAME"];
 $passwd = $_ENV["OPENSHIFT_MONGODB_DB_PASSWORD"];
 $port = $_ENV["OPENSHIFT_MONGODB_DB_PORT"];
 $uri = "mongodb://" . $user . ":" . $passwd . "@" . $host . ":" . $port;
-$mongo = new MongoClient($uri);```
-<p><!--more--></p>
+$mongo = new MongoClient($uri);
+```
+
 <h3>Reading a 'table'</h3>
 <p>In NoSQL document databases, an individual document is analogous to a record in a traditional relational SQL database. Similarly, a collection is analogous to a table.</p>
 <p>Before we can fetch a collection, we have to specify which database we want to work with. After all, one MongoDB instance can host multiple databases.</p>
-```database_name;
+```php
+database_name;
 $collection = $db->selectCollection("collection_name");
 ```
 <p>Or if you want to save some typing:</p>
-```selectCollection("database_name", "collection_name");
+```
+selectCollection("database_name", "collection_name");
 ```
 <p>Now that you have a collection object, you can query it, iterate through it, etc.</p>
 <h3>Querying documents</h3>
@@ -54,7 +48,8 @@ $collection = $db->selectCollection("collection_name");
 ```
 <p>This is similar to a "SELECT * FROM table_name" query in a relational SQL database.</p>
 <p>To query with specific criteria, you'll need to construct an array of the key-value pair you want to query on. Let's assume we had a few JSON documents with the following structure:</p>
-```{ "name": "alex", "age": 28, "computers": ["laptop","desktop","vm"] },
+```
+{ "name": "alex", "age": 28, "computers": ["laptop","desktop","vm"] },
 { "name": "whoever", "age": 35, "computers": ["laptop","desktop"] }```
 <p>To search the "name" keys for the value "alex" you'll need to create an array with that key-value pair, then execute the find method with that query.</p>
 ``` 'alex');
