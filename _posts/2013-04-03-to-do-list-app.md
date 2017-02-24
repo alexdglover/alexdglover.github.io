@@ -36,15 +36,15 @@ setInterval( function(){ queryDB() }, 5000);   //Call the queryDB() function eve
 <script type="text/javascript">        
 function queryDB()
 {
-	$.ajax({
-		type: "POST",
-		url: "dbEngine.php",
-		data: "keyword=read",
-		success: function(server_response)
-		{
-			$('#todo-list').html(server_response).show();
-		}
-	})
+  $.ajax({
+    type: "POST",
+    url: "dbEngine.php",
+    data: "keyword=read",
+    success: function(server_response)
+    {
+      $('#todo-list').html(server_response).show();
+    }
+  })
 }
 </script>
 ```

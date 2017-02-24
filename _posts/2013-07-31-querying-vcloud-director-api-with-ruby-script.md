@@ -46,11 +46,11 @@ def fetch(uri_str, limit = 10)
   case response
   #If authentication is successful, a token is returned in the response header. So if we get an HTTP 200 response from the vCloud server, then we can grab the "x-vcloud-authorization" token from the header
   when Net::HTTPSuccess     then
-	authKey = response.header['x-vcloud-authorization']
+  authKey = response.header['x-vcloud-authorization']
   #if we get an HTTPfound instead, we are probably getting redirected and should try to follow it. You may need to tweak this section to suit your use case
-  when Net::HTTPFound		then
+  when Net::HTTPFound    then
         #call the main fetch function again and decrement the overall redirect limit
-	fetch(response['location'], limit - 1)
+  fetch(response['location'], limit - 1)
   #If we get an HTTP redirection, we are definitely getting redirected and should follow it
   when Net::HTTPRedirection then fetch(response['location'], limit - 1)
   else
@@ -61,7 +61,7 @@ def fetch(uri_str, limit = 10)
   #Set the headers as a variable to be re-used later, including the authorization token we grabbed earlier
   headers = {
     'Accept' => 'application/*+xml;version=1.5',
-	'x-vcloud-authorization' => "#{authKey}"
+  'x-vcloud-authorization' => "#{authKey}"
   }
 
   #Build a new request, this time an HTTP GET, to grab a value from the API. Supply both the API call and the headers variable we just put together
@@ -71,10 +71,10 @@ def fetch(uri_str, limit = 10)
   case response
   when Net::HTTPSuccess     then
         #In my case, the value I wanted was returned in the XML body that was returned, so if the server responds with HTTP 200 I just grab the entire response body and pass it to a variable
-	result = response.body()
+  result = response.body()
   #same as previous
-  when Net::HTTPFound		then
-	fetch(response['location'], limit - 1)
+  when Net::HTTPFound    then
+  fetch(response['location'], limit - 1)
   #same as previous
   when Net::HTTPRedirection then fetch(response['location'], limit - 1)
   else

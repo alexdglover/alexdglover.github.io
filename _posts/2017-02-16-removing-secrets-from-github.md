@@ -69,7 +69,7 @@ Before we get started on the walk-through, there are two things I'd like to ment
    Untracked files:
      (use "git add <file>..." to include in what will be committed)
    
-   	app.rb
+     app.rb
    
    nothing added to commit but untracked files present (use "git add" to track)
    [alexdglover@mobile1:~/Documents/workspace/rick-and-morty-bot]$ git add app.rb 
