@@ -51,171 +51,173 @@ define("OPENSHIFT_DB", "shareyoursalary");
 
 class Database{
 
-	// Here we define the constructor that will be called each time the
-	// Database class is instantiated. In this case, we're just going
-	// to call the get_db_connection() function
-	function __construct(){
-		$this->get_db_connection();
-	}
+  // Here we define the constructor that will be called each time the
+  // Database class is instantiated. In this case, we're just going
+  // to call the get_db_connection() function
+  function __construct(){
+    $this->get_db_connection();
+  }
 
-	// Since I used OpenShift for this project, all of the database
-	// connection information was abstracted to environment variables.
-	// Ultimately, we are constructing a MongoClient class object and
-	// returning it to whatever called this function
-	function get_db_connection() {
-		$host = $_ENV["OPENSHIFT_MONGODB_DB_HOST"];
-		$user = $_ENV["OPENSHIFT_MONGODB_DB_USERNAME"];
-		$passwd = $_ENV["OPENSHIFT_MONGODB_DB_PASSWORD"];
-		$port = $_ENV["OPENSHIFT_MONGODB_DB_PORT"];
-		$uri = "mongodb://" . $user . ":" . $passwd . "@" . $host . ":" . $port;
-		$mongo = new MongoClient($uri);
-		return $mongo;
-	}
+  // Since I used OpenShift for this project, all of the database
+  // connection information was abstracted to environment variables.
+  // Ultimately, we are constructing a MongoClient class object and
+  // returning it to whatever called this function
+  function get_db_connection() {
+    $host = $_ENV["OPENSHIFT_MONGODB_DB_HOST"];
+    $user = $_ENV["OPENSHIFT_MONGODB_DB_USERNAME"];
+    $passwd = $_ENV["OPENSHIFT_MONGODB_DB_PASSWORD"];
+    $port = $_ENV["OPENSHIFT_MONGODB_DB_PORT"];
+    $uri = "mongodb://" . $user . ":" . $passwd . "@" . $host . ":" . $port;
+    $mongo = new MongoClient($uri);
+    return $mongo;
+  }
 
-	// Returns a database object based on a database name input parameter ($dbname)
-	function get_database($dbname) {
-		$conn = $this->get_db_connection();
-		return $conn->$dbname;
-	}
+  // Returns a database object based on a database name input parameter ($dbname)
+  function get_database($dbname) {
+    $conn = $this->get_db_connection();
+    return $conn->$dbname;
+  }
 
-	// Returns a collection object based on a collection name input ($collection)
-	function get_collection($collection) {
-		$db = $this->get_database(OPENSHIFT_DB);
-		return $db->$collection;
-	}
+  // Returns a collection object based on a collection name input ($collection)
+  function get_collection($collection) {
+    $db = $this->get_database(OPENSHIFT_DB);
+    return $db->$collection;
+  }
 
 }
-?>```
+?>
+```
 <p>This class is pretty straightforward and does little in the way of error handling. Basically we're just connecting to the database and abstracting some basic MongoDB functions to make them available as class functions.</p>
 <h5>The 'Survey' Class</h5>
 <p>The Survey object is the only real object in this program from an object-oriented programming perspective. This object (the survey) is the core of the application, and so most of the relevant data exists as properties of this class.</p>
 <p>Let's walk through the source with some comments:</p>
-```<?php
+```php
+<?php
 
 class Survey {
 
 // Class properties are defined here. These should probably be all marked as private varaiables
 
-	var $surveyName; // Human-readable survey name
-	var $URLName; // URL-friendly version of the surveyName property
-	var $currency; // the currency that this survey is based on, e.g. USD
-	var $period; // The period that the survey is based on, e.g. per hour or per year
-	var $minentries; // The minimum number of entries needed before the results are published. This ensures anonymity
-	private $db; // Property to hold the Database object
+  var $surveyName; // Human-readable survey name
+  var $URLName; // URL-friendly version of the surveyName property
+  var $currency; // the currency that this survey is based on, e.g. USD
+  var $period; // The period that the survey is based on, e.g. per hour or per year
+  var $minentries; // The minimum number of entries needed before the results are published. This ensures anonymity
+  private $db; // Property to hold the Database object
 
-    // This is the constructor function. It instantiates the database class and sets it to the local db property
-	public function __construct(){
-		$this->db = new Database();
-	}
+  // This is the constructor function. It instantiates the database class and sets it to the local db property
+  public function __construct(){
+    $this->db = new Database();
+  }
+
+  // Simple getter functions for each of the properties. These aren't actually used anywhere, but I created them as a standard practice
+  public function get_name(){
+    return $this->surveyName;
+  }
+
+  public function get_url_name(){
+    return $this->URLName;
+  }
+
+  public function get_currency(){
+      return $this->currency;
+  }
+
+  public function get_period(){
+    return $this->period;
+  }
+
+  public function get_minentries(){
+    return $this->minentries;
+  }
+
+  // This function will take the human-readable name as an input, then convert and return the URL-friendly version
+  private function convertNameToURLName($string) {
+    //Lower case everything
+    $string = strtolower($string);
+    //Make alphanumeric (removes all other characters)
+    $string = preg_replace("/[^a-z0-9_\s-]/", "", $string);
+    //Clean up multiple dashes or whitespaces
+    $string = preg_replace("/[\s-]+/", " ", $string);
+    //Convert whitespaces and underscore to dash
+    $string = preg_replace("/[\s_]/", "-", $string);
+    return $string;
+  }
 
 
-    // Simple getter functions for each of the properties. These aren't actually used anywhere, but I created them as a standard practice
-	public function get_name(){
-		return $this->surveyName;
-	}
+  // This function finds a given survey in the database based on the surveyName
+  // passed as an input parameter. The surveyName will be sent as part of
+  // the $args parameter (sent as part of a URL path parameter via F3).
+  // If found, the survey will be echo'd in JSON format (this
+  // allows it to be consumed as an API)
+  public function getByName($f3,$args) {
+    $surveys = $this->db->get_collection('surveys');
 
-	public function get_url_name(){
-		return $this->URLName;
-	}
+    // Convert name to URL friendly name
+    $URLName = $this->convertNameToURLName($args['name']);
 
-    public function get_currency(){
-        return $this->currency;
+    $query = array('URLName' => $URLName);
+    $cursor = $surveys->find($query);
+    foreach ($cursor as $doc){
+      if(count($doc['responses']) < $doc['minEntries'])
+      {
+        for($i=0; $i < (count($doc['responses'])); $i++)
+        {
+          $doc['responses'][$i] = '0';
+        }
+        echo json_encode($doc);
+      }
+      else {
+        echo json_encode($doc);
+      }
     }
+  }
 
-	public function get_period(){
-		return $this->period;
-	}
+  // The addSurvey function takes HTTP parameters (the $_REQUEST variables) as
+  // inputs and creates the new survey entry in the database. Once created, the
+  // function attempts to find the survey and echo it in JSON format (this allows it to be consumed as an API)
+  public function addSurvey($f3,$args) {
+    // Get surveys collection    
+    $surveys  = $this->db->get_collection('surveys');
+    $surveyName   = $_REQUEST['surveyName'];
+    // Convert name to URL friendly name
+    $URLName = $this->convertNameToURLName($surveyName);
+    $currency  = $_REQUEST['currency'];
+    $period    = $_REQUEST['period'];
+    $minEntries   = $_REQUEST['minEntries'];
 
-	public function get_minentries(){
-		return $this->minentries;
-	}
+    // Insert new data sent via API call
+    $surveys->insert(array('name' => $surveyName, 'URLName' => $URLName, 'currency' => $currency, 'period'=>$period, 'minEntries'=>$minEntries, 'responses'=>(array())));
+    // Build a query object, basically a single item array with the name of the new survey input value
+    $query = array('URLName' => $URLName);
+    // Attempt to find the survey we just created
+    $cursor = $surveys->find($query);
+    // For each object that matches the query, echo the data as JSON
+    foreach ($cursor as $doc){
+      echo json_encode($doc);
+    }
+  }
 
-    // This function will take the human-readable name as an input, then convert and return the URL-friendly version
-	private function convertNameToURLName($string) {
-		//Lower case everything
-		$string = strtolower($string);
-		//Make alphanumeric (removes all other characters)
-		$string = preg_replace("/[^a-z0-9_\s-]/", "", $string);
-		//Clean up multiple dashes or whitespaces
-		$string = preg_replace("/[\s-]+/", " ", $string);
-		//Convert whitespaces and underscore to dash
-		$string = preg_replace("/[\s_]/", "-", $string);
-		return $string;
-	}
+  // The addResponse function takes a survey name (as a URL parameter passed via F3)
+  // and a response input (via HTTP query parameters, the $_REQUEST variable below).
+  // It uses the survey name to find the survey in the database and then updates the
+  // embedded response array with the response value sent. Once updated, the function
+  // returns the newly updated survey in JSON format
+  public function addResponse($f3,$args) {
+    $surveys = $this->db->get_collection('surveys');
+    $response = $_REQUEST["response"];
 
+    // Convert name to URL friendly name
+    $URLName = $this->convertNameToURLName($args['name']);
 
-    // This function finds a given survey in the database based on the surveyName
-    // passed as an input parameter. The surveyName will be sent as part of
-    // the $args parameter (sent as part of a URL path parameter via F3).
-    // If found, the survey will be echo'd in JSON format (this
-    // allows it to be consumed as an API)
-	public function getByName($f3,$args) {
-		$surveys = $this->db->get_collection('surveys');
-
-        // Convert name to URL friendly name
-		$URLName = $this->convertNameToURLName($args['name']);
-
-		$query = array('URLName' => $URLName);
-        $cursor = $surveys->find($query);
-        foreach ($cursor as $doc){
-			if(count($doc['responses']) < $doc['minEntries'])
-			{
-				for($i=0; $i < (count($doc['responses'])); $i++)
-				{
-					$doc['responses'][$i] = '0';
-				}
-				echo json_encode($doc);
-			}
-			else {echo json_encode($doc);}
-        }
-	}
-
-    // The addSurvey function takes HTTP parameters (the $_REQUEST variables) as
-    // inputs and creates the new survey entry in the database. Once created, the
-    // function attempts to find the survey and echo it in JSON format (this allows it to be consumed as an API)
-	public function addSurvey($f3,$args) {
-		// Get surveys collection		
-		$surveys	= $this->db->get_collection('surveys');
-		$surveyName 	= $_REQUEST['surveyName'];
-		// Convert name to URL friendly name
-		$URLName = $this->convertNameToURLName($surveyName);
-		$currency	= $_REQUEST['currency'];
-		$period		= $_REQUEST['period'];
-		$minEntries 	= $_REQUEST['minEntries'];
-
-		// Insert new data sent via API call
-		$surveys->insert(array('name' => $surveyName, 'URLName' => $URLName, 'currency' => $currency, 'period'=>$period, 'minEntries'=>$minEntries, 'responses'=>(array())));
-		// Build a query object, basically a single item array with the name of the new survey input value
-		$query = array('URLName' => $URLName);
-		// Attempt to find the survey we just created
-        $cursor = $surveys->find($query);
-		// For each object that matches the query, echo the data as JSON
-        foreach ($cursor as $doc){
-            echo json_encode($doc);
-        }
-	}
-
-    // The addResponse function takes a survey name (as a URL parameter passed via F3)
-    // and a response input (via HTTP query parameters, the $_REQUEST variable below).
-    // It uses the survey name to find the survey in the database and then updates the
-    // embedded response array with the response value sent. Once updated, the function
-    // returns the newly updated survey in JSON format
-	public function addResponse($f3,$args) {
-		$surveys = $this->db->get_collection('surveys');
-		$response = $_REQUEST["response"];
-
-        // Convert name to URL friendly name
-        $URLName = $this->convertNameToURLName($args['name']);
-
-		$surveys->update(array('URLName' => $URLName),array('$push' => array('responses' => $response)));
-		$query = array('URLName' => $URLName);
-        $cursor = $surveys->find($query);
-        foreach ($cursor as $doc){
-            echo json_encode($doc);
-        }
-	}
+    $surveys->update(array('URLName' => $URLName),array('$push' => array('responses' => $response)));
+    $query = array('URLName' => $URLName);
+    $cursor = $surveys->find($query);
+    foreach ($cursor as $doc){
+        echo json_encode($doc);
+    }
+  }
 }
-
 ?>
 ```
 <p>Looking back, this Survey class contains aspects of both a model and a controller. In a proper MVC project, this probably should have been split into two classes, a 'Survey' object (with just the basic properties and getters/setters) and a 'SurveyController' (with the addSurvey and addResponse).</p>
