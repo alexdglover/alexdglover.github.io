@@ -14,6 +14,8 @@ tags:
 - php
 - rest
 - restful
+header:
+  teaser: /assets/ShareYourSalary-HomePage-1024x654.png
 ---
 <p>So in <a title="Share Your Salary App Part 1" href="http://alexdglover.com/share-your-salary-app-part-1/" target="_blank">Part 1</a> we built the core classes for our app and we exposed those classes as a RESTful web service in <a title="Share Your Salary App Part 2" href="http://alexdglover.com/share-your-salary-app-part-2/" target="_blank">Part 2</a>. Now, we'll build a UI and wrap up the project.</p>
 <p>Feel free to check out the application first or pull up the source in another window.</p>
@@ -290,7 +292,7 @@ $f3->route('GET /',
 ```
 
 <p>If you want to use a different file name for your home page (instead of welcome.htm) just change it in this line of the index.php file. Now if we browse to our site, we should see our home page:</p>
-<p><a href="http://alexdglover.com/wp-content/uploads/2015/02/ShareYourSalary-HomePage.png"><img class="aligncenter size-large wp-image-914" src="{{ site.baseurl }}/assets/ShareYourSalary-HomePage-1024x654.png" alt="ShareYourSalary Home Page" width="860" height="549" /></a></p>
+<p><a href="http://alexdglover.com/wp-content/uploads/2015/02/ShareYourSalary-HomePage.png"><img class="aligncenter size-large wp-image-914" src="{{ "/assets/ShareYourSalary-HomePage-1024x654.png" | absolute_url }}" alt="ShareYourSalary Home Page" width="860" height="549" /></a></p>
 <p>Now we can partially test this form if we want. If we submit a survey and the API processes it successfully, we'll get routed to a page that doesn't exist yet (that's OK, that's expected behavior). But how do we know the submission worked? We can go back to our API test page we created in <a title="Share Your Salary App Part 2" href="http://alexdglover.com/share-your-salary-app-part-2/">Part 2</a> and execute a getByName API call.</p>
 <p><a href="http://alexdglover.com/wp-content/uploads/2015/02/ShareYourSalary-APIDemo.png"><img class="aligncenter size-full wp-image-915" src="{{ site.baseurl }}/assets/ShareYourSalary-APIDemo.png" alt="ShareYourSalary API Demo" width="987" height="731" /></a></p>
 <p>If we tried to create a survey called 'demo' then all we need to do is execute the /survey/getByName/{name} API with that value. You can do this in Swagger, or since it's just a GET request, you can do it directly in your browser. Just browse to <a title="http://shareyoursalary-alexdglover.rhcloud.com/api/v1/survey/getByName/demo" href="http://shareyoursalary-alexdglover.rhcloud.com/api/v1/survey/getByName/demo" target="_blank">http://shareyoursalary-alexdglover.rhcloud.com/api/v1/survey/getByName/demo</a> and you should see the JSON response.</p>
