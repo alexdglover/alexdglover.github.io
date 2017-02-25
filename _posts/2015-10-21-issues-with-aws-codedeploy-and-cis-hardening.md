@@ -31,7 +31,8 @@ hooks:
       timeout: 600
       runas: ec2-user
     - source: scripts/register-with-elb.sh
-      timeout: 1200```
+      timeout: 1200
+```
 <p>That's it - patch.sh is the first script executed as ec2-user. But this revision worked before, what changed?</p>
 <p>One of the many changes required to meet the CIS benchmarks includes changing the <a href="https://en.wikipedia.org/wiki/Umask">umask</a> so "that files created by daemons will not be readable, writable or executable by any other than the group and owner of the daemon process..." Because the CodeDeploy daemon runs as root, any files created (including every file and script that is part of your CodeDeploy revision) are owned by root:root with permissions 750. So any script being called by a user that's not root (or in the root group) can't execute the scripts.</p>
 <p>To workaround this, you can simply add another script to update the permissions of the CodeDeploy deployment-root before you execute any scripts as a non-root user.</p>
