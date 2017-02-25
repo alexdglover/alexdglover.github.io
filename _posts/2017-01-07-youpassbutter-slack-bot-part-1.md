@@ -243,8 +243,8 @@ end
 <p>That's it! Now you should be able to go to your Slack channel and execute '/you-pass-butter' and get the image returned!</p>
 <p><a href="http://alexdglover.com/wp-content/uploads/2017/01/anim-3.gif"><img class="aligncenter size-full wp-image-1042" src="{{ site.baseurl }}/assets/anim-3.gif" alt="Testing Slash Command" width="1007" height="762" /></a></p>
 <p>Awesome!</p>
-<h2><a href="{{ "/youpassbutter-slack-bot-part-1/" | absolute_url }}">Part 2</a></h2>
-<p>In <a href="{{ "/youpassbutter-slack-bot-part-1/" | absolute_url }}">Part 2</a>, we'll cover</p>
+<h2><a href="{{ "/youpassbutter-slack-bot-part-2/" | absolute_url }}">Part 2</a></h2>
+<p>In <a href="{{ "/youpassbutter-slack-bot-part-2/" | absolute_url }}">Part 2</a>, we'll cover</p>
 <ul>
 <li>handling our second requirement, namely generating dynamic memes and POSTing them back to Slack</li>
 <li>packaging our Slash Commands as a Slack app, including the OAuth configuration needed for the "Add to Slack" button</li>

@@ -1,10 +1,6 @@
 ---
-
 title: YouPassButter Slack Bot, Part 2
 date: 2017-02-04 10:00:23.000000000 -06:00
-
-
-
 categories:
 - Fun IT Projects
 - How-to Guides
@@ -13,16 +9,6 @@ tags:
 - sinatra
 - slack
 - slash commands
-meta:
-  _edit_last: '1'
-  _s2mail: 'yes'
-  _publicize_twitter_user: "@alexdglover"
-  _thumbnail_id: '1070'
-  _wpas_done_all: '1'
-  _jetpack_dont_email_post_to_subs: '1'
-  _wpas_skip_16584087: '1'
-  _wpas_skip_1477652: '1'
-  _wpas_skip_1477650: '1'
 ---
 <h2>TL;DR Section</h2>
 <p>Just looking for the app? Just click the "Add to Slack" button to install the YouPassButter bot</p>
@@ -142,7 +128,7 @@ end```
 <p>The other thing we have to consider before writing any code is timeouts. Slash Commands must get a valid HTTP response within three seconds, or they will throw a timeout error. We can't assume the Meme Generator's API or our app will be able to reliably return an image in three seconds. Instead of responding to the original HTTP request, our app will make an <strong>asynchronous</strong> request to the 'response_url' provided in the Slack payload once the meme generation completes.</p>
 <p>With that in mind, let's start with building the API route in Sinatra:</p>
 ```post '/memes' do
-  # Grab the entire text from the Slash Command and split the meme, 
+  # Grab the entire text from the Slash Command and split the meme,
   # top text, and bottom text from the text argument from Slack
   text_params = params['text'].split('; ')
   # Grab the response URL from the Slack HTTP call. This is the
@@ -165,7 +151,7 @@ end```
     else
       string_as_json_response "Error generating meme"
     end
-  # If the meme is not found, return an error message and 
+  # If the meme is not found, return an error message and
   # include full list of available memes
   else
     memes = COMMAND_MEME_MAPPING.keys.sort.join(",\n  ")
