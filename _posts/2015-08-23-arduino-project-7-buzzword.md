@@ -1,10 +1,6 @@
 ---
-
 title: 'Arduino Project 7: Buzzword'
 date: 2015-08-23 13:13:04.000000000 -05:00
-
-
-
 categories:
 - Fun Electronics Projects
 - How-to Guides
@@ -13,23 +9,13 @@ tags:
 - games
 - tft
 - touchscreen
-meta:
-  _edit_last: '1'
-  _s2mail: 'yes'
-  _publicize_twitter_user: "@alexdglover"
-  _thumbnail_id: '969'
-  _wpas_mess: 'Arduino Project 7: Buzzword http://wp.me/p3dG3x-fB'
-  _wpas_skip_1477652: '1'
-  _wpas_skip_1477650: '1'
-  _wpas_done_all: '1'
-  _oembed_728f7dcf3facf2639e75dca26696bf4e: <iframe width="616" height="462" src="https://www.youtube.com/embed/9fIOSbhoIIk?feature=oembed"
-    frameborder="0" allowfullscreen></iframe>
-  _oembed_time_728f7dcf3facf2639e75dca26696bf4e: '1474856790'
 ---
 <p>Here's a quick and easy project you can do with minimal hardware components. I call this project/device "Buzzword" but it's basically the same game and concept as <a href="http://amzn.to/1LKt0o1" target="_blank">Catch Phrase</a>. In Catch Phrase, you have a device that shows you random words. You can say anything to help your team guess the word as long as you don't say any part of the "catch phrase" itself, say "it rhymes with <blank>," or otherwise cheat. Once your team correctly guesses the word, you pass the device to the opposing team. This goes on until you run out of time. Whichever team is holding the device when time is up loses.</p>
 <p>My game is very similar, except teams compete by seeing how many points they can get rather than simply whoever is holding the device at the end of the round. In addition, since you are providing your own list of words for the game in the code, you can update it once you get bored with the words or add new pop culture references.</p>
 <p>Here's a quick demo:</p>
-<p>[embed]http://youtu.be/9fIOSbhoIIk[/embed]</p>
+
+{% include video id="9fIOSbhoIIk" provider="youtube" %}
+
 <p>Or for those who don't want to wait for a video to load, here are a few screenshots that should give you an idea of how it works.</p>
 <ol>
 <li>Here's the initial startup screen<br />

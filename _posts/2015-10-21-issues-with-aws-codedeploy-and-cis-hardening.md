@@ -1,23 +1,12 @@
 ---
-
 title: Issues with AWS CodeDeploy and CIS hardening
 date: 2015-10-21 22:23:25.000000000 -05:00
-
-
-
 categories:
 - How-to Guides
 tags:
 - aws
 - codedeploy
 - umask
-meta:
-  _edit_last: '1'
-  _s2mail: 'yes'
-  _publicize_twitter_user: "@alexdglover"
-  _thumbnail_id: '1016'
-  _wpas_mess: Issues with AWS CodeDeploy and CIS hardening
-  _wpas_done_all: '1'
 ---
 <p>I've been using <a href="https://aws.amazon.com/codedeploy/" target="_blank">AWS CodeDeploy</a> for some time now and it's really an awesome service. If you're hosting your application in AWS and not using CodeDeploy you're missing out.</p>
 <p>If you want to use CodeDeploy yet but you just don't know how, check out my <a href="https://www.udemy.com/aws-codedeploy/?couponCode=GOBLs375" target="_blank">in-depth AWS CodeDeploy course</a>.</p>
