@@ -11,6 +11,13 @@ tags:
 - slash commands
 header:
   teaser: /assets/anim.gif
+  overlay_image: /assets/rick-look.jpg
+  overlay_color: "#5e616c"
+  overlay_filter: rgba(0, 0, 0, 0.5)
+  cta_label: "<i class='fa fa-github'></i> GitHub Repo"
+  cta_url: "https://github.com/alexdglover/you-pass-butter-bot"
+  caption: Image courtesy of Adult Swim, YouTube
+excerpt: A dirt simple Slack bot primer, using Ruby, Sinatra, Heroku, and Slash commands
 ---
 <h2>TL;DR Section</h2>
 <p>Just looking for the app? Just click the "Add to Slack" button to install the YouPassButter bot</p>

@@ -11,6 +11,12 @@ tags:
 - touchscreen
 header:
   teaser: /assets/IMG_20150704_103609-300x225.jpg
+  overlay_image: /assets/arduino-closeup.jpg
+  overlay_color: "#5e616c"
+  cta_label: "<i class='fa fa-github'></i> GitHub Repo"
+  cta_url: "https://github.com/alexdglover/buzzword"
+  caption: Image courtesy of <a href="https://commons.wikimedia.org/wiki/File:Arduino_crystal-1.jpg">Wikimedia Commons</a>
+excerpt: A "Catch Phrase" clone I built with an Arduino and TFT Touch Screen
 ---
 <p>Here's a quick and easy project you can do with minimal hardware components. I call this project/device "Buzzword" but it's basically the same game and concept as <a href="http://amzn.to/1LKt0o1" target="_blank">Catch Phrase</a>. In Catch Phrase, you have a device that shows you random words. You can say anything to help your team guess the word as long as you don't say any part of the "catch phrase" itself, say "it rhymes with <blank>," or otherwise cheat. Once your team correctly guesses the word, you pass the device to the opposing team. This goes on until you run out of time. Whichever team is holding the device when time is up loses.</p>
 <p>My game is very similar, except teams compete by seeing how many points they can get rather than simply whoever is holding the device at the end of the round. In addition, since you are providing your own list of words for the game in the code, you can update it once you get bored with the words or add new pop culture references.</p>

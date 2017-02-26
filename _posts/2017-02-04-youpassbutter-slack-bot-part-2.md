@@ -15,6 +15,7 @@ header:
   overlay_color: "#5e616c"
   cta_label: "<i class='fa fa-github'></i> GitHub Repo"
   cta_url: "https://github.com/alexdglover/you-pass-butter-bot"
+  caption: Image courtesy of Adult Swim, YouTube
 excerpt: In part 2, we add dynamic meme generation, OAuth configuration, and re-structure our API to support more Slash commands.
 ---
 <h2>TL;DR Section</h2>
