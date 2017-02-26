@@ -30,7 +30,7 @@ DEALLOCATE PREPARE stmt1;
 ```
 
 <p>For those who can't read SQL, here's the short version - an attacker just dropped ALL of your databases, in all schemas. Whoops. This is your face right now:</p>
-<p style="text-align: center;"><a href="http://alexdglover.files.wordpress.com/2012/11/rage-classic-l.png"><img class="aligncenter size-medium wp-image-241" title="rage-classic-l" alt="" src="{{ site.baseurl }}/assets/rage-classic-l.png" width="300" height="244" /></a></p>
+<p style="text-align: center;"><a href="{{ "/assets/rage-classic-l.png" | absolute_url }}"><img class="aligncenter size-medium wp-image-241" title="rage-classic-l" alt="" src="{{ site.baseurl }}/assets/rage-classic-l.png" width="300" height="244" /></a></p>
 <p>We're not going to let this happen to us, because losing and replacing that data seems like a lot of work, and we all have better things to do than restore backups and try to explain data loss to end users.</p>
 <p>Let's review some options.</p>
 <h3>Escape Special Characters</h3>

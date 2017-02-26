@@ -53,4 +53,4 @@ foreach( $myposts as $post ) : setup_postdata($post); ?>
 ```
 
 <p>Here's a quick preview of what the 'page of posts' code looks like, but obviously aspects of this will be very different based on the theme that you are using.</p>
-<p><a href="http://alexdglover.files.wordpress.com/2012/11/page_of_posts_screenshot.png"><img class="aligncenter size-full wp-image-152" title="page_of_posts_screenshot" alt="" src="{{ site.baseurl }}/assets/page_of_posts_screenshot.png" width="595" height="477" /></a></p>
+<p><a href="{{ "/assets/page_of_posts_screenshot.png" | absolute_url }}"><img class="aligncenter size-full wp-image-152" title="page_of_posts_screenshot" alt="" src="{{ site.baseurl }}/assets/page_of_posts_screenshot.png" width="595" height="477" /></a></p>

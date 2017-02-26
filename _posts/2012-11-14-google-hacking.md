@@ -25,6 +25,6 @@ intitle:”EvoCam” inurl:”webcam.html”</p>
 <p>Or you can find network printers that are accessible to the world wide web, and print funny pictures on their printer. You can find a fair number of printers with these search terms:<br />
 inurl:”printer/main.html” intext:”settings”</p>
 <p><span style="text-align:center;">Maybe you could print this for them:</span></p>
-<p style="text-align:center;"><a href="http://alexdglover.files.wordpress.com/2012/11/troll-troll-face.jpg"><img class="aligncenter  wp-image-183" title="troll-face" alt="" src="{{ site.baseurl }}/assets/troll-troll-face.jpg?w=150" height="300" width="300" /></a></p>
+<p style="text-align:center;"><a href="{{ "/assets/troll-troll-face.jpg" | absolute_url }}"><img class="aligncenter  wp-image-183" title="troll-face" alt="" src="{{ site.baseurl }}/assets/troll-troll-face.jpg?w=150" height="300" width="300" /></a></p>
 <p>You can find a lot of information on dorking and some good examples at the <a href="http://johnny.ihackstuff.com/ghdb/" target="_blank">Google Hacking DataBase</a>.</p>
 <p>One last note - if you're doing this for malevolent purposes, you may get 'caught' - IT security folks are not dumb, so if you try to malevolently attack an organization this way, you are most likely going to find a 'honeypot.' A honeypot is an INTENTIONALLY CREATED VULNERABLE AREA to draw in rookie hackers and bust 'em or at the very least, log the malevolent attempt. If you're doing this for learning/academic worries, I wouldn't sweat it. On the other hand, should you be taking any legal advice from me?</p>

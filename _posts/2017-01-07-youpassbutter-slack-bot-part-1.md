@@ -252,17 +252,17 @@ end
 <p>Now that we have our web service up and running, we just need to create the integration on the Slack side. If you're just creating Slash Commands for your team, this is super easy and you don't have to create a true Slack "app." Just log on to your Slack team, click on the dropdown next to your name, choose "Apps & integrations," then search for "Slash Commands" (assuming you don't already have this app installed).</p>
 
 <p>
-  <a href="http://alexdglover.com/wp-content/uploads/2017/01/anim.gif">
+  <a href="{{ "/assets/anim.gif" | absolute_url }}">
     <img class="aligncenter size-full wp-image-1038" src="{{ site.baseurl }}/assets/anim.gif" alt="" width="1023" height="663" />
   </a>
 </p>
 
 <p>Once you pull up the Slash Commands app, click on "Add Configuration." From there, you can provide whatever keyword you want for your Slash Command, then click "Add Slash Command Integration." On the next screen, provide the command name you want to use, and hit "Add Slash Command Integration."</p>
-<p><a href="http://alexdglover.com/wp-content/uploads/2017/01/anim-1.gif"><img class="aligncenter size-full wp-image-1039" src="{{ site.baseurl }}/assets/anim-1.gif" alt="" width="1023" height="663" /></a></p>
+<p><a href="{{ "/assets/anim-1.gif" | absolute_url }}"><img class="aligncenter size-full wp-image-1039" src="{{ site.baseurl }}/assets/anim-1.gif" alt="" width="1023" height="663" /></a></p>
 <p>On the next screen, there is a bunch of useful information about Slash Commands at the top, followed by configuration elements for our Slash Command. Let's change our command name to /you-pass-butter, and we'll set the URL to our application endpoint. In my case, that endpoint is https://rick-and-morty-bot.herokuapp.com/you-pass-butter. Also note that you can use GET or POST, <strong>but this only applies to custom Slash Commands you set up as part of your Slack 'team.'</strong> If you want to publish your Slash Command as an app, you need to use POST. In our case, we don't care which team the request is originating from, so we can ignore the token. You can also provide help text along with your slack command if you so choose.</p>
-<p><a href="http://alexdglover.com/wp-content/uploads/2017/01/anim-2.gif"><img class="aligncenter size-full wp-image-1040" src="{{ site.baseurl }}/assets/anim-2.gif" alt="" width="1007" height="1005" /></a></p>
+<p><a href="{{ "/assets/anim-2.gif" | absolute_url }}"><img class="aligncenter size-full wp-image-1040" src="{{ site.baseurl }}/assets/anim-2.gif" alt="" width="1007" height="1005" /></a></p>
 <p>That's it! Now you should be able to go to your Slack channel and execute '/you-pass-butter' and get the image returned!</p>
-<p><a href="http://alexdglover.com/wp-content/uploads/2017/01/anim-3.gif"><img class="aligncenter size-full wp-image-1042" src="{{ site.baseurl }}/assets/anim-3.gif" alt="Testing Slash Command" width="1007" height="762" /></a></p>
+<p><a href="{{ "/assets/anim-3.gif" | absolute_url }}"><img class="aligncenter size-full wp-image-1042" src="{{ site.baseurl }}/assets/anim-3.gif" alt="Testing Slash Command" width="1007" height="762" /></a></p>
 <p>Awesome!</p>
 <h2><a href="{{ "/youpassbutter-slack-bot-part-2/" | absolute_url }}">Part 2</a></h2>
 <p>In <a href="{{ "/youpassbutter-slack-bot-part-2/" | absolute_url }}">Part 2</a>, we'll cover</p>

@@ -124,11 +124,11 @@ Now we're ready to assemble the box.</li>
     If you're starting with a "clam-shell" style box (cigar boxes work great), you can follow my solution for the door latch. Secure the 12v door latch to the top of the cigar box with 1/4" screws. Next, take a <a href="http://amzn.to/1ShuHJl">sawtooth picture hangar</a> and nail it into place so it lines up with the 12v door latch. Obviously hammering inside of a cigar box can be difficult - you can also use a pair of pliers to squeeze the nail into place.
   </p>
   <p style="text-align: center;">
-    <a href="http://alexdglover.com/wp-content/uploads/2015/07/IMG_20150328_113216.jpg">
+    <a href="{{ "/assets/IMG_20150328_113216.jpg" | absolute_url }}">
       <img class="aligncenter size-medium wp-image-985" src="{{ site.baseurl }}/assets/IMG_20150328_113216-300x225.jpg" alt="arduino-project-6-unlock-it-with-fire-latch-1" width="300" height="225" /></a>
   </p>
   <p style="text-align: center;">
-    <a href="http://alexdglover.com/wp-content/uploads/2015/07/IMG_20150328_113232.jpg">
+    <a href="{{ "/assets/IMG_20150328_113232.jpg" | absolute_url }}">
       <img class="aligncenter size-medium wp-image-986" src="{{ site.baseurl }}/assets/IMG_20150328_113232-225x300.jpg" alt="arduino-project-6-unlock-it-with-fire-latch-2" width="225" height="300" />
     </a>
   </p>
@@ -139,7 +139,7 @@ Now we're ready to assemble the box.</li>
     At this point, things are going to start getting tight so go ahead and re-wire everything outside of the box. Once you're finished, mount your Arduino (or breadboard) and relay inside of the box. Try to keep all of these components mounted off to one side to save as much usable space as possible.
   </p>
   <p style="text-align: center;">
-    <a href="http://alexdglover.com/wp-content/uploads/2015/07/IMG_20150328_144411.jpg">
+    <a href="{{ "/assets/IMG_20150328_144411.jpg" | absolute_url }}">
       <img class="aligncenter size-medium wp-image-987" src="{{ site.baseurl }}/assets/IMG_20150328_144411-300x225.jpg" alt="arduino-project-6-unlock-it-with-fire-mounting-components" width="300" height="225" />
     </a>
   </p>

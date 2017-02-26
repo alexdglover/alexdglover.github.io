@@ -16,7 +16,7 @@ header:
 <p>There's no refuting the statistics - over 20% of all web traffic comes from mobile users, and almost everyone agrees that this figure will grow.</p>
 <p>Mobile users can use standard web sites, but mobile-friendly sites are going to have better click through, more page visits, and more time spent on pages (there's probably a cooler digital marketing term for this, but you get the idea).</p>
 <p>Part of the pain of mobile-friendly sites is that you must accommodate many different screen sizes and aspect ratios. Check out this comparison from <a href="http://phone-size.com/" target="_blank">Phone Size</a>:</p>
-<p><a href="http://alexdglover.files.wordpress.com/2012/11/phone_size_comparison.png"><img class="aligncenter size-full wp-image-208" title="phone_size_comparison" alt="" src="{{ site.baseurl }}/assets/phone_size_comparison.png" height="578" width="550" /></a></p>
+<p><a href="{{ "/assets/phone_size_comparison.png" | absolute_url }}"><img class="aligncenter size-full wp-image-208" title="phone_size_comparison" alt="" src="{{ site.baseurl }}/assets/phone_size_comparison.png" height="578" width="550" /></a></p>
 <p>Very different from one to the next. And realistically, this is a very small sampling of phone sizes.</p>
 <p><!--more Let's walk though a couple scenarios and talk about solutions.--></p>
 <p>Let's walk though a couple scenarios and talk about solutions.</p>

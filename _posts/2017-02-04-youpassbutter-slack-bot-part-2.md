@@ -102,12 +102,12 @@ end
 
 <p>Just for reference, here are what the two Slash Commands look like in the Slack UI:</p>
 <p style="text-align: center;">
-  <a href="http://alexdglover.com/wp-content/uploads/2017/01/YouPassButter-Part2-SlackUI1.png">
+  <a href="{{ "/assets/YouPassButter-Part2-SlackUI1.png" | absolute_url }}">
     <img class="aligncenter size-medium wp-image-1055" src="{{ site.baseurl }}/assets/YouPassButter-Part2-SlackUI1-237x300.png" alt="YouPassButter-Part2-SlackUI1" />
   </a>
 </p>
 <p style="text-align: center;">
-  <a href="http://alexdglover.com/wp-content/uploads/2017/01/YouPassButter-Part2-SlackUI2.png">
+  <a href="{{ "/assets/YouPassButter-Part2-SlackUI2.png" | absolute_url }}">
     <img class="aligncenter size-medium wp-image-1056" src="{{ site.baseurl }}/assets/YouPassButter-Part2-SlackUI2-230x300.png" alt="YouPassButter-Part2-SlackUI2" />
   </a>
 </p>
@@ -326,4 +326,4 @@ end
 <p>Now obviously our confirmation page is a little plain to say the least, but whatever, it works!</p>
 <h2>Conclusion</h2>
 <p>That's it for our YouPassButter Slack bot. It fetches images/gifs, generates memes, and can be easily installed by any Slack team. Now for a celebratory demo gif:</p>
-<p><a href="http://alexdglover.com/wp-content/uploads/2017/01/YPB-Part2-Final-Demo-Gif.gif"><img class="aligncenter size-full wp-image-1084" src="{{ site.baseurl }}/assets/YPB-Part2-Final-Demo-Gif.gif" alt="YPB-Part2-Final-Demo-Gif" /></a></p>
+<p><a href="{{ "/assets/YPB-Part2-Final-Demo-Gif.gif" | absolute_url }}"><img class="aligncenter size-full wp-image-1084" src="{{ site.baseurl }}/assets/YPB-Part2-Final-Demo-Gif.gif" alt="YPB-Part2-Final-Demo-Gif" /></a></p>

@@ -15,7 +15,7 @@ header:
 {: .notice--warning}
 
 <p>Modal overlays are those fancy popups, often used to display a full-sized image or some sort of form. They give the appearance of a new window within the browser, giving sites a more lively animated and interactive look.</p>
-<p style="text-align: center;"><a href="http://alexdglover.files.wordpress.com/2012/11/modaloverlayexample.png"><img class="aligncenter size-medium wp-image-234" title="modalOverlayExample" alt="" src="{{ site.baseurl }}/assets/modaloverlayexample.png" width="300" height="221" /></a></p>
+<p style="text-align: center;"><a href="{{ "/assets/modaloverlayexample.png" | absolute_url }}"><img class="aligncenter size-medium wp-image-234" title="modalOverlayExample" alt="" src="{{ site.baseurl }}/assets/modaloverlayexample.png" width="300" height="221" /></a></p>
 <p>It's a pretty sweet feature, and is actually pretty easy to implement. I'll highlight a couple options and talk about how to implement them in this post.</p>
 <h3>Lightbox</h3>
 <p><a href="http://lokeshdhakar.com/projects/lightbox2/" target="_blank">Lightbox</a> is a well known modal overlay package that uses jQuery. The implementation of Lightbox is very straightforward</p>

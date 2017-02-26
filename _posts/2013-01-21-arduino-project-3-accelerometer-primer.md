@@ -30,12 +30,12 @@ header:
 </ul>
 <p>Total project cost of $52, plus you'll have some leftover jumper wires and LEDs.</p>
 <p>Since this is just a simple primer, I won't go into great detail. Basically we need to wire up the accelerometer as outlined in the Arduino sketch and we need to wire up each LED to an output pin and ground. If you need help with the wiring, here's a rough diagram. Note - Fritzing didn't include a piece that was identical to my accelerometer, so I used two 5 pin components - they represent one piece. Also, the wire colors don't have any logical meaning, they match my real-world build.</p>
-<p><a href="http://alexdglover.files.wordpress.com/2013/01/accelerometer_primer.png"><img class="aligncenter size-full wp-image-350" alt="Accelerometer_Primer" src="{{ site.baseurl }}/assets/accelerometer_primer.png" width="595" height="562" /></a></p>
+<p><a href="{{ "/assets/accelerometer_primer.png" | absolute_url }}"><img class="aligncenter size-full wp-image-350" alt="Accelerometer_Primer" src="{{ site.baseurl }}/assets/accelerometer_primer.png" width="595" height="562" /></a></p>
 <p>Here's what it looks like up close.</p>
-<p><a href="http://alexdglover.files.wordpress.com/2013/01/img_2740.jpg"><img class="aligncenter size-full wp-image-351" alt="alexdglover_accelerometer_primer_1" src="{{ site.baseurl }}/assets/img_2740.jpg" width="595" height="446" /></a></p>
+<p><a href="{{ "/assets/img_2740.jpg" | absolute_url }}"><img class="aligncenter size-full wp-image-351" alt="alexdglover_accelerometer_primer_1" src="{{ site.baseurl }}/assets/img_2740.jpg" width="595" height="446" /></a></p>
 <p>Here are a couple more angles of the wiring:</p>
-<p><a href="http://alexdglover.files.wordpress.com/2013/01/img_2737.jpg"><img class="aligncenter size-full wp-image-352" alt="alexdglover_accelerometer_primer_2" src="{{ site.baseurl }}/assets/img_2737.jpg" width="595" height="446" /></a></p>
-<p><a href="http://alexdglover.files.wordpress.com/2013/01/img_2741.jpg"><img class="aligncenter size-full wp-image-353" alt="alexdglover_accelerometer_primer_3" src="{{ site.baseurl }}/assets/img_2741.jpg" width="595" height="446" /></a></p>
+<p><a href="{{ "/assets/img_2737.jpg" | absolute_url }}"><img class="aligncenter size-full wp-image-352" alt="alexdglover_accelerometer_primer_2" src="{{ site.baseurl }}/assets/img_2737.jpg" width="595" height="446" /></a></p>
+<p><a href="{{ "/assets/img_2741.jpg" | absolute_url }}"><img class="aligncenter size-full wp-image-353" alt="alexdglover_accelerometer_primer_3" src="{{ site.baseurl }}/assets/img_2741.jpg" width="595" height="446" /></a></p>
 <p>As far as the programming goes, I started with the example on <a href="https://www.virtuabotix.com/reference/index.php?title=Accelerometer_Sensor_Library" target="_blank">this page of  the Virtuabotix wiki</a>. Here's the my finished sktech:</p>
 
 ```c

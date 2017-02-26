@@ -270,7 +270,7 @@ proc            /proc           proc    defaults          0       0
 6. If you want to be thorough, restart your Raspberry Pi and verify that your disk has been mounted (via fstab from Part 1) and that XBMC has started.
 7. You're done. Time to enjoy.
 
-<p style="text-align: center;"><a href="http://alexdglover.com/wp-content/uploads/2014/01/abedcoolcoolcoo.gif"><img class="aligncenter size-medium wp-image-757" alt="abed_cool_cool_cool" src="{{ site.baseurl }}/assets/abedcoolcoolcoo-300x133.gif" width="300" height="133" /></a></p>
+<p style="text-align: center;"><a href="{{ "/assets/abedcoolcoolcoo.gif" | absolute_url }}"><img class="aligncenter size-medium wp-image-757" alt="abed_cool_cool_cool" src="{{ site.baseurl }}/assets/abedcoolcoolcoo-300x133.gif" width="300" height="133" /></a></p>
 
 <h3>Part 2.3 - XBMC Remote</h3>
 <p>If you're going to manage your XBMC/NAS/Pi remotely, I would also suggest downloading the <a href="http://wiki.xbmc.org/index.php?title=Official_XBMC_Remote" target="_blank">XBMC Remote App</a> for your Adroid or iPhone. To enable remote control on XBMC, go to System -> Settings -> Services -> Remote Control and enable both "Allow programs on this system to control XBMC" and "Allow programs on other systems to control XBMC."</p>

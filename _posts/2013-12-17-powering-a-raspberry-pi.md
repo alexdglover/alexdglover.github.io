@@ -50,7 +50,7 @@ header:
 <li>Run a <a href="http://www.amazon.com/gp/product/B002HMWQE2/ref=as_li_ss_tl?ie=UTF8&camp=1789&creative=390957&creativeASIN=B002HMWQE2&linkCode=as2&tag=alexdgloverwo-20" target="_blank">USB-to-micro-USB cable</a> from one of the outputs on your USB hub back to the power input connection on the Pi. This will properly route your +5v power through the polyfuse, protecting your Pi.</li>
 </ol>
 <p>See picture below for a visual explanation.</p>
-<p style="text-align: center;"><a href="http://alexdglover.com/wp-content/uploads/2013/12/photo-11.jpg"><img class="aligncenter size-large wp-image-725" alt="Powering Raspberry Pi with Powered USB" src="{{ "/assets/photo-11-1024x944.jpg" | absolute_url }}" width="620" height="571" /></a></p>
+<p style="text-align: center;"><a href="{{ "/assets/photo-11.jpg" | absolute_url }}"><img class="aligncenter size-large wp-image-725" alt="Powering Raspberry Pi with Powered USB" src="{{ "/assets/photo-11-1024x944.jpg" | absolute_url }}" width="620" height="571" /></a></p>
 <p>Obviously you still need to plug your powered USB hub into a power source. Now your Raspberry Pi will run off of the powered USB hub, allowing you to safely run your Pi and your peripherals from one power supply.</p>
 <p>Anyway, just wanted to share a couple of lessons learned while getting started and highlight the details behind "backpowering."</p>
 <p>How do you power your Pi?</p>

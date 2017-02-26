@@ -28,13 +28,13 @@ excerpt: A "Catch Phrase" clone I built with an Arduino and TFT Touch Screen
 <p>Or for those who don't want to wait for a video to load, here are a few screenshots that should give you an idea of how it works.</p>
 <ol>
 <li>Here's the initial startup screen<br />
-<a href="http://alexdglover.com/wp-content/uploads/2015/07/IMG_20150704_103515.jpg"><img class="aligncenter size-medium wp-image-970" src="{{ site.baseurl }}/assets/IMG_20150704_103515-300x225.jpg" alt="buzzword demo screenshot 1" width="300" height="225" /></a></li>
+<a href="{{ "/assets/IMG_20150704_103515.jpg" | absolute_url }}"><img class="aligncenter size-medium wp-image-970" src="{{ site.baseurl }}/assets/IMG_20150704_103515-300x225.jpg" alt="buzzword demo screenshot 1" width="300" height="225" /></a></li>
 <li>Once you click the button to start, a 60 second timer starts and you're shown the first word. The list of words is shuffled every time the game starts. At this point, if you're holding the device, you can pass if it's too hard, or start throwing out clues. If someone guesses correctly, you hit the +1 button which will increment your team's score and load up the next buzzword for the next player<br />
-<a href="http://alexdglover.com/wp-content/uploads/2015/07/IMG_20150704_103530.jpg"><img class="aligncenter size-medium wp-image-971" src="{{ site.baseurl }}/assets/IMG_20150704_103530-300x225.jpg" alt="buzzword demo screenshot 2" width="300" height="225" /></a></li>
+<a href="{{ "/assets/IMG_20150704_103530.jpg" | absolute_url }}"><img class="aligncenter size-medium wp-image-971" src="{{ site.baseurl }}/assets/IMG_20150704_103530-300x225.jpg" alt="buzzword demo screenshot 2" width="300" height="225" /></a></li>
 <li>This continues...<br />
-<a href="http://alexdglover.com/wp-content/uploads/2015/07/IMG_20150704_103609.jpg"><img class="aligncenter size-medium wp-image-969" src="{{ site.baseurl }}/assets/IMG_20150704_103609-300x225.jpg" alt="buzzword demo screenshot 3" width="300" height="225" /></a></li>
+<a href="{{ "/assets/IMG_20150704_103609.jpg" | absolute_url }}"><img class="aligncenter size-medium wp-image-969" src="{{ site.baseurl }}/assets/IMG_20150704_103609-300x225.jpg" alt="buzzword demo screenshot 3" width="300" height="225" /></a></li>
 <li>Until finally you run out of time and you get your final score<br />
-<a href="http://alexdglover.com/wp-content/uploads/2015/07/IMG_20150704_103624.jpg"><img class="aligncenter size-medium wp-image-972" src="{{ site.baseurl }}/assets/IMG_20150704_103624-300x225.jpg" alt="buzzword demo screenshot 4" width="300" height="225" /></a></li>
+<a href="{{ "/assets/IMG_20150704_103624.jpg" | absolute_url }}"><img class="aligncenter size-medium wp-image-972" src="{{ site.baseurl }}/assets/IMG_20150704_103624-300x225.jpg" alt="buzzword demo screenshot 4" width="300" height="225" /></a></li>
 </ol>
 <h2>Components Needed</h2>
 <ul>
