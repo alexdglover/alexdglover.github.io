@@ -12,6 +12,7 @@ tags:
 header:
   teaser: /assets/IMG_20150704_103609-300x225.jpg
   overlay_image: /assets/arduino-closeup.jpg
+  overlay_filter: rgba(0, 0, 0, 0.2)
   overlay_color: "#5e616c"
   cta_label: "<i class='fa fa-github'></i> GitHub Repo"
   cta_url: "https://github.com/alexdglover/buzzword"
