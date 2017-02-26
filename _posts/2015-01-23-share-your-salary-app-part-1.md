@@ -2,7 +2,7 @@
 title: Share Your Salary App Part 1
 date: 2015-01-23 09:30:51.000000000 -06:00
 categories:
-- Fun IT Projects
+- IT/Software Projects
 - How-to Guides
 tags:
 - f3

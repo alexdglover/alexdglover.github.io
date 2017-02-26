@@ -2,7 +2,7 @@
 title: Web Scraping, PHP, and Wheel of Fortune
 date: 2013-04-16 21:13:22.000000000 -05:00
 categories:
-- Fun IT Projects
+- IT/Software Projects
 tags:
 - cron
 - php

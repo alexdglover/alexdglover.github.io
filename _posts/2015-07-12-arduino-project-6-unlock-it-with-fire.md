@@ -2,7 +2,7 @@
 title: 'Arduino Project 6: Unlock it with Fire'
 date: 2015-07-12 15:10:09.000000000 -05:00
 categories:
-- Fun Electronics Projects
+- Electronics Projects
 - How-to Guides
 tags:
 - arduino

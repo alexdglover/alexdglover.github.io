@@ -2,7 +2,7 @@
 title: 'Raspberry Pi Project 1: NAS and XBMC'
 date: 2014-01-04 16:08:19.000000000 -06:00
 categories:
-- Fun IT Projects
+- IT/Software Projects
 - How-to Guides
 tags:
 - htpc

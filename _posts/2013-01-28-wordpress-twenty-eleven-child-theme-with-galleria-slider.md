@@ -2,7 +2,7 @@
 title: 'WordPress: Twenty Eleven Child Theme with Galleria Slider'
 date: 2013-01-28 09:00:44.000000000 -06:00
 categories:
-- Fun IT Projects
+- IT/Software Projects
 - Utilities And Other Useful Things
 tags:
 - slider

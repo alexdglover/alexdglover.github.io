@@ -2,7 +2,7 @@
 title: 'Arduino Project 5: Internet Control without Ethernet Shield'
 date: 2013-02-18 09:00:30.000000000 -06:00
 categories:
-- Fun IT Projects
+- IT/Software Projects
 - How-to Guides
 - Utilities And Other Useful Things
 tags:

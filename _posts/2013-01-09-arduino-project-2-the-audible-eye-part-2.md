@@ -2,7 +2,7 @@
 title: 'Arduino Project 2: The Audible Eye Part 2'
 date: 2013-01-09 09:00:03.000000000 -06:00
 categories:
-- Fun Electronics Projects
+- Electronics Projects
 - How-to Guides
 tags:
 - arduino

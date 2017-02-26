@@ -2,7 +2,7 @@
 title: 'Google Hacking'
 date: 2012-11-14 07:00:53.000000000 -06:00
 categories:
-- Fun IT Projects
+- IT/Software Projects
 - How-to Guides
 tags:
 - google

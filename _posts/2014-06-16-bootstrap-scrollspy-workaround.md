@@ -6,7 +6,7 @@ date: 2014-06-16 08:00:10.000000000 -05:00
 
 
 categories:
-- Fun IT Projects
+- IT/Software Projects
 - How-to Guides
 tags:
 - bootstrap

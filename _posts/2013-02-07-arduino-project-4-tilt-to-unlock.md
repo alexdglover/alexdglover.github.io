@@ -2,7 +2,7 @@
 title: 'Arduino Project 4: Tilt To Unlock'
 date: 2013-02-07 17:52:52.000000000 -06:00
 categories:
-- Fun Electronics Projects
+- Electronics Projects
 - How-to Guides
 tags:
 - accelerometer

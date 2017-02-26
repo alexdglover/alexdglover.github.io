@@ -2,7 +2,7 @@
 title: MongoDB and PHP Primer
 date: 2015-01-08 09:30:24.000000000 -06:00
 categories:
-- Fun IT Projects
+- IT/Software Projects
 - How-to Guides
 tags:
 - mongodb

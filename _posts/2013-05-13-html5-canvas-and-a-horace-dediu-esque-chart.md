@@ -2,7 +2,7 @@
 title: HTML5 Canvas and a Horace Dediu-esque Chart
 date: 2013-05-13 08:00:32.000000000 -05:00
 categories:
-- Fun IT Projects
+- IT/Software Projects
 - Utilities And Other Useful Things
 tags:
 - canvas

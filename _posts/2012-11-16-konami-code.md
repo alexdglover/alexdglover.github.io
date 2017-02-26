@@ -2,7 +2,7 @@
 title: Konami Code
 date: 2012-11-16 07:30:38.000000000 -06:00
 categories:
-- Fun IT Projects
+- IT/Software Projects
 - How-to Guides
 tags:
 - easter egg

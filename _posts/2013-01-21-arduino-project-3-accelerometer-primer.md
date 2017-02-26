@@ -2,8 +2,8 @@
 title: 'Arduino Project 3: Accelerometer Primer'
 date: 2013-01-21 09:00:21.000000000 -06:00
 categories:
-- Fun Electronics Projects
-- Fun IT Projects
+- Electronics Projects
+- IT/Software Projects
 - How-to Guides
 tags:
 - accelerometer

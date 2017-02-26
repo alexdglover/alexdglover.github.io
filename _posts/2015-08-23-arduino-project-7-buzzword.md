@@ -2,7 +2,7 @@
 title: 'Arduino Project 7: Buzzword'
 date: 2015-08-23 13:13:04.000000000 -05:00
 categories:
-- Fun Electronics Projects
+- Electronics Projects
 - How-to Guides
 tags:
 - arduino

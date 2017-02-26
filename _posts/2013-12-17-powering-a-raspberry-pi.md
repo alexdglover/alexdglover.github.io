@@ -1,12 +1,10 @@
 ---
 title: "Powering a Raspberry Pi"
-date: 2013-12-17 18:23:08 # .000000000 -06:00
-# type: post
-# published: true
-# status: publish
+date: 2013-12-17 18:23:08.000000000 -06:00
 categories:
 - How-to Guides
 - Questions for the Community
+- Electronics Projects
 tags:
 - backpower
 - pi

@@ -2,7 +2,7 @@
 title: "Who's that person in that thing? App"
 date: 2014-07-28 08:00:44.000000000 -05:00
 categories:
-- Fun IT Projects
+- IT/Software Projects
 tags:
 - api
 - movieDB

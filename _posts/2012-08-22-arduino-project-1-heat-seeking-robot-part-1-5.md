@@ -2,7 +2,7 @@
 title: 'Arduino Project 1: Heat Seeking Robot (Part 1.5)'
 date: 2012-08-22 22:25:25.000000000 -05:00
 categories:
-- Fun IT Projects
+- IT/Software Projects
 - How-to Guides
 tags:
 - arduino

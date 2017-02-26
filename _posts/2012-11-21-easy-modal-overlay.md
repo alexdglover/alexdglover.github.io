@@ -2,7 +2,7 @@
 title: Easy Modal Overlays
 date: 2012-11-21 08:00:12.000000000 -06:00
 categories:
-- Fun IT Projects
+- IT/Software Projects
 - How-to Guides
 tags:
 - jQuery

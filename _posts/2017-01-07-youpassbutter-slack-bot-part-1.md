@@ -2,7 +2,7 @@
 title: YouPassButter Slack Bot, Part 1
 date: 2017-01-07 11:34:38.000000000 -06:00
 categories:
-- Fun IT Projects
+- IT/Software Projects
 - How-to Guides
 tags:
 - ruby
