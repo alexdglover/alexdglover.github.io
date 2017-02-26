@@ -18,12 +18,12 @@ header:
 {: .notice--warning}
 
 <p>I've procrastinated on this project post far too long! I've had the Heat Seeking Robot working at a <em>very </em> primitive level for over a month now, and posted NOTHING. For this, I am sorry.</p>
-<p>So this is Part 1.5, where Part 2 was supposed to be the ultimate conclusion to the project. Here's where we're at so far: we have a working IR Thermometer reporting temperature readings to an Arduino board from <a title="Arduino Project 1: Heat Seeking Robot (Part 1)" href="http://alexdglover.wordpress.com/2012/07/20/arduino-project-1-heat-seeking-robot-part-1/" target="_blank">Part 1</a>. From there, I removed the IR thermometer from the breadboard, and pushed the four pins through one of the servo armatures (the white plus sign shaped object on top of the blue servo). As a throw-away proof-of-concept build, I just used double sided tape to attach the servo to the bread board (this will make more sense later).</p>
+<p>So this is Part 1.5, where Part 2 was supposed to be the ultimate conclusion to the project. Here's where we're at so far: we have a working IR Thermometer reporting temperature readings to an Arduino board from <a title="Arduino Project 1: Heat Seeking Robot (Part 1)" href="/arduino-project-1-heat-seeking-robot-part-1/" target="_blank">Part 1</a>. From there, I removed the IR thermometer from the breadboard, and pushed the four pins through one of the servo armatures (the white plus sign shaped object on top of the blue servo). As a throw-away proof-of-concept build, I just used double sided tape to attach the servo to the bread board (this will make more sense later).</p>
 
 
 <figure>
-  <a href="http://alexdglover.files.wordpress.com/2012/08/imag0118.jpg"><img class="size-full wp-image-116" title="Servo and IR Thermometer Mounted on Breadboard" src="{{ site.baseurl }}/assets/imag0118.jpg" alt="Servo and IR Thermometer Mounted on Breadboard" width="600" height="358" /></a>
-  <figcaption><a href="http://alexdglover.files.wordpress.com/2012/08/imag0118.jpg">Servo and IR Thermometer Mounted on Breadboard</a></figcaption>
+  <a href="{{ "/assets/imag0118.jpg" | absolute_url }}"><img class="size-full wp-image-116" title="Servo and IR Thermometer Mounted on Breadboard" src="{{ site.baseurl }}/assets/imag0118.jpg" alt="Servo and IR Thermometer Mounted on Breadboard" width="600" height="358" /></a>
+  <figcaption><a href="{{ "/assets/imag0118.jpg" | absolute_url }}">Servo and IR Thermometer Mounted on Breadboard</a></figcaption>
 </figure>
 
 <p>I then pushed the jumper wires into the same servo armatures, originally intending to solder the wires, but it's actually a pretty good connection! I wired up the servo and then combined the IR thermometer sketch with the example sketch 'sweep.' Sweep is a simple servo sketch that makes a servo turn back and forth. Now I could get temperature readings as the thermometer turned back and forth. Not bad so far.</p>
@@ -32,29 +32,29 @@ header:
 <p>I assembled the Tamiya Tracked Chassis and the double gearbox (with a 37.5x1 gear ratio). The Tamiya chassis kit includes a battery mount for two AA batteries, but I used two 9v batteries instead for space-saving reasons. The battery mount is mounted in the middle of the chassis, which uses up a fair amount of space. By using 2 9v batteries sitting side by side, I got a simple and efficient way to have two mobile power supplies. I also attached some jumper wires to the two motors (two wires per motor, ground and positive; see the white and black wires on the top motor, blue and orange wires on the bottom motor).</p>
 
 <figure>
-  <a href="http://alexdglover.files.wordpress.com/2012/08/imag0064.jpg"><img class="size-full wp-image-115" title="Assembled Tamiya Tracked Vehicle Chassis" src="{{ site.baseurl }}/assets/imag0064.jpg" alt="Assembled Tamiya Tracked Vehicle Chassis" width="600" height="358" /></a>
-  <figcaption><a href="http://alexdglover.files.wordpress.com/2012/08/imag0064.jpg">Assembled Tamiya Tracked Vehicle Chassis</a></figcaption>
+  <a href="{{ "/assets/imag0064.jpg" | absolute_url }}"><img class="size-full wp-image-115" title="Assembled Tamiya Tracked Vehicle Chassis" src="{{ site.baseurl }}/assets/imag0064.jpg" alt="Assembled Tamiya Tracked Vehicle Chassis" width="600" height="358" /></a>
+  <figcaption><a href="{{ "/assets/imag0064.jpg" | absolute_url }}">Assembled Tamiya Tracked Vehicle Chassis</a></figcaption>
 </figure>
 
 <p>Attached the DF Robot motor shield to the Arduino board. Keep in mind that our connections for the IR thermometer from Part 1 will have to plugged into the corresponding connections on the motor shield. The motor shield transparently connects to the Arduino for all of the analog slots, as well as the 5v, 3v3, and GND connections on the DC connection side of the board (as opposed to the ethernet connection side of the board). Black circuit board is the motor shield, blue board is the Arduino. The pink foam is some packaging foam I got when I ordered these supplies that I use to make sure the board doesn't get shorted when touching the metal battery exterior. May not be necessary, but hey, better safe than sorry.</p>
 
 <figure>
-  <a href="http://alexdglover.files.wordpress.com/2012/08/imag0139.jpg"><img class="size-full wp-image-117" title="Arduino and Motor Shield" src="{{ site.baseurl }}/assets/imag0139.jpg" alt="Arduino and Motor Shield" width="600" height="358" /></a>
-  <figcaption><a href="http://alexdglover.files.wordpress.com/2012/08/imag0139.jpg">Arduno and Motor Shield</a></figcaption>
+  <a href="{{ "/assets/imag0139.jpg" | absolute_url }}"><img class="size-full wp-image-117" title="Arduino and Motor Shield" src="{{ site.baseurl }}/assets/imag0139.jpg" alt="Arduino and Motor Shield" width="600" height="358" /></a>
+  <figcaption><a href="{{ "/assets/imag0139.jpg" | absolute_url }}">Arduno and Motor Shield</a></figcaption>
 </figure>
 
 <p>As you can see in the above picture, we're using mostly the same pins, just on the motor shield now and not directly on the Arduino. One thing I should have mentioned much much earlier: generally, when you have motors or other devices that consume a fair amount of power (relative to the Arduino), you will want two (or more) separate power sources, one specifically for the Arduino, and separate power sources for the motors. I used one of the male DC plug to 9v battery clips I bought to connect the Arduino and one of the 9v batteries. I used the other 9v battery to power the two DC motors. See the picture below; you'll need to connect your secondary power source (for the motors in this case) to the power-in connections you see on the right. Similarly, each AC motor needs to have a V-in and GND connected to the two green connection blocks in the middle of the picture.</p>
 
 <figure>
-  <a href="http://alexdglover.files.wordpress.com/2012/08/imag0123.jpg"><img class="size-full wp-image-118" title="Motor Shield Power and Motor Connections" src="{{ site.baseurl }}/assets/imag0123.jpg" alt="Motor Shield Power and Motor Connections" width="600" height="1003" /></a>
-  <figcaption><a href="http://alexdglover.files.wordpress.com/2012/08/imag0123.jpg">Motor Shield Power and Motor Connections</a></figcaption>
+  <a href="{{ "/assets/imag0123.jpg" | absolute_url }}"><img class="size-full wp-image-118" title="Motor Shield Power and Motor Connections" src="{{ site.baseurl }}/assets/imag0123.jpg" alt="Motor Shield Power and Motor Connections" width="600" height="1003" /></a>
+  <figcaption><a href="{{ "/assets/imag0123.jpg" | absolute_url }}">Motor Shield Power and Motor Connections</a></figcaption>
 </figure>
 
 <p>Alright, so we've got all of the building blocks in place, let's assemble and see what we've got.</p>
 
 <figure>
-  <a href="http://alexdglover.files.wordpress.com/2012/08/imag0141.jpg"><img class="size-full wp-image-120" title="Heat Seeking Robot In Progress" src="{{ site.baseurl }}/assets/imag0141.jpg" alt="Heat Seeking Robot In Progress" width="600" height="358" /></a>
-  <figcaption><a href="http://alexdglover.files.wordpress.com/2012/08/imag0141.jpg">Heat Seeking Robot in Progress</a></figcaption>
+  <a href="{{ "/assets/imag0141.jpg" | absolute_url }}"><img class="size-full wp-image-120" title="Heat Seeking Robot In Progress" src="{{ site.baseurl }}/assets/imag0141.jpg" alt="Heat Seeking Robot In Progress" width="600" height="358" /></a>
+  <figcaption><a href="{{ "/assets/imag0141.jpg" | absolute_url }}">Heat Seeking Robot in Progress</a></figcaption>
 </figure>
 
 

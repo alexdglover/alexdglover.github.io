@@ -16,7 +16,7 @@ tags:
 
 <p>In a recent work project, we had to do some simple database calls to update records. I was going to do a simple form with a submit button, but decided checked in with one of my coworkers (who's a far better developer than I) to see what he thought. Since we were developing a 'flashier' application, he pushed me to do it all asynchronously with jQuery. I had a hard time finding some good examples at the time, so I decided to create some demos and do a write up.</p>
 <p>Before we start looking at the code, I need to mention two things. For this walk-through, we'll start with a simple PHP form and add in jQuery components. If this doesn't interest you, feel free to skip down to the final section. Second, if you want to follow my example to the letter, you'll need to setup a database (I'm using MySQL) and add a table 'customer' with the following structure:</p>
-<p><a href="http://alexdglover.com/wp-content/uploads/2013/03/alexdglover_asynchDatabaseDemo_tableStructure.png"><img class="aligncenter size-full wp-image-525" alt="alexdglover_asynchDatabaseDemo_tableStructure" src="{{ site.baseurl }}/assets/alexdglover_asynchDatabaseDemo_tableStructure.png" width="564" height="229" /></a></p>
+<p><a href="{{ "/assets/alexdglover_asynchDatabaseDemo_tableStructure.png" | absolute_url }}"><img class="aligncenter size-full wp-image-525" alt="alexdglover_asynchDatabaseDemo_tableStructure" src="{{ site.baseurl }}/assets/alexdglover_asynchDatabaseDemo_tableStructure.png" width="564" height="229" /></a></p>
 <p>Here's a quick script to create the table if you're feeling lazy:</p>
 
 ```sql

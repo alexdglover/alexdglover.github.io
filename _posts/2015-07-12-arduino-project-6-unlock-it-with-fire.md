@@ -12,6 +12,12 @@ tags:
 - relay
 header:
   teaser: /assets/UnlockItWithFireWiring.jpg
+  overlay_image: /assets/IMG_20150328_144411.jpg
+  overlay_filter: rgba(0, 0, 0, 0.2)
+  overlay_color: "#5e616c"
+  cta_label: "<i class='fa fa-github'></i> GitHub Repo"
+  cta_url: "https://github.com/alexdglover/unlock-it-with-fire"
+excerpt: A lock box that can only be opened with a different kind of key
 ---
 <p>A couple years ago I built a <a href="http://alexdglover.com/arduino-project-4-tilt-to-unlock/" target="_blank">novelty lock box that used an Arduino and an accelerometer</a> so that you had to tilt the box in the correct sequence to unlock it. The prototype was pretty rough, so I eventually refined the design and built a Mark II version of it.</p>
 <p>This project is my third iteration of the novelty lockbox. The majority of the design has remain unchanged, except for this project I used a "flame sensor" instead of an accelerometer. Instead of tilting the box in a particular sequence, the only way to open the box is to use an open flame as the "key." Here's a quick video to demonstrate the finished product:</p>
@@ -61,7 +67,9 @@ void loop() {
   <p>Connect the 5v and ground pins (may be marked as '+' and 'G') on your flame sensor to the corresponding pins on the Arduino or bread board. Connect the A0 pin (the analog pin) on the flame sensor to the Analog Input 0 pin on the Arduino (green wire in the photo below, pin 23 on an ATmega328). Use <a href="http://amzn.to/1URGD8T" target="_blank">male-to-female jumper wires</a> to make this easier.</p>
 
   <p style="text-align: center;">
-    <img class="aligncenter size-medium wp-image-979" src="{{ "/assets/IMG_20150328_110043-300x225.jpg" | absolute_url }}" alt="arduino-project-6-unlock-it-with-fire-wiring-1" width="300" height="225" />
+    <a href="{{ "/assets/IMG_20150328_110043-300x225.jpg" | absolute_url }}">
+      <img class="aligncenter size-medium wp-image-979" src="{{ "/assets/IMG_20150328_110043-300x225.jpg" | absolute_url }}" alt="arduino-project-6-unlock-it-with-fire-wiring-1" width="300" height="225" />
+    </a>
   </p>
 </li>
 <li>
@@ -73,7 +81,7 @@ void loop() {
   </p>
 
   <p style="text-align: center;">
-    <a href="http://alexdglover.com/wp-content/uploads/2015/07/relay_wiring_example.jpg">
+    <a href="{{ "/assets/relay_wiring_example.jpg" | absolute_url }}">
       <img class="aligncenter size-medium wp-image-981" src="{{ "/assets/relay_wiring_example-300x225.jpg" |  absolute_url }}" alt="relay_wiring_example" width="300" height="225" />
     </a>
   </p>
@@ -101,12 +109,12 @@ Now we're ready to assemble the box.</li>
   </p>
 
   <p style="text-align: center;">
-    <a href="http://alexdglover.com/wp-content/uploads/2015/07/IMG_20150328_113207.jpg">
+    <a href="{{ "/assets/IMG_20150328_113207.jpg" | absolute_url }}">
       <img class="aligncenter size-medium wp-image-983" src="{{ site.baseurl }}/assets/IMG_20150328_113207-225x300.jpg" alt="arduino-project-6-unlock-it-with-fire-flame-sensor-1" width="225" height="300" />
     </a>
   </p>
   <p style="text-align: center;">
-    <a href="http://alexdglover.com/wp-content/uploads/2015/07/IMG_20150328_113223.jpg">
+    <a href="{{ "/assets/IMG_20150328_113223.jpg" | absolute_url }}">
       <img class="aligncenter size-medium wp-image-984" src="{{ site.baseurl }}/assets/IMG_20150328_113223-300x225.jpg" alt="arduino-project-6-unlock-it-with-fire-flame-sensor-2" width="300" height="225" />
     </a>
   </p>

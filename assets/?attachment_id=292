@@ -1,0 +1,700 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head profile="http://gmpg.org/xfn/11">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>alexdglover_DiskCheckup_1 | alexdglover</title>
+
+<link rel="stylesheet" href="https://s0.wp.com/wp-content/themes/pub/inove/style.css" type="text/css" media="screen" />
+
+<script type="text/javascript" src="https://s0.wp.com/wp-content/themes/pub/inove/js/base.js"></script>
+<script type="text/javascript" src="https://s0.wp.com/wp-content/themes/pub/inove/js/menu.js"></script>
+
+<link rel="pingback" href="https://alexdglover.wordpress.com/xmlrpc.php" />
+<meta name="google-site-verification" content="ursqnxujaeuqTki5Im5q1lQ107DHm1hSaazhoSEhaOs" />
+<link rel='dns-prefetch' href='//s2.wp.com' />
+<link rel='dns-prefetch' href='//s1.wp.com' />
+<link rel='dns-prefetch' href='//s0.wp.com' />
+<link rel="alternate" type="application/rss+xml" title="alexdglover &raquo; Feed" href="https://alexdglover.wordpress.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="alexdglover &raquo; Comments Feed" href="https://alexdglover.wordpress.com/comments/feed/" />
+<link rel="alternate" type="application/rss+xml" title="alexdglover &raquo; alexdglover_DiskCheckup_1 Comments Feed" href="https://alexdglover.wordpress.com/2012/12/05/monitoring-disks-in-raid-array-in-windows-7/alexdglover_diskcheckup_1/feed/" />
+	<script type="text/javascript">
+		/* <![CDATA[ */
+		function addLoadEvent(func) {
+			var oldonload = window.onload;
+			if (typeof window.onload != 'function') {
+				window.onload = func;
+			} else {
+				window.onload = function () {
+					oldonload();
+					func();
+				}
+			}
+		}
+		/* ]]> */
+	</script>
+			<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/wpcom-smileys\/twemoji\/2\/72x72\/","ext":".png","svgUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/wpcom-smileys\/twemoji\/2\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/s1.wp.com\/wp-includes\/js\/wp-emoji-release.min.js?m=1473172720h&ver=4.6.1-RC1-38499"}};
+			!function(a,b,c){function d(a){var c,d,e,f,g,h=b.createElement("canvas"),i=h.getContext&&h.getContext("2d"),j=String.fromCharCode;if(!i||!i.fillText)return!1;switch(i.textBaseline="top",i.font="600 32px Arial",a){case"flag":return i.fillText(j(55356,56806,55356,56826),0,0),!(h.toDataURL().length<3e3)&&(i.clearRect(0,0,h.width,h.height),i.fillText(j(55356,57331,65039,8205,55356,57096),0,0),c=h.toDataURL(),i.clearRect(0,0,h.width,h.height),i.fillText(j(55356,57331,55356,57096),0,0),d=h.toDataURL(),c!==d);case"diversity":return i.fillText(j(55356,57221),0,0),e=i.getImageData(16,16,1,1).data,f=e[0]+","+e[1]+","+e[2]+","+e[3],i.fillText(j(55356,57221,55356,57343),0,0),e=i.getImageData(16,16,1,1).data,g=e[0]+","+e[1]+","+e[2]+","+e[3],f!==g;case"simple":return i.fillText(j(55357,56835),0,0),0!==i.getImageData(16,16,1,1).data[0];case"unicode8":return i.fillText(j(55356,57135),0,0),0!==i.getImageData(16,16,1,1).data[0];case"unicode9":return i.fillText(j(55358,56631),0,0),0!==i.getImageData(16,16,1,1).data[0]}return!1}function e(a){var c=b.createElement("script");c.src=a,c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g,h,i;for(i=Array("simple","flag","unicode8","diversity","unicode9"),c.supports={everything:!0,everythingExceptFlag:!0},h=0;h<i.length;h++)c.supports[i[h]]=d(i[h]),c.supports.everything=c.supports.everything&&c.supports[i[h]],"flag"!==i[h]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[i[h]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='all-css-0-1' href='https://s2.wp.com/_static/??-eJyNkt1uwyAMhV9oDHWLuu1i2rMAcRO3GCPstOrblyzb+iu0G+SDzmcbG3vIJnBSSGppMjlOAyaxhxyYjBBGON6o5yDyZB9jEXcgdguaXdiZb3Vn95GHcx0uvevFDpG9i//zYuI9mP1Lq5EC0Sn0JrPojWphmDaYUI9WR6D6kjz5pVwLClyg3lN2OjsIenQQK5+0hVFe/1JzONaJNXtbluB9LiBi6kk4kVkaXTi0iRUrKn9BK+EAbCIHp8jpSphNdFja4503U8PBVteFbEEuzMm9K+fozv4z97G7+BFf9Lnq3t9e16vuo9ueABbeAus=' type='text/css' media='all' />
+<script type='text/javascript' src='https://s1.wp.com/_static/??-eJyFj9EKwjAMRX/IrE4m7kX8ltnFktqmtWkd+vV2oA/qUAiE3JxcbtQUgVi7MqIoW+tSMN2erbGyUr8A8GTSkLHxxC9YB87IeWZ9OJJDKIJpMFWrRqewwMUg2aNIhRa275GIr4TTX8xijoM+Q0Kh+5erLxBdMcSiErr6wAhzho+pXh38vu363aZvt93aPgArrnBz'></script>
+<link rel='stylesheet' id='all-css-0-2' href='https://s1.wp.com/wp-content/mu-plugins/highlander-comments/style.css?m=1377793621h' type='text/css' media='all' />
+<!--[if lt IE 8]>
+<link rel='stylesheet' id='highlander-comments-ie7-css'  href='https://s1.wp.com/wp-content/mu-plugins/highlander-comments/style-ie7.css?m=1351637563h&#038;ver=20110606' type='text/css' media='all' />
+<![endif]-->
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://alexdglover.wordpress.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://s1.wp.com/wp-includes/wlwmanifest.xml" /> 
+<meta name="generator" content="WordPress.com" />
+<link rel='shortlink' href='http://wp.me/a2mF8v-4I' />
+<link rel="alternate" type="application/json+oembed" href="https://public-api.wordpress.com/oembed/1.0/?format=json&amp;url=https%3A%2F%2Falexdglover.wordpress.com%2F2012%2F12%2F05%2Fmonitoring-disks-in-raid-array-in-windows-7%2Falexdglover_diskcheckup_1%2F&amp;for=wpcom-auto-discovery" /><link rel="alternate" type="application/xml+oembed" href="https://public-api.wordpress.com/oembed/1.0/?format=xml&amp;url=https%3A%2F%2Falexdglover.wordpress.com%2F2012%2F12%2F05%2Fmonitoring-disks-in-raid-array-in-windows-7%2Falexdglover_diskcheckup_1%2F&amp;for=wpcom-auto-discovery" />
+<!-- Jetpack Open Graph Tags -->
+<meta property="og:type" content="article" />
+<meta property="og:title" content="alexdglover_DiskCheckup_1" />
+<meta property="og:url" content="https://alexdglover.wordpress.com/2012/12/05/monitoring-disks-in-raid-array-in-windows-7/alexdglover_diskcheckup_1/" />
+<meta property="og:description" content="Visit the post for more." />
+<meta property="article:published_time" content="2012-12-05T04:39:07+00:00" />
+<meta property="article:modified_time" content="2012-12-05T04:39:07+00:00" />
+<meta property="og:site_name" content="alexdglover" />
+<meta property="og:image" content="https://alexdglover.files.wordpress.com/2012/12/alexdglover_diskcheckup_1.png" />
+<meta property="og:locale" content="en_US" />
+<meta name="twitter:site" content="@wordpressdotcom" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:description" content="Visit the post for more." />
+<meta property="fb:app_id" content="249643311490" />
+<meta property="article:publisher" content="https://www.facebook.com/WordPresscom" />
+<link rel="shortcut icon" type="image/x-icon" href="https://s2.wp.com/i/favicon.ico" sizes="16x16 24x24 32x32 48x48" />
+<link rel="icon" type="image/x-icon" href="https://s2.wp.com/i/favicon.ico" sizes="16x16 24x24 32x32 48x48" />
+<link rel="apple-touch-icon-precomposed" href="https://s0.wp.com/i/webclip.png" />
+<link rel='openid.server' href='https://alexdglover.wordpress.com/?openidserver=1' />
+<link rel='openid.delegate' href='https://alexdglover.wordpress.com/' />
+<link rel="search" type="application/opensearchdescription+xml" href="https://alexdglover.wordpress.com/osd.xml" title="alexdglover" />
+<link rel="search" type="application/opensearchdescription+xml" href="https://s1.wp.com/opensearch.xml" title="WordPress.com" />
+		<style id="wpcom-hotfix-masterbar-style">
+			@media screen and (min-width: 783px) {
+				#wpadminbar .quicklinks li#wp-admin-bar-my-account.with-avatar > a img {
+					margin-top: 5px;
+				}
+			}
+		</style>
+		<meta name="application-name" content="alexdglover" /><meta name="msapplication-window" content="width=device-width;height=device-height" /><meta name="msapplication-tooltip" content="Quick thoughts on IT, fun projects, and the singularities I come across." /><meta name="msapplication-task" content="name=Subscribe;action-uri=https://alexdglover.wordpress.com/feed/;icon-uri=https://s2.wp.com/i/favicon.ico" /><meta name="msapplication-task" content="name=Sign up for a free blog;action-uri=http://wordpress.com/signup/;icon-uri=https://s2.wp.com/i/favicon.ico" /><meta name="msapplication-task" content="name=WordPress.com Support;action-uri=http://support.wordpress.com/;icon-uri=https://s2.wp.com/i/favicon.ico" /><meta name="msapplication-task" content="name=WordPress.com Forums;action-uri=http://forums.wordpress.com/;icon-uri=https://s2.wp.com/i/favicon.ico" /><meta name="title" content="alexdglover_DiskCheckup_1 | alexdglover on WordPress.com" />
+<meta name="description" content="Quick thoughts on IT, fun projects, and the singularities I come across." />
+		<script type="text/javascript" src="//c.amazon-adsystem.com/aax2/amzn_ads.js"></script>
+		<script type="text/javascript">
+		try { amznads.getAds("3033"); } catch(e) { /* ignore */ }
+		</script>
+		<script type="text/javascript">
+		try {
+			var a9_p = amznads.getKeys(),
+			_ipw_custom = {
+				wordAds: '0',
+				adSafe: '0',
+				domain: 'alexdglover.wordpress.com',
+				pageURL: 'https://alexdglover.wordpress.com/2012/12/05/monitoring-disks-in-raid-array-in-windows-7/alexdglover_diskcheckup_1/'
+			};
+			if("undefined"!=typeof a9_p&&""!=a9_p&&null!==a9_p&&"[object Array]"===Object.prototype.toString.call(a9_p)){var a="",b=0,c=a9_p.length;a9_p.sort();for(var d=0;d<c;d++){a9_p[d-b]=a9_p[d-b].replace(/a1x6p/,"a160x600p");var e=a9_p[d-b].split("p");e[0]==a&&(a9_p.splice(d-b,1),b++);a=e[0]}_ipw_custom.amznPay=a9_p};document.close();
+		} catch(e) {}
+		</script>
+		<script type="text/javascript" src="https://static.criteo.net/js/ld/publishertag.js"></script>
+ 		<script type="text/javascript" src="//s.pubmine.com/head.js"></script><style type="text/css" id="syntaxhighlighteranchor"></style>
+<script type="text/javascript">
+	window.google_analytics_uacct = "UA-52447-2";
+</script>
+
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-52447-2']);
+	_gaq.push(['_setDomainName', 'wordpress.com']);
+	_gaq.push(['_initData']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
+	})();
+</script>
+</head>
+
+<body class="single single-attachment postid-292 attachmentid-292 attachment-png mp6 customizer-styles-applied highlander-enabled highlander-light">
+<!-- wrap START -->
+<div id="wrap">
+
+<!-- container START -->
+<div id="container"  >
+
+<!-- header START -->
+<div id="header">
+
+	<!-- banner START -->
+		<!-- banner END -->
+
+	<div id="caption">
+		<h1 id="title"><a href="https://alexdglover.wordpress.com/">alexdglover</a></h1>
+		<div id="tagline">Quick thoughts on IT, fun projects, and the singularities I come across.</div>
+	</div>
+
+	<div class="fixed"></div>
+</div>
+<!-- header END -->
+
+<!-- navigation START -->
+<div id="navigation">
+	<!-- menus START -->
+	<ul id="menus">
+	<li class="page_item"><a class="home" title="Home" href="https://alexdglover.wordpress.com/">Home</a></li>
+	<li class="page_item page-item-2"><a href="https://alexdglover.wordpress.com/about/">About</a></li>
+<li class="page_item page-item-43"><a href="https://alexdglover.wordpress.com/support/">Support</a></li>
+	<li><a class="lastmenu" href="javascript:void(0);"></a></li>
+</ul>
+
+	<!-- menus END -->
+
+	<!-- searchbox START -->
+	<div id="searchbox">
+		<form action="https://alexdglover.wordpress.com" method="get">
+			<div class="content">
+				<input type="text" class="textfield" name="s" size="24" value="" />
+				<input type="submit" class="button" value="" />
+			</div>
+		</form>
+	</div>
+<script type="text/javascript">
+//<![CDATA[
+	var searchbox = MGJS.$("searchbox");
+	var searchtxt = MGJS.getElementsByClassName("textfield", "input", searchbox)[0];
+	var searchbtn = MGJS.getElementsByClassName("button", "input", searchbox)[0];
+	var tiptext = "Type text to search here...";
+	if(searchtxt.value == "" || searchtxt.value == tiptext) {
+		searchtxt.className += " searchtip";
+		searchtxt.value = tiptext;
+	}
+	searchtxt.onfocus = function(e) {
+		if(searchtxt.value == tiptext) {
+			searchtxt.value = "";
+			searchtxt.className = searchtxt.className.replace(" searchtip", "");
+		}
+	}
+	searchtxt.onblur = function(e) {
+		if(searchtxt.value == "") {
+			searchtxt.className += " searchtip";
+			searchtxt.value = tiptext;
+		}
+	}
+	searchbtn.onclick = function(e) {
+		if(searchtxt.value == "" || searchtxt.value == tiptext) {
+			return false;
+		}
+	}
+//]]>
+</script>
+	<!-- searchbox END -->
+
+	<div class="fixed"></div>
+</div>
+<!-- navigation END -->
+
+<!-- content START -->
+<div id="content">
+
+	<!-- main START -->
+	<div id="main">
+
+
+	<div id="postpath">
+		<a title="Go to homepage" href="https://alexdglover.wordpress.com/">Home</a>
+		 &gt; <a href="https://alexdglover.wordpress.com/2012/12/05/monitoring-disks-in-raid-array-in-windows-7/">Monitoring Disks in RAID Array in Windows&nbsp;7</a>
+		 &gt; alexdglover_DiskCheckup_1	</div>
+
+	<div id="post-292" class="post post-292 attachment type-attachment status-inherit hentry">
+		<h2>alexdglover_DiskCheckup_1</h2>
+		<div class="info">
+										<span class="addcomment"><a href="#respond">Leave a comment</a></span>
+				<span class="comments"><a href="#comments">Go to comments</a></span>
+						<div class="fixed"></div>
+		</div>
+		<div class="content attachment">
+			<p><img width="587" height="453" src="https://alexdglover.files.wordpress.com/2012/12/alexdglover_diskcheckup_1.png?w=587" class="attachment-587x700 size-587x700" alt="alexdglover_DiskCheckup_1" srcset="https://alexdglover.files.wordpress.com/2012/12/alexdglover_diskcheckup_1.png?w=587 587w, https://alexdglover.files.wordpress.com/2012/12/alexdglover_diskcheckup_1.png?w=150 150w, https://alexdglover.files.wordpress.com/2012/12/alexdglover_diskcheckup_1.png?w=300 300w, https://alexdglover.files.wordpress.com/2012/12/alexdglover_diskcheckup_1.png 702w" sizes="(max-width: 587px) 100vw, 587px" data-attachment-id="292" data-permalink="https://alexdglover.wordpress.com/2012/12/05/monitoring-disks-in-raid-array-in-windows-7/alexdglover_diskcheckup_1/" data-orig-file="https://alexdglover.files.wordpress.com/2012/12/alexdglover_diskcheckup_1.png" data-orig-size="702,542" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;}" data-image-title="alexdglover_DiskCheckup_1" data-image-description="" data-medium-file="https://alexdglover.files.wordpress.com/2012/12/alexdglover_diskcheckup_1.png?w=300" data-large-file="https://alexdglover.files.wordpress.com/2012/12/alexdglover_diskcheckup_1.png?w=595" /></p>
+				<div class="caption"></div>
+				<div class="image-description"></div>
+
+				<div class="navigation">
+					<div class="alignleft"></div>
+					<div class="alignright"><a href='https://alexdglover.wordpress.com/2012/12/05/monitoring-disks-in-raid-array-in-windows-7/alexdglover_diskcheckup_3/'><img width="150" height="124" src="https://alexdglover.files.wordpress.com/2012/12/alexdglover_diskcheckup_3.png?w=150" class="attachment-thumbnail size-thumbnail" alt="alexdglover_DiskCheckup_3" srcset="https://alexdglover.files.wordpress.com/2012/12/alexdglover_diskcheckup_3.png?w=150 150w, https://alexdglover.files.wordpress.com/2012/12/alexdglover_diskcheckup_3.png?w=300 300w" sizes="(max-width: 150px) 100vw, 150px" data-attachment-id="294" data-permalink="https://alexdglover.wordpress.com/2012/12/05/monitoring-disks-in-raid-array-in-windows-7/alexdglover_diskcheckup_3/" data-orig-file="https://alexdglover.files.wordpress.com/2012/12/alexdglover_diskcheckup_3.png" data-orig-size="543,449" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;}" data-image-title="alexdglover_DiskCheckup_3" data-image-description="" data-medium-file="https://alexdglover.files.wordpress.com/2012/12/alexdglover_diskcheckup_3.png?w=300" data-large-file="https://alexdglover.files.wordpress.com/2012/12/alexdglover_diskcheckup_3.png?w=543" /></a></div>
+				</div>
+			<div class="fixed"></div>
+		</div>
+		<div class="under">
+		</div>
+	</div>
+
+	<!-- related posts START -->
+		<!-- related posts END -->
+
+	
+
+<script type="text/javascript" src="https://s0.wp.com/wp-content/themes/pub/inove/js/comment.js?1"></script>
+
+<div id="comments">
+
+	
+		<div id="cmtswitcher">
+										<a id="commenttab" class="curtab" href="javascript:void(0);" onclick="MGJS.switchTab('thecomments,commentnavi', 'thetrackbacks', 'commenttab', 'curtab', 'trackbacktab', 'tab');">
+					Comments (0)				</a>
+				<a id="trackbacktab" class="tab" href="javascript:void(0);" onclick="MGJS.switchTab('thetrackbacks', 'thecomments,commentnavi', 'trackbacktab', 'curtab', 'commenttab', 'tab');">
+					Trackbacks (0)				</a>
+			
+							<span class="addcomment"><a href="#respond">Leave a comment</a></span>
+			
+							<span class="addtrackback"><a href="https://alexdglover.wordpress.com/2012/12/05/monitoring-disks-in-raid-array-in-windows-7/alexdglover_diskcheckup_1/trackback/">Trackback</a></span>
+					</div><!-- #cmtswitcher -->
+
+		<div id="commentlist">
+
+			<!-- Comments -->
+			<ol id="thecomments">
+							<li class="messagebox">
+					No comments yet.				</li>
+						</ol><!-- #thecomments -->
+
+			
+			<!-- Trackbacks and Pingbacks -->
+			<ol id="thetrackbacks">
+									<li class="messagebox">
+						No trackbacks yet.					</li>
+							</ol><!-- #thetrackbacks -->
+
+		</div><!-- #commentlist -->
+	
+
+				<div id="respond" class="comment-respond">
+			<h3 id="reply-title" class="comment-reply-title">Care to share your two cents? <small><a rel="nofollow" id="cancel-comment-reply-link" href="/2012/12/05/monitoring-disks-in-raid-array-in-windows-7/alexdglover_diskcheckup_1/#respond" style="display:none;">Cancel reply</a></small></h3>				<form action="https://alexdglover.wordpress.com/wp-comments-post.php" method="post" id="commentform" class="comment-form">
+					<input type="hidden" id="highlander_comment_nonce" name="highlander_comment_nonce" value="0639501d07" /><input type="hidden" name="_wp_http_referer" value="/2012/12/05/monitoring-disks-in-raid-array-in-windows-7/alexdglover_diskcheckup_1/" />
+<input type="hidden" name="hc_post_as" id="hc_post_as" value="guest" />
+
+<div class="comment-form-field comment-textarea">
+	<label for="comment">Enter your comment here...</label>
+	<div id="comment-form-comment"><textarea id="comment" name="comment" title="Enter your comment here..."></textarea></div>
+</div>
+
+<div id="comment-form-identity">
+
+	<div id="comment-form-nascar">
+		<p>Fill in your details below or click an icon to log in:</p>
+		<ul>
+			<li class="selected" style="display:none;">
+				<a href="#comment-form-guest" id="postas-guest" title="Guest">
+					<span></span>
+				</a>
+			</li>
+			<li>
+				<a href="#comment-form-load-service:WordPress.com" id="postas-wordpress" title="WordPress.com">
+					<span></span>
+				</a>
+			</li>
+			<li>
+				<a href="#comment-form-load-service:Twitter" id="postas-twitter" title="Twitter">
+					<span></span>
+				</a>
+			</li>
+			<li>
+				<a href="#comment-form-load-service:Facebook" id="postas-facebook" title="Facebook">
+					<span></span>
+				</a>
+			</li>
+			<li>
+			<iframe id="googleplus-sign-in" name="googleplus-sign-in" src="https://public-api.wordpress.com/connect/?googleplus-sign-in=https%3A%2F%2Falexdglover.wordpress.com" width="24" height="24" scrolling="no" allowtransparency="true" seamless="seamless" frameborder="0"></iframe>
+			</li>
+		</ul>
+	</div>
+
+	<div id="comment-form-guest" class="comment-form-service selected">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+<a href="https://gravatar.com/site/signup/" target="_blank">				<img src="https://1.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=25" alt="Gravatar" width="25" class="no-grav" />
+</a>			</div>
+
+				<div class="comment-form-fields">
+				<div class="comment-form-field comment-form-email">
+					<label for="email">Email <span class="required">(required)</span> <span class="nopublish">(Address never made public)</span></label>
+					<div class="comment-form-input"><input id="email" name="email" type="email" value="" /></div>
+				</div>
+				<div class="comment-form-field comment-form-author">
+					<label for="author">Name <span class="required">(required)</span></label>
+					<div class="comment-form-input"><input id="author" name="author" type="text" value="" /></div>
+				</div>
+				<div class="comment-form-field comment-form-url">
+					<label for="url">Website</label>
+					<div class="comment-form-input"><input id="url" name="url" type="url" value="" /></div>
+				</div>
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-wordpress" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="https://1.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=25" alt="WordPress.com Logo" width="25" class="no-grav" />
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="wp_avatar" id="wordpress-avatar" class="comment-meta-wordpress" value="" />
+				<input type="hidden" name="wp_user_id" id="wordpress-user_id" class="comment-meta-wordpress" value="" />
+				<input type="hidden" name="wp_access_token" id="wordpress-access_token" class="comment-meta-wordpress" value="" />
+				<p class="comment-form-posting-as pa-wordpress"><strong></strong> You are commenting using your WordPress.com account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( 'wordpress' );">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-twitter" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="https://1.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=25" alt="Twitter picture" width="25" class="no-grav" />
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="twitter_avatar" id="twitter-avatar" class="comment-meta-twitter" value="" />
+				<input type="hidden" name="twitter_user_id" id="twitter-user_id" class="comment-meta-twitter" value="" />
+				<input type="hidden" name="twitter_access_token" id="twitter-access_token" class="comment-meta-twitter" value="" />
+				<p class="comment-form-posting-as pa-twitter"><strong></strong> You are commenting using your Twitter account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( 'twitter' );">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-facebook" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="https://1.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=25" alt="Facebook photo" width="25" class="no-grav" />
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="fb_avatar" id="facebook-avatar" class="comment-meta-facebook" value="" />
+				<input type="hidden" name="fb_user_id" id="facebook-user_id" class="comment-meta-facebook" value="" />
+				<input type="hidden" name="fb_access_token" id="facebook-access_token" class="comment-meta-facebook" value="" />
+				<p class="comment-form-posting-as pa-facebook"><strong></strong> You are commenting using your Facebook account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( 'facebook' );">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-googleplus" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="https://1.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=25" alt="Google+ photo" width="25" class="no-grav" />
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="googleplus_avatar" id="googleplus-avatar" class="comment-meta-googleplus" value="" />
+				<input type="hidden" name="googleplus_user_id" id="googleplus-user_id" class="comment-meta-googleplus" value="" />
+				<input type="hidden" name="googleplus_access_token" id="googleplus-access_token" class="comment-meta-googleplus" value="" />
+				<p class="comment-form-posting-as pa-googleplus"><strong></strong> You are commenting using your Google+ account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( 'googleplus' );">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+
+	<div id="comment-form-load-service" class="comment-form-service">
+		<div class="comment-form-posting-as-cancel"><a href="javascript:HighlanderComments.cancelExternalWindow();">Cancel</a></div>
+		<p>Connecting to %s</p>
+	</div>
+
+</div>
+
+<script type="text/javascript">
+var highlander_expando_javascript = function(){
+	var input = document.createElement( 'input' ),
+	    comment = jQuery( '#comment' );
+
+	if ( 'placeholder' in input ) {
+		comment.attr( 'placeholder', jQuery( '.comment-textarea label' ).remove().text() );
+	}
+
+	// Expando Mode: start small, then auto-resize on first click + text length
+	jQuery( '#comment-form-identity' ).hide();
+	jQuery( '#comment-form-subscribe' ).hide();
+	jQuery( '#commentform .form-submit' ).hide();
+
+	comment.css( { 'height':'10px' } ).one( 'focus', function() {
+		var timer = setInterval( HighlanderComments.resizeCallback, 10 )
+		jQuery( this ).animate( { 'height': HighlanderComments.initialHeight } ).delay( 100 ).queue( function(n) { clearInterval( timer ); HighlanderComments.resizeCallback(); n(); } );
+		jQuery( '#comment-form-identity' ).slideDown();
+		jQuery( '#comment-form-subscribe' ).slideDown();
+		jQuery( '#commentform .form-submit' ).slideDown();
+	});
+}
+jQuery(document).ready( highlander_expando_javascript );
+</script>
+
+<div id="comment-form-subscribe">
+	<p class="comment-subscription-form"><input type="checkbox" name="subscribe" id="subscribe" value="subscribe" style="width: auto;"/> <label class="subscribe-label" id="subscribe-label" for="subscribe" style="display: inline;">Notify me of new comments via email.</label></p><p class="post-subscription-form"><input type="checkbox" name="subscribe_blog" id="subscribe_blog" value="subscribe" style="width: auto;"/> <label class="subscribe-label" id="subscribe-blog-label" for="subscribe_blog"  style="display: inline;">Notify me of new posts via email.</label></p></div>
+
+
+
+
+<p class="form-submit"><input name="submit" type="submit" id="comment-submit" class="submit" value="Post Comment" /> <input type='hidden' name='comment_post_ID' value='292' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</p><p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="53bfd29f02" /></p>
+<input type="hidden" name="genseq" value="1488135493" />
+<p style="display: none;"><input type="hidden" id="ak_js" name="ak_js" value="248"/></p>				</form>
+					</div><!-- #respond -->
+		<div style="clear: both"></div>
+</div><!-- #comments -->
+
+	<div id="postnavi">
+		<span class="prev"></span>
+		<span class="next"><a href="https://alexdglover.wordpress.com/2012/12/05/monitoring-disks-in-raid-array-in-windows-7/" rel="prev">Monitoring Disks in RAID Array in Windows&nbsp;7</a></span>
+		<div class="fixed"></div>
+	</div>
+
+
+	</div>
+	<!-- main END -->
+
+	
+<!-- sidebar START -->
+<div id="sidebar">
+
+<!-- sidebar north START -->
+<div id="northsidebar" class="sidebar">
+
+	<!-- feeds -->
+	<div class="widget widget_feeds">
+		<div class="content">
+			<div id="subscribe-feeds">
+				<a rel="external nofollow" id="feedrss" title="Subscribe to this blog..." href="https://alexdglover.wordpress.com/feed/"><abbr title="Really Simple Syndication">RSS</abbr> feed</a>
+									<ul id="feed_readers">
+						<li id="google_reader"><a rel="external nofollow" class="reader" title="Subscribe with Google" href="http://fusion.google.com/add?feedurl=https://alexdglover.wordpress.com/feed/"><span>Google</span></a></li>
+						<li id="youdao_reader"><a rel="external nofollow" class="reader" title="Subscribe with Youdao" href="http://reader.youdao.com/#url=https://alexdglover.wordpress.com/feed/"><span>Youdao</span></a></li>
+						<li id="xianguo_reader"><a rel="external nofollow" class="reader" title="Subscribe with Xian Guo" href="http://www.xianguo.com/subscribe.php?url=https://alexdglover.wordpress.com/feed/"><span>Xian Guo</span></a></li>
+						<li id="zhuaxia_reader"><a rel="external nofollow" class="reader" title="Subscribe with Zhua Xia" href="http://www.zhuaxia.com/add_channel.php?url=https://alexdglover.wordpress.com/feed/"><span>Zhua Xia</span></a></li>
+						<li id="yahoo_reader"><a rel="external nofollow" class="reader" title="Subscribe with My Yahoo!" href="http://add.my.yahoo.com/rss?url=https://alexdglover.wordpress.com/feed/"><span>My Yahoo!</span></a></li>
+						<li id="newsgator_reader"><a rel="external nofollow" class="reader" title="Subscribe with newsgator" href="http://www.newsgator.com/ngs/subscriber/subfext.aspx?url=https://alexdglover.wordpress.com/feed/"><span>newsgator</span></a></li>
+						<li id="bloglines_reader"><a rel="external nofollow" class="reader" title="Subscribe with Bloglines" href="http://www.bloglines.com/sub/https://alexdglover.wordpress.com/feed/"><span>Bloglines</span></a></li>
+						<li id="inezha_reader"><a rel="external nofollow" class="reader" title="Subscribe with iNezha"	href="http://inezha.com/add?url=https://alexdglover.wordpress.com/feed/"><span>iNezha</span></a></li>
+					</ul>
+							</div>
+
+			<!-- twitter -->
+							<a id="followme" title="Follow me!" href="http://twitter.com/alexdglover/">Twitter</a>
+			
+			<div class="fixed"></div>
+		</div>
+	</div>
+
+	<!-- showcase -->
+	
+<div id="text-3" class="widget widget_text"><h3>HEY! This site has moved!</h3>			<div class="textwidget">Thanks for visiting - to see the newest, up-to-date content, please visit <a href="http://alexdglover.com">my new WP instance!</a></div>
+		</div><div id="image-2" class="widget widget_image"><h3>Your Host</h3><div style="overflow:hidden;"><a href="https://alexdglover.wordpress.com"><img src="https://alexdglover.files.wordpress.com/2012/05/122_4101-e1337645137399.jpg?w=320&amp;h=240#038;h=240" alt="Alex Glover" title="Your Host" class="aligncenter" width="320" height="240" /></a></div>
+</div><div id="blog_subscription-2" class="widget widget_blog_subscription"><h3><label for="subscribe-field">Follow Blog via Email</label></h3>
+				<form action="https://subscribe.wordpress.com" method="post" accept-charset="utf-8" id="subscribe-blog">
+											<p>Enter your email address to follow this blog and receive notifications of new posts by email.</p>
+						<p><input type="text" name="email" style="width: 95%; padding: 1px 2px" placeholder="Enter your email address" value="" id="subscribe-field"/></p>
+					
+					<p>
+						<input type="hidden" name="action" value="subscribe"/>
+						<input type="hidden" name="blog_id" value="34954019"/>
+						<input type="hidden" name="source" value="https://alexdglover.wordpress.com/2012/12/05/monitoring-disks-in-raid-array-in-windows-7/alexdglover_diskcheckup_1/"/>
+						<input type="hidden" name="sub-type" value="widget"/>
+						<input type="hidden" name="redirect_fragment" value="blog_subscription-2" />
+						<input type="hidden" id="_wpnonce" name="_wpnonce" value="71dc6c2021" />						<input type="submit" value="Follow" />
+					</p>
+				</form>
+			
+</div><div id="categories-2" class="widget widget_categories"><h3>Categories</h3>		<ul>
+	<li class="cat-item cat-item-129048731"><a href="https://alexdglover.wordpress.com/category/fun-electronics-projects/" >Fun Electronics Projects</a>
+</li>
+	<li class="cat-item cat-item-90584855"><a href="https://alexdglover.wordpress.com/category/fun-it-projects/" >Fun IT Projects</a>
+</li>
+	<li class="cat-item cat-item-9666"><a href="https://alexdglover.wordpress.com/category/how-to-guides/" title="Instructional posts about how to do configurations, programming, and deployments. These are shared in the hopes that IT professionals and hobbyists can learn something from my mistakes.">How-to Guides</a>
+</li>
+	<li class="cat-item cat-item-94358515"><a href="https://alexdglover.wordpress.com/category/questions-for-the-community/" >Questions for the Community</a>
+</li>
+	<li class="cat-item cat-item-90596946"><a href="https://alexdglover.wordpress.com/category/utilities-and-other-useful-things/" >Utilities And Other Useful Things</a>
+</li>
+		</ul>
+</div><div id="text-2" class="widget widget_text">			<div class="textwidget"><a href="http://internetdefenseleague.org"><img src="https://internetdefenseleague.herokuapp.com/images/badges/final/shield_badge.png" alt="Member of The Internet Defense League" width="250" height="250" /></a></div>
+		</div>		<div id="recent-posts-2" class="widget widget_recent_entries">		<h3>Recent Posts</h3>		<ul>
+					<li>
+				<a href="https://alexdglover.wordpress.com/2013/02/18/arduino-project-5-internet-control-without-ethernet-shield/">Arduino Project 5: Internet Control without Ethernet&nbsp;Shield</a>
+						</li>
+					<li>
+				<a href="https://alexdglover.wordpress.com/2013/02/07/arduino-project-4-tilt-to-unlock/">Arduino Project 4: Tilt To&nbsp;Unlock</a>
+						</li>
+					<li>
+				<a href="https://alexdglover.wordpress.com/2013/01/28/wordpress-twenty-eleven-child-theme-with-galleria-slider/">WordPress: Twenty Eleven Child Theme with Galleria&nbsp;Slider</a>
+						</li>
+					<li>
+				<a href="https://alexdglover.wordpress.com/2013/01/21/arduino-project-3-accelerometer-primer/">Arduino Project 3: Accelerometer&nbsp;Primer</a>
+						</li>
+					<li>
+				<a href="https://alexdglover.wordpress.com/2013/01/14/bootable-usb-with-unetbootin/">Bootable USB with&nbsp;UNetbootin</a>
+						</li>
+				</ul>
+		</div>		<div id="archives-2" class="widget widget_archive"><h3>Archives</h3>		<label class="screen-reader-text" for="archives-dropdown-2">Archives</label>
+		<select id="archives-dropdown-2" name="archive-dropdown" onchange='document.location.href=this.options[this.selectedIndex].value;'>
+			
+			<option value="">Select Month</option>
+				<option value='https://alexdglover.wordpress.com/2013/02/'> February 2013 &nbsp;(2)</option>
+	<option value='https://alexdglover.wordpress.com/2013/01/'> January 2013 &nbsp;(5)</option>
+	<option value='https://alexdglover.wordpress.com/2012/12/'> December 2012 &nbsp;(1)</option>
+	<option value='https://alexdglover.wordpress.com/2012/11/'> November 2012 &nbsp;(9)</option>
+	<option value='https://alexdglover.wordpress.com/2012/09/'> September 2012 &nbsp;(2)</option>
+	<option value='https://alexdglover.wordpress.com/2012/08/'> August 2012 &nbsp;(2)</option>
+	<option value='https://alexdglover.wordpress.com/2012/07/'> July 2012 &nbsp;(1)</option>
+	<option value='https://alexdglover.wordpress.com/2012/06/'> June 2012 &nbsp;(2)</option>
+	<option value='https://alexdglover.wordpress.com/2012/05/'> May 2012 &nbsp;(3)</option>
+	<option value='https://alexdglover.wordpress.com/2012/04/'> April 2012 &nbsp;(1)</option>
+
+		</select>
+		</div><div id="meta-2" class="widget widget_meta"><h3>Meta</h3>			<ul>
+			<li><a href="https://wordpress.com/start?ref=wplogin">Register</a></li>			<li><a href="https://alexdglover.wordpress.com/wp-login.php">Log in</a></li>
+			<li><a href="https://alexdglover.wordpress.com/feed/">Entries <abbr title="Really Simple Syndication">RSS</abbr></a></li>
+			<li><a href="https://alexdglover.wordpress.com/comments/feed/">Comments <abbr title="Really Simple Syndication">RSS</abbr></a></li>
+			<li><a href="https://wordpress.com/" title="Powered by WordPress, state-of-the-art semantic personal publishing platform.">WordPress.com</a></li>			</ul>
+			</div>	</div>
+</div>
+<!-- sidebar END -->
+	<div class="fixed"></div>
+</div>
+<!-- content END -->
+
+<!-- footer START -->
+<div id="footer">
+	<a id="gotop" href="#" onclick="MGJS.goTop();return false;">Top</a>
+	<div id="themeinfo">
+		<a href="https://wordpress.com/?ref=footer_blog">Blog at WordPress.com.</a> 	</div>
+</div>
+<!-- footer END -->
+
+</div>
+<!-- container END -->
+</div>
+<!-- wrap END -->
+
+<!--  -->
+<script type='text/javascript' src='//0.gravatar.com/js/gprofiles.js?ver=201708y'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var WPGroHo = {"my_hash":""};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://s1.wp.com/wp-content/mu-plugins/gravatar-hovercards/wpgroho.js?m=1380573781h'></script>
+
+	<script>
+		//initialize and attach hovercards to all gravatars
+		jQuery( document ).ready( function( $ ) {
+
+			if (typeof Gravatar === "undefined"){
+				return;
+			}
+
+			if ( typeof Gravatar.init !== "function" ) {
+				return;
+			}			
+
+			Gravatar.profile_cb = function( hash, id ) {
+				WPGroHo.syncProfileData( hash, id );
+			};
+			Gravatar.my_hash = WPGroHo.my_hash;
+			Gravatar.init( 'body', '#wp-admin-bar-my-account' );
+		});
+	</script>
+
+		<div style="display:none">
+	</div>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var HighlanderComments = {"loggingInText":"Logging In\u2026","submittingText":"Posting Comment\u2026","postCommentText":"Post Comment","connectingToText":"Connecting to %s","commentingAsText":"%1$s: You are commenting using your %2$s account.","logoutText":"Log Out","loginText":"Log In","connectURL":"https:\/\/alexdglover.wordpress.com\/public.api\/connect\/?action=request","logoutURL":"https:\/\/alexdglover.wordpress.com\/wp-login.php?action=logout&_wpnonce=df69292f44","homeURL":"https:\/\/alexdglover.wordpress.com\/","postID":"292","gravDefault":"mystery","enterACommentError":"Please enter a comment","enterEmailError":"Please enter your email address here","invalidEmailError":"Invalid email address","enterAuthorError":"Please enter your name here","gravatarFromEmail":"This picture will show whenever you leave a comment. Click to customize it.","logInToExternalAccount":"Log in to use details from one of these accounts.","change":"Change","changeAccount":"Change Account","comment_registration":"","userIsLoggedIn":"","isJetpack":"0","text_direction":"ltr"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://s2.wp.com/_static/??/wp-content/js/jquery/jquery.autoresize.js,/wp-content/mu-plugins/highlander-comments/script.js?m=1479964158j'></script>
+<script type='text/javascript' src='https://s1.wp.com/wp-content/mu-plugins/akismet-3.0/_inc/form.js?m=1404442431h'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var actionbardata = {"siteID":"34954019","siteName":"alexdglover","siteURL":"http:\/\/alexdglover.wordpress.com","icon":"<img alt='' src='https:\/\/s1.wp.com\/i\/logo\/wpcom-gray-white.png' class='avatar avatar-50' height='50' width='50' \/>","canManageOptions":"","canCustomizeSite":"","isFollowing":"","themeSlug":"pub\/inove","signupURL":"https:\/\/wordpress.com\/start\/","loginURL":"https:\/\/alexdglover.wordpress.com\/wp-login.php?redirect_to=https%3A%2F%2Falexdglover.wordpress.com%2F2012%2F12%2F05%2Fmonitoring-disks-in-raid-array-in-windows-7%2Falexdglover_diskcheckup_1%2F","themeURL":"","xhrURL":"https:\/\/alexdglover.wordpress.com\/wp-admin\/admin-ajax.php","nonce":"5a893720cb","isSingular":"1","isFolded":"","isLoggedIn":"","isMobile":"","subscribeNonce":"<input type=\"hidden\" id=\"_wpnonce\" name=\"_wpnonce\" value=\"71dc6c2021\" \/>","referer":"https:\/\/alexdglover.wordpress.com\/2012\/12\/05\/monitoring-disks-in-raid-array-in-windows-7\/alexdglover_diskcheckup_1\/","canFollow":"1","statusMessage":"","customizeLink":"https:\/\/alexdglover.wordpress.com\/wp-admin\/customize.php?url=https%3A%2F%2Falexdglover.wordpress.com%2F2012%2F12%2F05%2Fmonitoring-disks-in-raid-array-in-windows-7%2Falexdglover_diskcheckup_1%2F","postID":"292","shortlink":"http:\/\/wp.me\/a2mF8v-4I","canEditPost":"","editLink":"https:\/\/alexdglover.wordpress.com\/wp-admin\/post.php?post=292&action=edit","statsLink":"https:\/\/wordpress.com\/stats\/post\/292\/alexdglover.wordpress.com","i18n":{"view":"View site","follow":"Follow","following":"Following","edit":"Edit","login":"Log in","signup":"Sign up","customize":"Customize","report":"Report this content","themeInfo":"Get theme: INove","shortlink":"Copy shortlink","copied":"Copied","followedText":"New posts from this site will now appear in your <a href=\"https:\/\/wordpress.com\/\">Reader<\/a>","foldBar":"Collapse this bar","unfoldBar":"Expand this bar","editSubs":"Manage subscriptions","viewReader":"View site in the Reader","subscribe":"Sign me up","enterEmail":"Enter your email address","followers":"Join 49 other followers","alreadyUser":"Already have a WordPress.com account? <a href=\"https:\/\/alexdglover.wordpress.com\/wp-login.php?redirect_to=https%3A%2F%2Falexdglover.wordpress.com%2F2012%2F12%2F05%2Fmonitoring-disks-in-raid-array-in-windows-7%2Falexdglover_diskcheckup_1%2F\">Log in now.<\/a>","stats":"Stats"}};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://s1.wp.com/_static/??-eJx9jEEOAiEQBD8kOzGC8WJ8C8JEB2HAAVb9vezBjae9dbq6C15FucwNuUGo4HEmh+U9hbqDP5S6KrHfiCtEemCFZ8eOd8s+ovzGxC52P+AQuZzSOCrBEj9TIt4wWj+4ulqBZGtDGUnlGUVoka3dlsE1yrwY1jTWl3Te65MxWh8PJnwBheBW3Q=='></script>
+<script type="text/javascript">
+// <![CDATA[
+(function() {
+try{
+  if ( window.external &&'msIsSiteMode' in window.external) {
+    if (window.external.msIsSiteMode()) {
+      var jl = document.createElement('script');
+      jl.type='text/javascript';
+      jl.async=true;
+      jl.src='/wp-content/plugins/ie-sitemode/custom-jumplist.php';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(jl, s);
+    }
+  }
+}catch(e){}
+})();
+// ]]>
+</script>		<script>
+			var _comscore = _comscore || [];
+			_comscore.push({
+				c1: "2",
+				c2: "7518284"
+			});
+			(function() {
+				var s = document.createElement("script"),
+					el = document.getElementsByTagName("script")[0];
+				s.defer = true;
+				s.src = (document.location.protocol == "https:" ? "https://sb" : "http://b") + ".scorecardresearch.com/beacon.js";
+				el.parentNode.insertBefore(s, el);
+			})();
+		</script>
+		<noscript>
+			<p class="robots-nocontent"><img src="https://sb.scorecardresearch.com/p?c1=2&c2=7518284&c3=&c4=&c5=&c6=&c15=&cv=2.0&cj=1" alt="" style="display:none;" width="1" height="1" /></p>
+		</noscript><script src="//stats.wp.com/w.js?56" type="text/javascript" async defer></script>
+<script type="text/javascript">
+_tkq = window._tkq || [];
+_stq = window._stq || [];
+_tkq.push(['storeContext', {'blog_id':'34954019','blog_tz':'-6','user_lang':'en','blog_lang':'en','user_id':'0'}]);
+_stq.push(['view', {'blog':'34954019','v':'wpcom','tz':'-6','user_id':'0','post':'292','subd':'alexdglover'}]);
+_stq.push(['extra', {'crypt':'UE5XaGUuOTlwaD85flAmcm1mcmZsaDhkV11YdT1UeVRla1NLdXYlUnJLd195UG5zUFp5T2RzdmE/LTAxdXxOL352LnxpX2ZhU1BYWlpXajJ5anVPSFB1eDc0dkUtdz9kUWg2TjhHQ24/S0ZxLSVLJVpYfjlMWlhJbXB0dmxuTCYvU04rV1lDZzlhLmZ0WnlmeWQlN1VGQUQybUgxQis3OW1+dFd8Z11IdGhlWmVuQS5EeVFXdjVCQXY/ZG84SX5EdkdEZ1R0TWxLcHhoLWlnbk45aVo/Mlp4MDQufE5RUmlFTFFmUSs4X0JBdkQsW0hIJWhKSyVscHdRQm14PWtsWTd8UFMzQlZidFpaJl1fdDZjT3hHNUgv'}]);
+_stq.push([ 'clickTrackerInit', '34954019', '292' ]);
+	</script>
+<noscript><img src="https://pixel.wp.com/b.gif?v=noscript" style="height:0px;width:0px;overflow:hidden" alt="" /></noscript>
+<script>
+if ( 'object' === typeof wpcom_mobile_user_agent_info ) {
+
+	wpcom_mobile_user_agent_info.init();
+	var mobileStatsQueryString = "";
+	
+	if( false !== wpcom_mobile_user_agent_info.matchedPlatformName )
+		mobileStatsQueryString += "&x_" + 'mobile_platforms' + '=' + wpcom_mobile_user_agent_info.matchedPlatformName;
+	
+	if( false !== wpcom_mobile_user_agent_info.matchedUserAgentName )
+		mobileStatsQueryString += "&x_" + 'mobile_devices' + '=' + wpcom_mobile_user_agent_info.matchedUserAgentName;
+	
+	if( wpcom_mobile_user_agent_info.isIPad() )
+		mobileStatsQueryString += "&x_" + 'ipad_views' + '=' + 'views';
+
+	if( "" != mobileStatsQueryString ) {
+		new Image().src = document.location.protocol + '//pixel.wp.com/g.gif?v=wpcom-no-pv' + mobileStatsQueryString + '&baba=' + Math.random();
+	}
+	
+}
+</script>
+</body>
+</html>
