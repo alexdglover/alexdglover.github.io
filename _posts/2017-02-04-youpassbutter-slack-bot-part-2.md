@@ -9,13 +9,28 @@ tags:
 - sinatra
 - slack
 - slash commands
+header:
+  teaser: /assets/YPB-Part2-Meme-Text-Placement.gif
 ---
 <h2>TL;DR Section</h2>
 
 <p>Just looking for the app? Just click the "Add to Slack" button to install the YouPassButter bot</p>
-<p><a href="https://slack.com/oauth/authorize?scope=commands&client_id=122992570306.122925378483"><img src="{{ site.baseurl }}/assets/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" alt="Add to Slack" /></a></p>
+
+<p style="text-align: center;">
+  <a href="https://slack.com/oauth/authorize?scope=commands&client_id=122992570306.122925378483">
+    <img src="{{ site.baseurl }}/assets/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" alt="Add to Slack" />
+  </a>
+</p>
+
 <p>Prefer to just go straight to the source? <a href="https://github.com/alexdglover/you-pass-butter-bot">Check out the code on GitHub</a>.</p>
-<h2><a href="https://github.com/alexdglover/you-pass-butter-bot"><img class="aligncenter size-medium wp-image-1050" src="{{ site.baseurl }}/assets/GitHub_Logo-300x123.png" alt="GitHub_Logo" /></a>Where we left off</h2>
+
+<p style="text-align: center;">
+  <a href="https://github.com/alexdglover/you-pass-butter-bot">
+    <img class="aligncenter size-medium wp-image-1050" src="{{ site.baseurl }}/assets/GitHub_Logo-300x123.png" alt="GitHub_Logo" />
+  </a>
+</p>
+
+<h2>Where we left off</h2>
 <p>If you haven't ready it already, check out <a href="http://alexdglover.com/youpassbutter-slack-bot-part-1/">Part 1</a> to get the context behind the app and the initial implementation.</p>
 <p>In this post, we'll</p>
 

@@ -9,6 +9,8 @@ tags:
 - sinatra
 - slack
 - slash commands
+header:
+  teaser: /assets/anim.gif
 ---
 <h2>TL;DR Section</h2>
 <p>Just looking for the app? Just click the "Add to Slack" button to install the YouPassButter bot</p>
