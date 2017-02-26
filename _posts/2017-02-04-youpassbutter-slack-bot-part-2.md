@@ -11,6 +11,11 @@ tags:
 - slash commands
 header:
   teaser: /assets/YPB-Part2-Meme-Text-Placement.gif
+  overlay_image: /assets/rick-fuck-you-god.jpg
+  overlay_color: "#5e616c"
+  cta_label: "<i class='fa fa-github'></i> GitHub Repo"
+  cta_url: "https://github.com/alexdglover/you-pass-butter-bot"
+excerpt: In part 2, we add dynamic meme generation, OAuth configuration, and re-structure our API to support more Slash commands.
 ---
 <h2>TL;DR Section</h2>
 
