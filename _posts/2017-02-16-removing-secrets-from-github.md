@@ -12,19 +12,6 @@ tags:
 - passwords
 - secrets
 - sensitive data
-meta:
-  _edit_last: '1'
-  _oembed_044460767134e37b7dcdf93ef47fb652: <blockquote class="imgur-embed-pub" lang="en"
-    data-id="MLwpwcA"><a href="http://imgur.com/MLwpwcA">Screenshot</a></blockquote><script
-    async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
-  _oembed_time_044460767134e37b7dcdf93ef47fb652: '1486221676'
-  _s2mail: 'yes'
-  _publicize_twitter_user: "@alexdglover"
-  _oembed_ad46386c43fddb44d00b1ac8d764ff7a: "{{unknown}}"
-  _thumbnail_id: '1096'
-  _wpas_mess: Removing Secrets from GitHub
-  _wpas_skip_16584087: '1'
-  _wpas_done_all: '1'
 ---
 I did it. The one universal rule when it comes to source control/Git, and I broke it. I committed my OAuth key for my <a href="http://alexdglover.com/youpassbutter-slack-bot-part-1/" target="_blank">YouPassButter Slack app</a> to GitHub. Thankfully it was only a personal project, and not anything more important than that. Either way, I got a little spooked and wanted to go through the process of removing sensitive data from GitHub as a learning opportunity.
 Before we get started on the walk-through, there are two things I'd like to mention upfront:
@@ -49,7 +36,7 @@ Before we get started on the walk-through, there are two things I'd like to ment
    Rewrite c4d38d45a710b7e87c2d75820fe65d204f9014e1 (39/75) (1 seconds passed, remaining 0 predicted)    rm 'app.rb'
    Rewrite d2b25cdd3e6190b2d59c1239d5955245c76a173b (39/75) (1 seconds passed, remaining 0 predicted)    rm 'app.rb'
    Rewrite c4570086709c08364d769bcb1818c0a2631ea111 (39/75) (1 seconds passed, remaining 0 predicted)    rm 'app.rb'
-   
+
    Ref 'refs/heads/master' was rewritten
    Ref 'refs/remotes/heroku/master' was rewritten
    WARNING: Ref 'refs/remotes/heroku/master' is unchanged
@@ -68,11 +55,11 @@ Before we get started on the walk-through, there are two things I'd like to ment
    Your branch is up-to-date with 'origin/master'.
    Untracked files:
      (use "git add <file>..." to include in what will be committed)
-   
+
      app.rb
-   
+
    nothing added to commit but untracked files present (use "git add" to track)
-   [alexdglover@mobile1:~/Documents/workspace/rick-and-morty-bot]$ git add app.rb 
+   [alexdglover@mobile1:~/Documents/workspace/rick-and-morty-bot]$ git add app.rb
    [alexdglover@mobile1:~/Documents/workspace/rick-and-morty-bot]$ git commit -m 'adds app.rb back into repo after removing secrets'
    [master 346e3e5] adds app.rb back into repo after removing secrets
     1 file changed, 202 insertions(+)
