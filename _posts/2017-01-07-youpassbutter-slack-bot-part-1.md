@@ -14,10 +14,22 @@ header:
 ---
 <h2>TL;DR Section</h2>
 <p>Just looking for the app? Just click the "Add to Slack" button to install the YouPassButter bot</p>
-<p><a href="https://slack.com/oauth/authorize?scope=commands&client_id=122992570306.122925378483"><img src="{{ site.baseurl }}/assets/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" alt="Add to Slack" width="139" height="40" /></a></p>
+<p style="text-align: center;">
+  <a href="https://slack.com/oauth/authorize?scope=commands&client_id=122992570306.122925378483">
+    <img src="{{ site.baseurl }}/assets/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" alt="Add to Slack" width="139" height="40" />
+  </a>
+</p>
+
 <p>Don't care about the context, just looking for a general guide to building a Slack bot with Ruby and Sinatra? Skip down to the "Implementation" section.</p>
+
 <p>Prefer to just go straight to the source? <a href="https://github.com/alexdglover/you-pass-butter-bot">Check out the code on GitHub</a>.</p>
-<p><a href="https://github.com/alexdglover/you-pass-butter-bot"><img class="aligncenter size-medium wp-image-1050" src="{{ site.baseurl }}/assets/GitHub_Logo-300x123.png" alt="GitHub_Logo" width="300" height="123" /></a></p>
+
+<p style="text-align: center;">
+  <a href="https://github.com/alexdglover/you-pass-butter-bot">
+    <img class="aligncenter size-medium wp-image-1050" src="{{ site.baseurl }}/assets/GitHub_Logo-300x123.png" alt="GitHub_Logo" width="300" height="123" />
+  </a>
+</p>
+
 <h2>Background/Context</h2>
 <p>I've wanted to build a Slack bot for a while now, but didn't have any ideas for what the bot should do. Then it hit me - a Rick and Morty bot for getting funny quotes and memes posted to Slack.  And what robot better represents Rick and Morty then the butter-passing robot Rick built</p>
 <p><iframe width="560" height="315" src="https://www.youtube.com/embed/ekP0LQEsUh0?start=32" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>

@@ -3,6 +3,7 @@ title: 'To Do List App'
 date: 2013-04-03 17:01:55.000000000 -05:00
 categories:
 - Utilities And Other Useful Things
+- IT/Software Projects
 tags:
 - asynchronous
 - jQuery
@@ -11,6 +12,8 @@ tags:
 - php
 - to do app
 - todomvc
+header:
+  teaser: /assets/todos.png
 ---
 **Be advised** This post is quite old ({{ page.date | date_to_string }}) and any code may be out of date. Proceed with caution.
 {: .notice--warning}

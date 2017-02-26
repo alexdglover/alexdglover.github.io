@@ -10,6 +10,8 @@ tags:
 - flame sensor
 - lock box
 - relay
+header:
+  teaser: /assets/UnlockItWithFireWiring.jpg
 ---
 <p>A couple years ago I built a <a href="http://alexdglover.com/arduino-project-4-tilt-to-unlock/" target="_blank">novelty lock box that used an Arduino and an accelerometer</a> so that you had to tilt the box in the correct sequence to unlock it. The prototype was pretty rough, so I eventually refined the design and built a Mark II version of it.</p>
 <p>This project is my third iteration of the novelty lockbox. The majority of the design has remain unchanged, except for this project I used a "flame sensor" instead of an accelerometer. Instead of tilting the box in a particular sequence, the only way to open the box is to use an open flame as the "key." Here's a quick video to demonstrate the finished product:</p>

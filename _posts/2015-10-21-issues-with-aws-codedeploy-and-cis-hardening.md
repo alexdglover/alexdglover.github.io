@@ -7,6 +7,8 @@ tags:
 - aws
 - codedeploy
 - umask
+header:
+  teaser: /assets/aws-codedeploy-logo.png
 ---
 <p>I've been using <a href="https://aws.amazon.com/codedeploy/" target="_blank">AWS CodeDeploy</a> for some time now and it's really an awesome service. If you're hosting your application in AWS and not using CodeDeploy you're missing out.</p>
 <p>If you want to use CodeDeploy yet but you just don't know how, check out my <a href="https://www.udemy.com/aws-codedeploy/?couponCode=GOBLs375" target="_blank">in-depth AWS CodeDeploy course</a>.</p>
