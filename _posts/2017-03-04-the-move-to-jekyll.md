@@ -15,7 +15,7 @@ header:
 
 WordPress has served me well over the years, but it's time for me to move on. My blog first started with Wordpress.com hosting, but I didn't like that I was hosting WP's ads,  a custom domain was an up-charge, and they limit which themes and plugins I could use. So I migrated to a self-hosted WordPress instance, allowing me to serve Google ads, add membership functionality, and allow people to subscribe to my site by email.
 
-I've had some issues with 1and1 hosting over the years (downtime, charges for PHP support, non-refundable contracts), and I've come to realize I don't need most of these plugins. I don't make enough money to justify the ads, and a lot of the site's visitors are friends and family. I only have a few members/subscribers, so I don't really need membership functionality either. On top of that, 1and1 isn't free - I'm literally paying for a hosting service I don't like, to host functionality I don't need.
+I've had some issues with 1and1 hosting over the years (downtime, charges for PHP support, non-refundable contracts), and I've come to realize I don't need most of the plugins. I don't make enough money to justify the ads, and a lot of the site's visitors are friends and family anyway. I only have a few members/subscribers, so I don't really need membership functionality either. On top of that, 1and1 isn't free - I'm literally paying for a hosting service I don't like, to host functionality I don't need.
 
 With all of that in mind, blogging with Jekyll and hosting on GitHub seemed like a no-brainer. Hosting is free, it's faster and more secure than WP, and I get to enjoy hacking on a new tool set. But before I made the switch, I wanted to make sure Jekyll could do everything I wanted with a blogging platform.
 
@@ -79,14 +79,14 @@ Jekyll supports Google Analytics, injecting your tracking ID into every page on 
 ```
 # Analytics
 analytics:
-  provider               : "google"
+  provider       : "google"
   google:
-    tracking_id          : "ga-my-tracking-id-1234556789"
+    tracking_id  : "ga-my-tracking-id-1234556789"
 ```
 
 ## Posting to Social Media
 
-I've seen plenty of other Jekyll users create a simple integration to social media sites using the built-in RSS feed from Jekyll and <a href="http://www.ifttt.com/">IFTTT</a>, so I won't beat that dear horse. The most interesting implementation I've seen done was by <a href="https://eduardoboucas.com/blog/2015/04/28/sharing-jekyll-posts-on-social-media-using-front-matter-and-ifttt.html">Eduardo Boucas</a>, so I'll direct you to his site for an example.
+I've seen plenty of other Jekyll users create a simple integration to social media sites using the built-in RSS feed from Jekyll and <a href="http://www.ifttt.com/">IFTTT</a>, so I won't beat that dead horse. The most interesting implementation I've seen done was by <a href="https://eduardoboucas.com/blog/2015/04/28/sharing-jekyll-posts-on-social-media-using-front-matter-and-ifttt.html">Eduardo Boucas</a>, so I'll direct you to his site for an example.
 
 ## Retaining Permalinks
 Fortunately, when I set up my self-hosted WordPress site I had the foresight to choose a sane and practical permalink structure. All of my permalinks are just the post title, but URL encoded  (99% of the time this just means spaces are replaced by hyphens, and all words are downcased). I can maintain all of my permalinks and not lose any SEO "juice" by using that same permalink pattern in my new Jekyll blog:
