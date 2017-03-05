@@ -10,7 +10,7 @@ tags:
 - tft
 - touchscreen
 header:
-  teaser: /assets/IMG_20150704_103609-300x225.jpg
+  teaser: /assets/IMG_20150704_103609.jpg
   overlay_image: /assets/arduino-closeup.jpg
   overlay_filter: rgba(0, 0, 0, 0.2)
   overlay_color: "#5e616c"

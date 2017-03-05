@@ -4,6 +4,31 @@ permalink: /search
 ---
 
 <script>
+window.onload = function(){
+  getQueryFromUrl();
+};
+
+function getPostsByCategory(val) {
+
+  console.log("hiding all elements");
+  $( ".postGroup" ).hide();
+
+  // Downcase query val for case-insensitive search
+  val = val.toLowerCase();
+
+  console.log("display div with matching ID");
+  $( "div[id*='" + val + "']" ).show()
+
+} // End of getSearchResults
+
+function getQueryFromUrl(){
+  var fullUrl = window.location.href;
+  var query = fullUrl.split('queryText=')[1];
+  if(typeof(query) != "undefined"){
+    $( "#searchInput" ).val(query);
+    getSearchResults(query);
+  }
+}
 
 function getSearchResults(val) {
   console.log("hiding all elements");
@@ -35,15 +60,15 @@ function getSearchResults(val) {
       }
     });
   } // End of input length check
-  
+
 } // End of getSearchResults
 </script>
 
-<input type="text" onkeyup="getSearchResults(this.value)">
+<input id="searchInput" type="text" onkeyup="getSearchResults(this.value)">
 
 <div id="results">
   {% for post in site.posts %}
-  <div id="{{ post.title }}" class="result" style="display: none;"> 
+  <div id="{{ post.title }}" class="result" style="display: none;">
     <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
     {% if post.header.teaser %}
     <a href="{{ post.url }}"><img src="{{ post.header.teaser }}" style="width: 150px;" class="align-left" /></a>

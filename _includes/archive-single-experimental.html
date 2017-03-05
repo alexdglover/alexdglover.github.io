@@ -1,0 +1,64 @@
+{% if post.header.teaser %}
+  {% capture teaser %}{{ post.header.teaser }}{% endcapture %}
+{% else %}
+  {% assign teaser = site.teaser %}
+{% endif %}
+
+{% if post.id %}
+  {% assign title = post.title | markdownify | remove: "<p>" | remove: "</p>" %}
+{% else %}
+  {% assign title = post.title %}
+{% endif %}
+
+<div class="{{ include.type | default: "list" }}__item">
+  <!-- <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    <h2 class="archive__item-title" itemprop="headline">
+      {% if post.link %}
+        <a href="{{ post.link }}">{{ title }}</a> <a href="{{ post.url | absolute_url }}" rel="permalink"><i class="fa fa-link" aria-hidden="true" title="permalink"></i><span class="sr-only">Permalink</span></a>
+      {% else %}
+        <a href="{{ post.url | absolute_url }}" rel="permalink">{{ title }}</a>
+      {% endif %}
+    </h2>
+    {% if teaser %}
+      <div class="archive__item-teaser">
+        <img src=
+          {% if teaser contains "://" %}
+            "{{ teaser }}"
+          {% else %}
+            "{{ teaser | absolute_url }}"
+          {% endif %}
+          alt="">
+      </div>
+    {% endif %}
+    {% if post.read_time %}
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> {% include read-time.html %}</p>
+    {% endif %}
+    {% if post.excerpt %}<p class="archive__item-excerpt" itemprop="description">{{ post.excerpt | markdownify | strip_html | truncate: 160 }}</p>{% endif %}
+  </article> -->
+  <div id="{{ post.title }}">
+    <h2 class="archive__item-title" itemprop="headline">
+      {% if post.link %}
+        <a href="{{ post.link }}">{{ title }}</a> <a href="{{ post.url | absolute_url }}" rel="permalink"><i class="fa fa-link" aria-hidden="true" title="permalink"></i><span class="sr-only">Permalink</span></a>
+      {% else %}
+        <a href="{{ post.url | absolute_url }}" rel="permalink">{{ title }}</a>
+      {% endif %}
+    </h2>
+    {% if post.header.teaser %}
+      <a href="{{ post.url }}"><img src="{{ post.header.teaser }}" style="width: 300px;" class="align-left" /></a>
+    {% endif %}
+    <p><small><strong>{{ post.date | date: "%B %e, %Y" }}</strong> - <strong>Categories:</strong> {{ post.categories | join:',' }} </small></p>
+    {% if post.read_time %}
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> {% include read-time.html %}</p>
+    {% endif %}
+    {% if post.excerpt %}<p class="archive__item-excerpt" itemprop="description">{{ post.excerpt | markdownify | strip_html | truncate: 160 }}</p>{% endif %}
+  </div>
+  <div style="clear:both;"></div>
+  <div style="text-align: center;">
+    {% if post.link %}
+      <a href="{{ post.link }}" class="btn btn--info">Read More</a> <a href="{{ post.url | absolute_url }}" rel="permalink"><i class="fa fa-link" aria-hidden="true" title="permalink"></i><span class="sr-only">Permalink</span></a>
+    {% else %}
+      <a href="{{ post.url | absolute_url }}" class="btn btn--info" rel="permalink">Read More</a>
+    {% endif %}
+  </div>
+  <hr />
+</div>

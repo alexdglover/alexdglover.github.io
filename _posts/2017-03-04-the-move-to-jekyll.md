@@ -11,12 +11,6 @@ tags:
 - migration
 header:
   teaser: /assets/jekyll-search-demo.gif
-#  overlay_image: /assets/rick-fuck-you-god.jpg
-#  overlay_color: "#5e616c"
-#  cta_label: "<i class='fa fa-github'></i> GitHub Repo"
-#  cta_url: "https://github.com/alexdglover/you-pass-butter-bot"
-#  caption: Image courtesy of Adult Swim, YouTube
-#excerpt: In part 2, we add dynamic meme generation, OAuth configuration, and re-structure our API to support more Slash commands.
 ---
 
 WordPress has served me well over the years, but it's time for me to move on. My blog first started with Wordpress.com hosting, but I didn't like that I was hosting WP's ads,  a custom domain was an up-charge, and they limit which themes and plugins I could use. So I migrated to a self-hosted WordPress instance, allowing me to serve Google ads, add membership functionality, and allow people to subscribe to my site by email.
