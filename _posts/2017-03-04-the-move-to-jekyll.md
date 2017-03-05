@@ -89,7 +89,7 @@ analytics:
 I've seen plenty of other Jekyll users create a simple integration to social media sites using the built-in RSS feed from Jekyll and <a href="http://www.ifttt.com/">IFTTT</a>, so I won't beat that dead horse. The most interesting implementation I've seen done was by <a href="https://eduardoboucas.com/blog/2015/04/28/sharing-jekyll-posts-on-social-media-using-front-matter-and-ifttt.html">Eduardo Boucas</a>, so I'll direct you to his site for an example.
 
 ## Retaining Permalinks
-Fortunately, when I set up my self-hosted WordPress site I had the foresight to choose a sane and practical permalink structure. All of my permalinks are just the post title, but URL encoded  (99% of the time this just means spaces are replaced by hyphens, and all words are downcased). I can maintain all of my permalinks and not lose any SEO "juice" by using that same permalink pattern in my new Jekyll blog:
+Fortunately, when I set up my self-hosted WordPress site I had the foresight to choose a sane and practical permalink structure. All of my permalinks are just the post title, but URL encoded  (99% of the time this just means spaces are replaced by hyphens, and all words are downcased). I can maintain all of my permalinks and not lose any SEO "juice" by using that setting the same permalink pattern in the _config.yml of my new Jekyll blog:
 
 ```
 # Outputting
