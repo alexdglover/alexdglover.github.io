@@ -38,7 +38,7 @@ function getCategoryFromUrl(){
   <div id="{{ category | slugify | downcase }}" class="postGroup" style="display: none;">
     <h2 class="archive__subtitle">Category: {{ category | downcase }}</h2>
     {% for post in posts %}
-      {% include archive-single.html %}
+      {% include archive-single-experimental.html %}
     {% endfor %}
   </div>
 {% endfor %}

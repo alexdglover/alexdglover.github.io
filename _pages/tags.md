@@ -38,7 +38,7 @@ function getTagFromUrl(){
   <div id="{{ tag | slugify | downcase }}" class="postGroup" style="display: none;">
     <h2 class="archive__subtitle">Tag: {{ tag | downcase }}</h2>
     {% for post in posts %}
-      {% include archive-single.html %}
+      {% include archive-single-experimental.html %}
     {% endfor %}
   </div>
 {% endfor %}
