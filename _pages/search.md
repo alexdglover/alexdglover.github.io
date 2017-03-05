@@ -1,6 +1,6 @@
 ---
 title: Search
-permalink: /search
+permalink: /search/
 ---
 
 <script>
