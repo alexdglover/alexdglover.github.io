@@ -7,8 +7,11 @@ categories:
 tags:
 - helpful
 - unix
-- unix command line
-- unix find
+- linux
+- command line
+- cli
+- bash
+- find
 
 ---
 <p>Recently ran into an issue at work where a single database was creating A LOT of trace files. 54 gigabytes of trace files to be specific. Well, this was a problem because the system disk was only 56GB, preventing me from building new databases. No problem, its a dev environment, I'll just delete the trace files that are older than 3 days. Except that the trace file naming convention wasn't consistent, so there was no way for me to delete the oldest files based only on file name.</p>
