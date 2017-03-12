@@ -20,7 +20,7 @@ $port = 27017; // 27017 is the default port
 $uri = "mongodb://" . $user . ":" . $passwd . "@" . $host . ":" . $port;
 $mongo = new Mongo($uri);
 ```
-<p>If you're using <a title="Introduction to OpenShift" href="http://alexdglover.com/introduction-to-openshift/" target="_blank">OpenShift</a>, you can simply use the relevant environment variables:</p>
+<p>If you're using <a title="Introduction to OpenShift" href="http://www.alexdglover.com/introduction-to-openshift/" target="_blank">OpenShift</a>, you can simply use the relevant environment variables:</p>
 ```php
 $host = $_ENV["OPENSHIFT_MONGODB_DB_HOST"];
 $user = $_ENV["OPENSHIFT_MONGODB_DB_USERNAME"];

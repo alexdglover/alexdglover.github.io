@@ -14,7 +14,7 @@ tags:
 - restful
 - api
 ---
-<p>In a previous project, I built "<a href="http://alexdglover.com/whos-that-person-in-that-thing-app/" target="_blank">Who's that person in that thing?</a>," a JavaScript web app that called The Movie DB's API to find common actors given two movies. That was fun, but I still wanted to build an API service myself and I wanted to experiment with some new tools. But first I needed a project idea as an excuse to use them.</p>
+<p>In a previous project, I built "<a href="http://www.alexdglover.com/whos-that-person-in-that-thing-app/" target="_blank">Who's that person in that thing?</a>," a JavaScript web app that called The Movie DB's API to find common actors given two movies. That was fun, but I still wanted to build an API service myself and I wanted to experiment with some new tools. But first I needed a project idea as an excuse to use them.</p>
 <h2>Project Idea/Application Premise/The Excuse</h2>
 <p>People are funny about money, especially about their salary. With most people, it's a taboo to talk about it. But everyone's been curious at some point to know how they compare to their peers. Some people fear they are getting paid less to do the same work as others, and sometimes that fear is founded in fact. The "Share Your Salary" app is an anonymous salary survey tool to address these kinds of use cases.</p>
 <p>Before we get into any of the tools or how-to, feel free to check out the application first or look over the source.</p>
@@ -25,9 +25,9 @@ tags:
 
 <h2>New Tools</h2>
 <h3><a title="OpenShift.com" href="http://www.openshift.com" target="_blank" rel="nofollow">OpenShift</a></h3>
-<p>Well I started to write this section, turned out to be about a thousand words... so I moved it to <a title="Introduction to OpenShift" href="http://alexdglover.com/introduction-to-openshift/" target="_blank">it's own separate post</a>. In short, OpenShift is a PaaS hosting service. OpenShift hosts the entire Share Your Salary app, including a MongoDB container, an HAProxy load balancer, and Apache/PHP containers in an auto-scaling group.</p>
+<p>Well I started to write this section, turned out to be about a thousand words... so I moved it to <a title="Introduction to OpenShift" href="http://www.alexdglover.com/introduction-to-openshift/" target="_blank">it's own separate post</a>. In short, OpenShift is a PaaS hosting service. OpenShift hosts the entire Share Your Salary app, including a MongoDB container, an HAProxy load balancer, and Apache/PHP containers in an auto-scaling group.</p>
 <h3><a title="MongoDB.org" href="http://www.mongodb.org/" target="_blank">MongoDB</a></h3>
-<p>MongoDB is a highly scalable NoSQL database. MongoDB is a document database and uses JavaScript Object Notation (JSON) to represent those documents. I really like JSON, but PHP doesn't 'speak' JSON natively, which makes using MongoDB a little less intuitive. I wrote <a title="MongoDB and PHP Primer" href="http://alexdglover.com/mongodb-and-php-primer/" target="_blank">a separate MongoDB and PHP Primer post</a> to go over some of the basics.</p>
+<p>MongoDB is a highly scalable NoSQL database. MongoDB is a document database and uses JavaScript Object Notation (JSON) to represent those documents. I really like JSON, but PHP doesn't 'speak' JSON natively, which makes using MongoDB a little less intuitive. I wrote <a title="MongoDB and PHP Primer" href="http://www.alexdglover.com/mongodb-and-php-primer/" target="_blank">a separate MongoDB and PHP Primer post</a> to go over some of the basics.</p>
 <p>I used MongoDB as the backend for the "Share Your Salary" app.</p>
 <h3><a title="FatFreeFramework.com" href="http://fatfreeframework.com/" target="_blank">Fat Free Framework</a></h3>
 <p>Fat Free Framework (or F3 for short) is a tiny PHP framework (it's only ~65 KB in total) that provides URL routing, caching, page templating, and built-in database support for MySQL, SQLite, MSSQL/Sybase, PostgreSQL, MongoDB and F3's proprietary flat-file DB called Jig.</p>

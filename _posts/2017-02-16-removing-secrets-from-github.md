@@ -20,7 +20,7 @@ header:
   caption: Image courtesy of New Line Cinema, YouTube
 excerpt: Is it secret?! Is it safe?!<br /><br /><br />What to do when you've committed keys, secrets, passwords, and/or other sensitive information to GitHub or any public Git repo
 ---
-I did it. The one universal rule when it comes to source control/Git, and I broke it. I committed my OAuth key for my <a href="http://alexdglover.com/youpassbutter-slack-bot-part-1/" target="_blank">YouPassButter Slack app</a> to GitHub. Thankfully it was only a personal project, and not anything more important than that. Either way, I got a little spooked and wanted to go through the process of removing sensitive data from GitHub as a learning opportunity.
+I did it. The one universal rule when it comes to source control/Git, and I broke it. I committed my OAuth key for my <a href="http://www.alexdglover.com/youpassbutter-slack-bot-part-1/" target="_blank">YouPassButter Slack app</a> to GitHub. Thankfully it was only a personal project, and not anything more important than that. Either way, I got a little spooked and wanted to go through the process of removing sensitive data from GitHub as a learning opportunity.
 Before we get started on the walk-through, there are two things I'd like to mention upfront:
 
 * Because of the distributed nature of Git, if someone cloned or forked your repo while it contained sensitive data, that data is compromised. There is no way to delete your data out of someone else's repo

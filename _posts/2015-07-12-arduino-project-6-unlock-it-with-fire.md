@@ -19,7 +19,7 @@ header:
   cta_url: "https://github.com/alexdglover/unlock-it-with-fire"
 excerpt: A lock box that can only be opened with a different kind of key
 ---
-<p>A couple years ago I built a <a href="http://alexdglover.com/arduino-project-4-tilt-to-unlock/" target="_blank">novelty lock box that used an Arduino and an accelerometer</a> so that you had to tilt the box in the correct sequence to unlock it. The prototype was pretty rough, so I eventually refined the design and built a Mark II version of it.</p>
+<p>A couple years ago I built a <a href="http://www.alexdglover.com/arduino-project-4-tilt-to-unlock/" target="_blank">novelty lock box that used an Arduino and an accelerometer</a> so that you had to tilt the box in the correct sequence to unlock it. The prototype was pretty rough, so I eventually refined the design and built a Mark II version of it.</p>
 <p>This project is my third iteration of the novelty lockbox. The majority of the design has remain unchanged, except for this project I used a "flame sensor" instead of an accelerometer. Instead of tilting the box in a particular sequence, the only way to open the box is to use an open flame as the "key." Here's a quick video to demonstrate the finished product:</p>
 
 {% include video id="u50mTOLcKIY" provider="youtube" %}
@@ -61,7 +61,7 @@ void loop() {
 <p>One quick clarification - I refer to this device as a "flame sensor" because that's how its marketed, but in reality it's just a photoresistor that has a filtering film around it that only allows infrared light to pass through. The voltage in the photoresistor circuit will change with the amount of light, and the Arduino analog pin will convert that voltage value to an integer between 0 and 1024. This means any infrared light will affect the sensor, including sunlight, TV remotes that use infrared, even something that is very hot could theoretically give off enough infrared to affect the sensor. If you're getting strange values while testing your sensor, be sure that you don't have another source of infrared throwing you off.</p>
 <p>Once you're confident your sensor works and you have some idea of what values it returns, you're ready to build out the lock box components.</p>
 <h3>Assembly</h3>
-<p>Note: To save on cost, I've been building <a href="https://www.arduino.cc/en/Main/Standalone#.UwkAm_ldWuk">Arduino compatible breadboards</a> using standalone ATmega328 chips. The instructions will still work for an Arduino Uno, but the pictures won't be as helpful. Check out <a href="http://alexdglover.com/arduino-project-4-tilt-to-unlock/" target="_blank">Arduino Project 4: Tilt to Unlock</a> to see pictures for a similar assembly using an Arduino Uno.</p>
+<p>Note: To save on cost, I've been building <a href="https://www.arduino.cc/en/Main/Standalone#.UwkAm_ldWuk">Arduino compatible breadboards</a> using standalone ATmega328 chips. The instructions will still work for an Arduino Uno, but the pictures won't be as helpful. Check out <a href="http://www.alexdglover.com/arduino-project-4-tilt-to-unlock/" target="_blank">Arduino Project 4: Tilt to Unlock</a> to see pictures for a similar assembly using an Arduino Uno.</p>
 <ol>
 <li>
   <p>Connect the 5v and ground pins (may be marked as '+' and 'G') on your flame sensor to the corresponding pins on the Arduino or bread board. Connect the A0 pin (the analog pin) on the flame sensor to the Analog Input 0 pin on the Arduino (green wire in the photo below, pin 23 on an ATmega328). Use <a href="http://amzn.to/1URGD8T" target="_blank">male-to-female jumper wires</a> to make this easier.</p>
@@ -77,7 +77,7 @@ void loop() {
 </li>
 <li>
   <p>
-    The door latch has two wires, they are arbitrary (either one can be powered or ground). Connect one of them to the ground wire from the power supply. Connect the other wire to the normally open ('NO') socket on the relay. Connect the 12v wire from the power supply to the always-closed or common socket on the relay (it's almost always the middle one). Here's a closeup of the wiring from <a href="http://alexdglover.com/arduino-project-4-tilt-to-unlock/" target="_blank">Arduino Project 4</a>:
+    The door latch has two wires, they are arbitrary (either one can be powered or ground). Connect one of them to the ground wire from the power supply. Connect the other wire to the normally open ('NO') socket on the relay. Connect the 12v wire from the power supply to the always-closed or common socket on the relay (it's almost always the middle one). Here's a closeup of the wiring from <a href="http://www.alexdglover.com/arduino-project-4-tilt-to-unlock/" target="_blank">Arduino Project 4</a>:
   </p>
 
   <p style="text-align: center;">

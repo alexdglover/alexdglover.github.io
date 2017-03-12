@@ -28,7 +28,7 @@ header:
 [GitHub Repo](https://github.com/alexdglover/vigilant-winner){: .btn .btn--large .btn--info}
 {: .text-center}
 
-<p>In my haste to modify the to do list app to save values, I skipped the part where I should have learned one of the new JavaScript frameworks highlighted on <a href="http://todomvc.com/" target="_blank">ToDoMVC</a>. I actually used the template provided in the ToDoMVC package and used the asynchronous database call setup I outlined in a <a title="Asynchronous Database Operations with PHP and jQuery" href="http://alexdglover.com/asynchronous-database-operations-with-php-and-jquery/" target="_blank">related post</a>.</p>
+<p>In my haste to modify the to do list app to save values, I skipped the part where I should have learned one of the new JavaScript frameworks highlighted on <a href="http://todomvc.com/" target="_blank">ToDoMVC</a>. I actually used the template provided in the ToDoMVC package and used the asynchronous database call setup I outlined in a <a title="Asynchronous Database Operations with PHP and jQuery" href="http://www.alexdglover.com/asynchronous-database-operations-with-php-and-jquery/" target="_blank">related post</a>.</p>
 <p>The bad news - this isn't a secure application, SQL injection attacks will succeed here. Also, some of the icons don't seem to work outside of Chrome.</p>
 <p>The good news - this application supports multiple clients via the use of a "poor man's pull." Basically, if User A and User B are writing to dos in the app on two separate computers, they will see each other's notes in near real time. This is possible by using JavaScript to call the DB query every X number of milliseconds. Here's a code snippet if you're having a hard time understanding:</p>
 ```javascript

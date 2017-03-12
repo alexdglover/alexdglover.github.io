@@ -37,7 +37,7 @@ excerpt: In part 2, we add dynamic meme generation, OAuth configuration, and re-
 </p>
 
 <h2>Where we left off</h2>
-<p>If you haven't ready it already, check out <a href="http://alexdglover.com/youpassbutter-slack-bot-part-1/">Part 1</a> to get the context behind the app and the initial implementation.</p>
+<p>If you haven't ready it already, check out <a href="http://www.alexdglover.com/youpassbutter-slack-bot-part-1/">Part 1</a> to get the context behind the app and the initial implementation.</p>
 <p>In this post, we'll</p>
 
 <ul>
@@ -48,7 +48,7 @@ excerpt: In part 2, we add dynamic meme generation, OAuth configuration, and re-
 
 <h2>Re-structuring our commands</h2>
 
-<p>In <a href="http://alexdglover.com/youpassbutter-slack-bot-part-1/">Part 1</a>, we had a one-to-one mapping from our Slash Commands to our API endpoints. This made our app very clean and simple, but has one serious drawback; Slack only allows up to 25 slash commands per 'app.' We haven't even implemented our meme generation feature yet, so this is a dealbreaker for us.</p>
+<p>In <a href="http://www.alexdglover.com/youpassbutter-slack-bot-part-1/">Part 1</a>, we had a one-to-one mapping from our Slash Commands to our API endpoints. This made our app very clean and simple, but has one serious drawback; Slack only allows up to 25 slash commands per 'app.' We haven't even implemented our meme generation feature yet, so this is a dealbreaker for us.</p>
 <p>Let's consolidate our image-specific Slash commands into one image-fetching Slash command, and we'll pass a second argument to the command to specify <em>which</em> image we want to return.</p>
 <p>Since we're consolidating the Slash commands, we'll also need to consolidate our API endpoints to match. Fortunately, this is very easy. All of our Sinatra routes are basically key-value pairs, where the key is the route (e.g. /you-pass-butter) and the value is the URL to the image (e.g. https://media.giphy.com/whatever.gif). Because of this, we can consolidate all of our routes into a Hash and write a single route to dynamically fetch and return the correct image.</p>
 

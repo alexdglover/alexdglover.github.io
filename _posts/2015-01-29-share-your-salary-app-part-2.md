@@ -13,7 +13,7 @@ tags:
 header:
   teaser: /assets/SwaggerUILogo.png
 ---
-<p>In <a title="Share Your Salary App Part 1" href="http://alexdglover.com/share-your-salary-app-part-1/" target="_blank">Part 1</a>, I covered the core classes for the Share Your Salary application. These classes covered my Model and Controllers in my quasi-MVC application. Now we're ready to expose those controller functions via a RESTful API.</p>
+<p>In <a title="Share Your Salary App Part 1" href="http://www.alexdglover.com/share-your-salary-app-part-1/" target="_blank">Part 1</a>, I covered the core classes for the Share Your Salary application. These classes covered my Model and Controllers in my quasi-MVC application. Now we're ready to expose those controller functions via a RESTful API.</p>
 <p>For this project, I used the Fat Free Framework for both API routes and web page templating. To start, I simply downloaded and unzipped the <a href="https://github.com/bcosca/fatfree/archive/master.zip">F3 package</a> and added the contents to my shareyoursalary app directory. Next, I created a "classes" folder and added the PHP class files I created in Part 1. At this point, my folder structure looked like this:</p>
 <ul>
 <li>shareyoursalary/
@@ -74,7 +74,7 @@ public function getByName($f3,$args) {
 
 <p style="text-align: center;"><a href="http://swagger.io/"><img class="aligncenter size-full wp-image-888" src="{{ "/assets/SwaggerUILogo.png" | absolute_url }}" alt="SwaggerUILogo" width="567" height="204" /></a></p>
 
-<p>I already gave an overview of Swagger UI in <a title="Share Your Salary App Part 1" href="http://alexdglover.com/share-your-salary-app-part-1/" target="_blank">Part 1</a>, now for the implementation details. To start, I downloaded the <a href="https://github.com/swagger-api/swagger-ui/archive/master.zip">Swagger UI package</a>, unzipped it the root of the project directory and renamed the directory 'swagger' leaving our new file structure like this:</p>
+<p>I already gave an overview of Swagger UI in <a title="Share Your Salary App Part 1" href="http://www.alexdglover.com/share-your-salary-app-part-1/" target="_blank">Part 1</a>, now for the implementation details. To start, I downloaded the <a href="https://github.com/swagger-api/swagger-ui/archive/master.zip">Swagger UI package</a>, unzipped it the root of the project directory and renamed the directory 'swagger' leaving our new file structure like this:</p>
 <ul>
 <li>shareyoursalary/
 <ul>
