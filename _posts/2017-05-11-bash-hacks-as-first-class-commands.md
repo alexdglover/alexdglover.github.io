@@ -11,11 +11,12 @@ tags:
 
 In my new job at [Zendesk](https://www.zendesk.com/), I deal with a lot of Ruby
 projects that leverage [bundler](http://bundler.io/) for dependency management.
-Specifically, right now I'm working with SparkleFormation,
+Specifically, right now I'm working with
+[SparkleFormation](http://www.sparkleformation.io/),
 [stack_master](https://github.com/envato/stack_master), and
 [aws-vault](https://github.com/99designs/aws-vault). With that toolset, each
-command starts with 20 some odd characters that don't change very often, like
-this:
+command starts with a staggering **_43 static characters_** that don't change
+between commands, like this:
 
 ```shell
 aws-vault exec <AWS profile> -- bundle exec stack_master apply \
@@ -70,4 +71,4 @@ are clean and short:
 zsm dev apply my_stack
 ```
 
-I hope you found this useful.
+As always, I hope you found this useful.
