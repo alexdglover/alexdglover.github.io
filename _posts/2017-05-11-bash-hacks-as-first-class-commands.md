@@ -28,12 +28,12 @@ tried to solve this by setting an alias in my BASH profile to abstract the
 stack_master command:
 
 ```shell
-alias be=”bundle exec stack_master”
+alias sm=”bundle exec stack_master”
 ```
 
 One problem with this approach - if you use a command or binary that spawns a
-new shell (like aws-vault does), your bash_profile is ignored, defeating the
-entire purpose.
+new shell (like aws-vault does), your bash_profile is ignored and your aliases
+don't work, defeating the entire purpose.
 
 Fortunately this is an easy problem to solve. Because the default PATH is the
 same for all shells, we can recreate our alias as a script and place it in
@@ -47,8 +47,9 @@ after a script is invoked.
 bundle exec stack_master “$@”
 ```
 
-Once I created `/usr/local/bin/be` and populated it with those lines, executing
-`be` behaved exactly as the original alias, but is also available in all shells.
+Once I created `/usr/local/bin/sm` and populated it with those lines, executing
+`sm` behaved exactly as the original alias, but was also compatible with
+aws-vault.
 
 For those of you using the same toolset of aws-vault, stack_master, and
 SparkleFormation, I further condensed my command. Note that this only works if
