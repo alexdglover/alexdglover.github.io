@@ -1,7 +1,6 @@
 ---
 title: DNSReRoute - A Full SaaS Platform
 categories:
-- How-to Guides
 - IT/Software Projects
 tags:
 - Flask
