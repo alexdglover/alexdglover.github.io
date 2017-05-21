@@ -12,6 +12,8 @@ tags:
 - DNS
 - redirect
 - SaaS
+header:
+  teaser: /assets/img/DNSReRoute_Architecture.png
 ---
 
 About a year ago, I had a use case for a simple redirect. I just needed to

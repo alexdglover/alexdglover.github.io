@@ -1,8 +1,6 @@
 ---
 title: Removing Secrets from GitHub
 date: 2017-02-16 12:00:53.000000000 -06:00
-header:
-  teaser: "/assets/MLwpwcA.png"
 categories:
 - How-to Guides
 tags:
