@@ -23,7 +23,7 @@ excerpt: In part 2, we add dynamic meme generation, OAuth configuration, and re-
 <p>Just looking for the app? Just click the "Add to Slack" button to install the YouPassButter bot</p>
 
 <p style="text-align: center;">
-  <a href="https://slack.com/oauth/authorize?scope=commands&client_id=122992570306.122925378483">
+  <a href="https://slack.com/oauth/authorize?scope=commands&client_id=122992570306.122925378483&install_redirect=general">
     <img src="{{ site.baseurl }}/assets/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" alt="Add to Slack" />
   </a>
 </p>
@@ -320,10 +320,29 @@ end
 <p>Instead, we can just create the "Add to Slack" button. The process is much simpler and there's less overhead. Hell, the code is even generated for you automatically just by browsing to <a href="https://api.slack.com/docs/slack-button">https://api.slack.com/docs/slack-button</a> (assuming you're already logged in). Let's do that now. Scroll down to the "Add the Slack Button" section, select your Slash Command app in the dropdown in the top right, and then check <em>only</em> the 'commands' checkbox:</p>
 <p><a href="{{ "/assets/YPB-Part2-AddToSlackButton.gif" | absolute_url }}"><img class="aligncenter size-large wp-image-1074" src="{{ "/assets/YPB-Part2-AddToSlackButton.gif" | absolute_url }}" alt="YPB-Part2-AddToSlackButton" /></a></p>
 <p>Once you've got the HTML copied, you can drop it into your blog, emails, or a landing page you maintain for the app. Here's the Add to Slack button for the YouPassButter app:</p>
-<p><a href="https://slack.com/oauth/authorize?scope=commands&client_id=122992570306.122925378483"><img src="{{ site.baseurl }}/assets/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" alt="Add to Slack" /></a></p>
+<p><a href="https://slack.com/oauth/authorize?scope=commands&client_id=122992570306.122925378483&install_redirect=general"><img src="{{ site.baseurl }}/assets/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" alt="Add to Slack" /></a></p>
 <p>Here's a quick demo of a user clicking the button, authenticating to their Slack team, and getting a successful response from our /oauth endpoint:</p>
 <p><a href="{{ "/assets/YPB-Part2-AddToSlack-Auth-Demo.gif" | absolute_url }}"><img class="aligncenter size-large wp-image-1086" src="{{ "/assets/YPB-Part2-AddToSlack-Auth-Demo.gif" | absolute_url }}" alt="YPB-Part2-AddToSlack-Auth-Demo" /></a></p>
 <p>Now obviously our confirmation page is a little plain to say the least, but whatever, it works!</p>
 <h2>Conclusion</h2>
 <p>That's it for our YouPassButter Slack bot. It fetches images/gifs, generates memes, and can be easily installed by any Slack team. Now for a celebratory demo gif:</p>
 <p><a href="{{ "/assets/YPB-Part2-Final-Demo-Gif.gif" | absolute_url }}"><img class="aligncenter size-full wp-image-1084" src="{{ site.baseurl }}/assets/YPB-Part2-Final-Demo-Gif.gif" alt="YPB-Part2-Final-Demo-Gif" /></a></p>
+
+
+## 23-Jun-2017 Update
+I got a friendly email from someone in Australia who wanted to use the YouPassButter
+bot (which is awesome, love hearing from people who use my code/apps), but the
+"Add to Slack" button wasn't working. It would just throw a JSON response
+in the body complaining about an `invalid_client_id` (which absolutely wasn't the
+problem, because the client ID is immutable for an app and I didn't change the code).
+So I started to dig in, reproduced the error, but there was a separate URL in the
+["Your Apps"](https://api.slack.com/apps) page on Slack's site that worked fine.
+So after a few minutes of "WTF?" and verifying it worked a few times, I dug into the
+anchor tag behind the link. Oddly enough, it was the *exact* same URL from my "Add
+to Slack" button except it included another URL parameter, `install_redirect=general`.
+As a quick experiment, I updated my "Add to Slack" button and it started working!
+I opened a support case with Slack to find out why this change happened, I'll let
+all of you know if/when I hear back.
+
+In the meantime, be wary of this issue and let me know if you find it mentioned
+in the documentation anywhere.
