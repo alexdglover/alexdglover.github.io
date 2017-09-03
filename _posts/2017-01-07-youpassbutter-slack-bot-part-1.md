@@ -22,7 +22,7 @@ excerpt: A dirt simple Slack bot primer, using Ruby, Sinatra, Heroku, and Slash 
 <h2>TL;DR Section</h2>
 <p>Just looking for the app? Just click the "Add to Slack" button to install the YouPassButter bot</p>
 <p style="text-align: center;">
-  <a href="https://slack.com/oauth/authorize?scope=commands&client_id=122992570306.122925378483&install_redirect=general">
+  <a href="https://slack.com/oauth/authorize?scope=commands&client_id=122992570306.122925378483">
     <img src="{{ site.baseurl }}/assets/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" alt="Add to Slack" width="139" height="40" />
   </a>
 </p>

@@ -23,7 +23,7 @@ excerpt: In part 2, we add dynamic meme generation, OAuth configuration, and re-
 <p>Just looking for the app? Just click the "Add to Slack" button to install the YouPassButter bot</p>
 
 <p style="text-align: center;">
-  <a href="https://slack.com/oauth/authorize?scope=commands&client_id=122992570306.122925378483&install_redirect=general">
+  <a href="https://slack.com/oauth/authorize?scope=commands&client_id=122992570306.122925378483">
     <img src="{{ site.baseurl }}/assets/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" alt="Add to Slack" />
   </a>
 </p>
@@ -320,7 +320,7 @@ end
 <p>Instead, we can just create the "Add to Slack" button. The process is much simpler and there's less overhead. Hell, the code is even generated for you automatically just by browsing to <a href="https://api.slack.com/docs/slack-button">https://api.slack.com/docs/slack-button</a> (assuming you're already logged in). Let's do that now. Scroll down to the "Add the Slack Button" section, select your Slash Command app in the dropdown in the top right, and then check <em>only</em> the 'commands' checkbox:</p>
 <p><a href="{{ "/assets/YPB-Part2-AddToSlackButton.gif" | absolute_url }}"><img class="aligncenter size-large wp-image-1074" src="{{ "/assets/YPB-Part2-AddToSlackButton.gif" | absolute_url }}" alt="YPB-Part2-AddToSlackButton" /></a></p>
 <p>Once you've got the HTML copied, you can drop it into your blog, emails, or a landing page you maintain for the app. Here's the Add to Slack button for the YouPassButter app:</p>
-<p><a href="https://slack.com/oauth/authorize?scope=commands&client_id=122992570306.122925378483&install_redirect=general"><img src="{{ site.baseurl }}/assets/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" alt="Add to Slack" /></a></p>
+<p><a href="https://slack.com/oauth/authorize?scope=commands&client_id=122992570306.122925378483"><img src="{{ site.baseurl }}/assets/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" alt="Add to Slack" /></a></p>
 <p>Here's a quick demo of a user clicking the button, authenticating to their Slack team, and getting a successful response from our /oauth endpoint:</p>
 <p><a href="{{ "/assets/YPB-Part2-AddToSlack-Auth-Demo.gif" | absolute_url }}"><img class="aligncenter size-large wp-image-1086" src="{{ "/assets/YPB-Part2-AddToSlack-Auth-Demo.gif" | absolute_url }}" alt="YPB-Part2-AddToSlack-Auth-Demo" /></a></p>
 <p>Now obviously our confirmation page is a little plain to say the least, but whatever, it works!</p>
@@ -349,8 +349,9 @@ in the documentation anywhere.
 
 ## 02-Sep-2017 Update
 The issue mentioned in the earlier update was entirely my fault, no issue with Slack
-or Heroku. In an effort to better format my code and comply with Rubocop, I accidentally
-introduced additional whitespace. When my Heroku app tried to authenticate to Slack, it
+or Heroku. The whole `install_redirect` things was a red herring. In an effort to
+better format my code and comply with Rubocop, I accidentally introduced additional
+whitespace. When my Heroku app tried to authenticate to Slack, it
 was posting to `https://slack.com/api/oauth.access?client_id=    1229...` instead of
 `https://slack.com/api/oauth.access?client_id=1229...`. You can see the issue here:
 https://github.com/alexdglover/you-pass-butter-bot/commit/cc0318b0e5563b4d454e785978953d00cd451987#diff-cc95738088603531796e0d0f246a5d77L97
