@@ -346,3 +346,17 @@ all of you know if/when I hear back.
 
 In the meantime, be wary of this issue and let me know if you find it mentioned
 in the documentation anywhere.
+
+## 02-Sep-2017 Update
+The issue mentioned in the earlier update was entirely my fault, no issue with Slack
+or Heroku. In an effort to better format my code and comply with Rubocop, I accidentally
+introduced additional whitespace. When my Heroku app tried to authenticate to Slack, it
+was posting to `https://slack.com/api/oauth.access?client_id=    1229...` instead of
+`https://slack.com/api/oauth.access?client_id=1229...`. You can see the issue here:
+https://github.com/alexdglover/you-pass-butter-bot/commit/cc0318b0e5563b4d454e785978953d00cd451987#diff-cc95738088603531796e0d0f246a5d77L97
+
+Unfortunately right after I solved that issue, I discovered that MemeGenerator.net
+has changed their API such that they do not return a full URL to the generated image,
+breaking the meme generation capability. I'm hoping to contact them and find a solution
+or have them update their API. Until then, I'm disabling the meme generator commands.
+Please let me know if you have any other issues with the bot!
