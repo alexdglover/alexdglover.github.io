@@ -15,6 +15,9 @@ header:
   teaser: /assets/img/DNSReRoute_Architecture.png
 ---
 
+**Dec 28 2017 Update** OpenShift deprecated their original offering, so the API backend is completely dead. All functionality in the single page app (besides the Auth0 integration) is now broken. 
+{: .notice--warning}
+
 About a year ago, I had a use case for a simple redirect. I just needed to
 redirect developers from an old Jenkins DNS record (that pointed to an instance
 that was destroyed) to a new DNS record (pointing to the new, running Jenkins
