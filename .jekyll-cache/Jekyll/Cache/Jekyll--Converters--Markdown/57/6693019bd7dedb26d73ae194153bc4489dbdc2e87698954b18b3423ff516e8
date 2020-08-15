@@ -1,0 +1,288 @@
+I"2T<p>The Raspberry Pi makes a great HTPC or media PC, whatever you want to call it, because of its low cost, low power consumption, quiet, and small form factor. As I was getting ready to start my Raspberry Pi build, I realized that the Pi could take over a few other functions that my desktop does, including NAS, at a fraction of the cost (see my previous post about <a title="Powering a Raspberry Pi" href="http://www.alexdglover.com/powering-a-raspberry-pi/">Powering a Pi</a> and related utility savings). But could I modify a RaspXBMC build to also run Samba or some other network file sharing? Could XBMC be installed on Raspbian with less than a thousand calls to aptitude? Could XBMC and Samba run simultaneously on a Pi without making video playback unwatchable? That's what I hoped to find out.</p>
+<p>For context, I started with a <a href="http://www.amazon.com/gp/product/B008XVAVAW/ref=as_li_ss_tl?ie=UTF8&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B008XVAVAW&amp;linkCode=as2&amp;tag=alexdgloverwo-20" target="_blank">Raspberry Pi starter kit</a> from Amazon. For storage, I am using a <a href="http://www.amazon.com/gp/product/B004IYJX16/ref=as_li_ss_tl?ie=UTF8&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B004IYJX16&amp;linkCode=as2&amp;tag=alexdgloverwo-20" target="_blank">Fantom 2TB external hard drive</a>. After some preliminary research, I decided to start with Raspbian and try to install XBMC on top. For this walk-through, I'll assume you've got your Raspberry Pi powered, connected to your router, and that you have gotten Raspbian installed. If you need help getting started, check out the <a href="http://www.raspberrypi.org/wp-content/uploads/2012/04/quick-start-guide-v2_1.pdf" target="_blank">Raspberry Pi Quick Start Guide</a>.</p>
+<h2>Part 1 - NAS</h2>
+<h3>Part 1.1 - NTFS-3G</h3>
+<p>If you don't plan to use NTFS as your filesystem for your Pi storage, you can skip this step!</p>
+<p>If you do want to use NTFS, and you want to be able to read AND write to the drive, you need to install NTFS support:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get <span class="nb">install </span>ntfs-3g
+</code></pre></div></div>
+
+<p>If you're starting with a brand new external hard drive, you'll need to create the partition and filesystem.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pi@raspberrypi ~ <span class="nv">$ </span><span class="nb">sudo </span>fdisk /dev/sda
+
+Command <span class="o">(</span>m <span class="k">for </span><span class="nb">help</span><span class="o">)</span>: n
+Partition <span class="nb">type</span>:
+   p   primary <span class="o">(</span>1 primary, 0 extended, 3 free<span class="o">)</span>
+   e   extended
+Select <span class="o">(</span>default p<span class="o">)</span>: p
+Partition number <span class="o">(</span>1-4, default 2<span class="o">)</span>: 1
+Command <span class="o">(</span>m <span class="k">for </span><span class="nb">help</span><span class="o">)</span>: t
+Selected partition 1
+Hex code <span class="o">(</span><span class="nb">type </span>L to list codes<span class="o">)</span>:7
+Command <span class="o">(</span>m <span class="k">for </span><span class="nb">help</span><span class="o">)</span>: w
+...
+<span class="o">(</span>disk is formatted<span class="o">)</span>
+...
+pi@raspberrypi ~ <span class="nv">$ </span>mkfs.ntfs /dev/sda1
+</code></pre></div></div>
+
+<h3>Part 1.2 - Automounting with fstab</h3>
+<p>In Raspbian (and every flavor of Linux I've worked with so far), all filesystems that should be mounted at boot are identified in the fstab file (/etc/fstab). The fstab file can be configured a million ways, so I'll just share my configuration and explain.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>proc            /proc           proc    defaults          0       0
+/dev/mmcblk0p5  /boot           vfat    defaults          0       2
+/dev/mmcblk0p6 /               ext4    defaults,noatime  0       1
+<span class="c"># a swapfile is not a swap partition, so no using swapon|off from here on, use  dphys-swapfile swap[on|off]  for that</span>
+
+<span class="c">#/dev/sda1 - the 2TB Fantom Drive</span>
+/dev/sda1       /media/1TB      ntfs-3g defaults        0       0
+</code></pre></div></div>
+
+<p>The first four lines were created automatically by the Raspbian install, we'll leave those alone. We're only interested in the last line that starts with /dev/sda1, that's the line I've manually added to the configuration.</p>
+<p>BUT WHAT DOES IT ALL MEAN???  The columns of the fstab file (courtesy of the <a href="https://wiki.archlinux.org/index.php/fstab" target="_blank">ArchLinux wiki</a>) are</p>
+
+<p><code class="language-plaintext highlighter-rouge"># &lt;file system&gt;  &lt;dir&gt;  &lt;type&gt;  &lt;options&gt;  &lt;dump&gt;  &lt;pass&gt;</code></p>
+
+<p><strong><code class="language-plaintext highlighter-rouge">&lt;file system&gt;</code></strong> - the partition or storage device to be mounted. In my case, “/dev/sda1”</p>
+
+<p><strong><code class="language-plaintext highlighter-rouge">&lt;dir&gt;</code></strong> - the mountpoint where <code class="language-plaintext highlighter-rouge">&lt;file system&gt;</code> is mounted to. In my case, “/media/1TB”</p>
+
+<p><strong><code class="language-plaintext highlighter-rouge">&lt;type&gt;</code></strong> - the file system type of the partition or storage device to be mounted. In my case, it is “ntfs-3g”</p>
+
+<p><strong><code class="language-plaintext highlighter-rouge">&lt;options&gt;</code></strong> - mount options for the filesystem. In my case, I chose “defaults” which includes mounting the filesystem as read-write with no <a href="http://en.wikipedia.org/wiki/Umask" target="_blank">umasks</a> for permissions/access</p>
+
+<p><strong><code class="language-plaintext highlighter-rouge">&lt;dump&gt;</code></strong> - not needed in our case, just use 0 (zero)</p>
+
+<p><strong><code class="language-plaintext highlighter-rouge">&lt;pass&gt;</code></strong> - used by <a title="Fsck" href="https://wiki.archlinux.org/index.php/Fsck">fsck</a> to decide which order filesystems are to be checked. You can set this to 0 (zero)</p>
+
+<p>So my configuration file says to mount /dev/sda1 on /media/1TB as an NTFS filesystem, using default mount options, and never run fsck on this drive.</p>
+<p>Now that you have an example, implementing is pretty easy.</p>
+
+<ol>
+  <li>
+    <p>Make a backup of your fstab file</p>
+
+    <p><code class="language-plaintext highlighter-rouge">sudo cp /etc/fstab /var/fstab</code></p>
+  </li>
+  <li>
+    <p>Open fstab in your favorite text editor</p>
+
+    <p><code class="language-plaintext highlighter-rouge">sudo vim /etc/fstab</code></p>
+  </li>
+  <li>Add the lines to the configuration (see example above) to automount your drives</li>
+  <li>Save and close the fstab file</li>
+  <li>
+    <p>Test your configuration by executing a mount all command</p>
+
+    <p><code class="language-plaintext highlighter-rouge">mount -a</code></p>
+  </li>
+</ol>
+
+<p>If your drive correctly mounted to the mount point you specified (/media/1TB) and it is mounted as read-write, you're golden.</p>
+<p>If you are using multiple drives, then simply add additional lines to the fstab to cover all of the drives you want to automount. Now our storage will automatically mount read-write at startup.</p>
+<h3>Part 1.3 - Samba</h3>
+<p>In my build, I wanted to share out any drives mounted in /media/ in case I added drives in the future. Additionally, accessibility rather than security was the priority for me. Because of that I set up Samba to allow anonymous access to any device on my LAN. If you're cool with that approach, follow along. If not, you may have to do some research on how to set up Samba to your liking.</p>
+
+<ol>
+  <li>
+    <p>Install samba</p>
+
+    <p><code class="language-plaintext highlighter-rouge">sudo apt-get install samba</code></p>
+  </li>
+  <li>
+    <p>Open the samba config file in your favorite text editor</p>
+
+    <p><code class="language-plaintext highlighter-rouge">sudo vim /etc/samba/smb.conf</code></p>
+  </li>
+  <li>
+    <p>Find the line that says “security = user” and update the file with the following lines</p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># "security = user" is always a good idea. This will require a Unix account</span>
+<span class="c"># in this server for every user accessing the server. See</span>
+<span class="c"># /usr/share/doc/samba-doc/htmldocs/Samba3-HOWTO/ServerType.html</span>
+<span class="c"># in the samba-doc package for details.</span>
+   security <span class="o">=</span> share
+   guest account <span class="o">=</span> nobody
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Scroll to the bottom of the Samba configuration file and add a new section for your new share. See my configuration for example</p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>shared]
+     comment <span class="o">=</span> Shared 1TB drive on Raspberry Pi
+     path <span class="o">=</span> /media/1TB/
+     browseable <span class="o">=</span> <span class="nb">yes
+     read </span>only <span class="o">=</span> no
+     guest ok <span class="o">=</span> <span class="nb">yes</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Test your configuration by executing <code class="language-plaintext highlighter-rouge">testparm</code> and examining the output</p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pi@raspberrypi ~ <span class="nv">$ </span>testparm
+Load smb config files from /etc/samba/smb.conf
+rlimit_max: increasing rlimit_max <span class="o">(</span>1024<span class="o">)</span> to minimum Windows limit <span class="o">(</span>16384<span class="o">)</span>
+Processing section <span class="s2">"[homes]"</span>
+Processing section <span class="s2">"[printers]"</span>
+Processing section <span class="s2">"[print</span><span class="nv">$]</span><span class="s2">"</span>
+Processing section <span class="s2">"[shared]"</span>
+WARNING: The <span class="nv">security</span><span class="o">=</span>share option is deprecated
+Loaded services file OK.
+Server role: ROLE_STANDALONE
+Press enter to see a dump of your service definitions
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Assuming your test went well, reload samba</p>
+
+    <p><code class="language-plaintext highlighter-rouge">sudo /etc/init.d/samba reload</code></p>
+  </li>
+  <li>
+    <p>On another device, try to mount the share. On Windows, you can just open the start menu and type “\yourservername” or “\your.server.IP.address” On a Mac, open Finder, go to the “Go” dropdown menu at the top, and choose connect to server and enter “smb://yourservername” or “smb://your.server.IP.address” If prompted for a user account, choose Guest.</p>
+  </li>
+</ol>
+
+<figure class="">
+  <img src="https://www.alexdglover.com/assets/mac_finder_connect_to_server.gif" alt="Finder - Connect to Server" />
+  
+    <figcaption>Courtesy of Mobilefish.com
+</figcaption>
+  
+</figure>
+
+<p>OK, this is already over 1000 words long so let's take a breather and continue with XBMC in Part 2.</p>
+
+<h2>Part 2 - XBMC</h2>
+<h3>Part 2.1 - Installing XBMC</h3>
+<p>Installing XBMC is usually pretty easy, but since we're using Raspbian we can't use the normal packages. Fortunately for me and anyone who is trying to accomplish this, <a href="http://michael.gorven.za.net/" target="_blank">Michael Gorven</a> has already figured this out for us and even hosts the packages we need. Go ahead and open a new window or tab and browse to <a href="http://michael.gorven.za.net/raspberrypi/xbmc">http://michael.gorven.za.net/raspberrypi/xbmc</a> . The author has already done a great job of documenting this process so I won't duplicate it here. Once your installation is finished, test that you can start XBMC by executing 'sudo xbmc-standalone' and seeing if XBMC appears on your display.</p>
+<p>This is perfect, except that XBMC is now tied to our session. Now if you're directly connected to the Pi with a keyboard, this is irrelevant. If, like me, you're doing all of your Pi work via SSH, XBMC will die once you terminate your SSH session. Let's set up XBMC as a service so we can start/stop it gracefully and allow it to run after our SSH session ends. Additionally, if you're having issues with XBMC not starting at boot, setting up a service can ensure that XBMC is started for the right run levels.</p>
+<h3>Part 2.2 - Setting up XBMC as a Service</h3>
+<p>The <a href="http://wiki.xbmc.org/index.php?title=Main_Page" target="_blank">XBMC Wiki</a> has a good article for <a href="http://wiki.xbmc.org/index.php?title=HOW-TO:Install_XBMC_for_Linux#Add_a_new_init_script" target="_blank">how to set up XBMC as a service</a>, but I want to expand on it a little bit.</p>
+
+<ol>
+  <li>Create the init script file
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim /etc/init.d/xbmc
+</code></pre></div>    </div>
+  </li>
+  <li>Paste the following code into your vim session:
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#! /bin/sh</span>
+
+<span class="c">### BEGIN INIT INFO</span>
+<span class="c"># Provides:          xbmc</span>
+<span class="c"># Required-Start:    $all</span>
+<span class="c"># Required-Stop:     $all</span>
+<span class="c"># Default-Start:     2 3 4 5</span>
+<span class="c"># Default-Stop:      0 1 6</span>
+<span class="c"># Description:       starts instance of XBMC using start-stop-daemon and xinit</span>
+<span class="c"># Short-Description: starts instance of XBMC</span>
+<span class="c">### END INIT INFO</span>
+
+<span class="c">############### EDIT ME ##################</span>
+
+<span class="c"># path to xinit exec</span>
+<span class="nv">DAEMON</span><span class="o">=</span>/usr/bin/xinit
+
+<span class="c"># startup args</span>
+<span class="nv">DAEMON_OPTS</span><span class="o">=</span><span class="s2">" /usr/bin/xbmc --standalone -- :0"</span>
+
+<span class="c"># script name</span>
+<span class="nv">NAME</span><span class="o">=</span>xbmc
+
+<span class="c"># app name</span>
+<span class="nv">DESC</span><span class="o">=</span>XBMC
+
+<span class="c"># user</span>
+<span class="nv">RUN_AS</span><span class="o">=</span>pi
+
+<span class="c"># Path of the PID file</span>
+<span class="nv">PID_FILE</span><span class="o">=</span>/var/run/xbmc.pid
+
+<span class="c">############### END EDIT ME ##################</span>
+
+<span class="nb">test</span> <span class="nt">-x</span> <span class="nv">$DAEMON</span> <span class="o">||</span> <span class="nb">exit </span>0
+
+<span class="nb">set</span> <span class="nt">-e</span>
+
+<span class="k">case</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="k">in
+  </span>start<span class="p">)</span>
+        <span class="nb">echo</span> <span class="s2">"Starting </span><span class="nv">$DESC</span><span class="s2">"</span>
+        start-stop-daemon <span class="nt">--start</span> <span class="nt">-c</span> <span class="nv">$RUN_AS</span> <span class="nt">--background</span> <span class="nt">--pidfile</span> <span class="nv">$PID_FILE</span>  <span class="nt">--make-pidfile</span> <span class="nt">--exec</span> <span class="nv">$DAEMON</span> <span class="nt">--</span> <span class="nv">$DAEMON_OPTS</span>
+        <span class="p">;;</span>
+  stop<span class="p">)</span>
+        <span class="nb">echo</span> <span class="s2">"Stopping </span><span class="nv">$DESC</span><span class="s2">"</span>
+        start-stop-daemon <span class="nt">--stop</span> <span class="nt">--pidfile</span> <span class="nv">$PID_FILE</span>
+        <span class="p">;;</span>
+
+  status<span class="p">)</span>
+        <span class="nb">echo</span> <span class="s2">"Checking status of </span><span class="nv">$DESC</span><span class="s2">..."</span>
+        <span class="nv">PID</span><span class="o">=</span><span class="si">$(</span><span class="nb">cat</span> <span class="nv">$PID_FILE</span><span class="si">)</span>
+        <span class="c"># This line is for debugging purposes only</span>
+        <span class="c"># echo "PID is $PID"</span>
+        <span class="k">if </span>ps <span class="nt">-p</span> <span class="nv">$PID</span> <span class="o">&gt;</span> /dev/null <span class="p">;</span> <span class="k">then
+                </span><span class="nb">echo</span> <span class="s2">"XBMC is running with PID </span><span class="nv">$PID</span><span class="s2">"</span>
+        <span class="k">else
+                </span><span class="nb">echo</span> <span class="s2">"XBMC doesn't seem to be running"</span>
+        <span class="k">fi</span>
+        <span class="p">;;</span>
+
+  restart|force-reload<span class="p">)</span>
+        <span class="nb">echo</span> <span class="s2">"Restarting </span><span class="nv">$DESC</span><span class="s2">"</span>
+        start-stop-daemon <span class="nt">--stop</span> <span class="nt">--pidfile</span> <span class="nv">$PID_FILE</span>
+        <span class="nb">sleep </span>5
+        start-stop-daemon <span class="nt">--start</span> <span class="nt">-c</span> <span class="nv">$RUN_AS</span> <span class="nt">--background</span> <span class="nt">--pidfile</span> <span class="nv">$PID_FILE</span>  <span class="nt">--make-pidfile</span> <span class="nt">--exec</span> <span class="nv">$DAEMON</span> <span class="nt">--</span> <span class="nv">$DAEMON_OPTS</span>
+        <span class="p">;;</span>
+  <span class="k">*</span><span class="p">)</span>
+        <span class="nv">N</span><span class="o">=</span>/etc/init.d/<span class="nv">$NAME</span>
+        <span class="nb">echo</span> <span class="s2">"Usage: </span><span class="nv">$N</span><span class="s2"> {start|stop|restart|force-reload}"</span> <span class="o">&gt;</span>&amp;2
+        <span class="nb">exit </span>1
+        <span class="p">;;</span>
+<span class="k">esac</span>
+
+<span class="nb">exit </span>0
+</code></pre></div>    </div>
+
+    <p>Save and quit out of vim. There are a few differences between my init script and the one provided on the XBMC wiki. For one, my “runas” user is set to “pi” - you’ll want to set this to whatever user you installed XBMC with to avoid permissions issues. Additionally, my init script will take “status” as an argument to the init script and will return information about whether or not XBMC is running.</p>
+  </li>
+  <li>Change the script’s permissions to make it executable
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chmod a+x /etc/init.d/xbmc
+</code></pre></div>    </div>
+  </li>
+  <li>Test that the init script is working:
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pi@raspberrypi ~ <span class="nv">$ </span><span class="nb">sudo</span> /etc/init.d/xbmc start
+Starting XBMC
+pi@raspberrypi ~ <span class="nv">$ </span>/etc/init.d/xbmc status
+Checking status of XBMC...
+XBMC is running with PID 10986
+pi@raspberrypi ~ <span class="nv">$ </span>/etc/init.d/xbmc stop
+Stopping XBMC
+pi@raspberrypi ~ <span class="nv">$ </span>/etc/init.d/xbmc status
+Checking status of XBMC...
+XBMC doesn<span class="s1">'t seem to be running
+</span></code></pre></div>    </div>
+  </li>
+  <li>If you want XBMC to start when the OS boots, update the rc.d scripts. Unless you have a specific use case, using the “defaults” argument will work for you.
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>update-rc.d xbmc defaults
+</code></pre></div>    </div>
+  </li>
+  <li>If you want to be thorough, restart your Raspberry Pi and verify that your disk has been mounted (via fstab from Part 1) and that XBMC has started.</li>
+  <li>You’re done. Time to enjoy.</li>
+</ol>
+
+<p style="text-align: center;"><a href="https://www.alexdglover.com/assets/abedcoolcoolcoo.gif"><img class="aligncenter size-medium wp-image-757" alt="abed_cool_cool_cool" src="/assets/abedcoolcoolcoo-300x133.gif" width="300" height="133" /></a></p>
+
+<h3>Part 2.3 - XBMC Remote</h3>
+<p>If you're going to manage your XBMC/NAS/Pi remotely, I would also suggest downloading the <a href="http://wiki.xbmc.org/index.php?title=Official_XBMC_Remote" target="_blank">XBMC Remote App</a> for your Adroid or iPhone. To enable remote control on XBMC, go to System -&gt; Settings -&gt; Services -&gt; Remote Control and enable both "Allow programs on this system to control XBMC" and "Allow programs on other systems to control XBMC."</p>
+
+<figure class="">
+  <img src="https://www.alexdglover.com/assets/500px-Settings.services.remote_control.png" alt="XBMC remote control" />
+  
+    <figcaption>Courtesy of xbmc.org
+</figcaption>
+  
+</figure>
+
+<p>Assuming you're on the same wireless network, you should be able to connect to the XBMC with your remote app using your Pi's IP address and the default username and password of 'xbmc.'</p>
+<p>Well at nearly 2000 words, this has been a whopper of a post. Hopefully this write up has helped you one way or another, and let me know if you have any questions. Enjoy your new combination NAS and HTPC.</p>
+:ET

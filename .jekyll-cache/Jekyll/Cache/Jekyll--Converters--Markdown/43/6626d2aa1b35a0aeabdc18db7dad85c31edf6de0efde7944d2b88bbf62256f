@@ -1,0 +1,604 @@
+I"�g<p>So in <a title="Share Your Salary App Part 1" href="http://www.alexdglover.com/share-your-salary-app-part-1/" target="_blank">Part 1</a> we built the core classes for our app and we exposed those classes as a RESTful web service in <a title="Share Your Salary App Part 2" href="http://www.alexdglover.com/share-your-salary-app-part-2/" target="_blank">Part 2</a>. Now, we'll build a UI and wrap up the project.</p>
+<p>Feel free to check out the application first or pull up the source in another window.</p>
+
+<p class="text-center"><a href="http://shareyoursalary-alexdglover.rhcloud.com" class="btn btn--large btn--info">Demo</a>
+<a href="https://github.com/alexdglover/shareyoursalary" class="btn btn--large btn--info">GitHub Repo</a></p>
+
+<p>The Fat Free Framework configuration allows you to specify a document root for the front-end pages. By default, this is set to the 'ui' directory in the root of the F3 directory structure. This will be our working directory for building the UI. The F3 package will have a few pages, CSS, and images in the 'ui' directory, you can delete them all if you want (I kept the welcome.htm file just out of convenience).</p>
+<p>Now I'm not a good UI developer, so I tend to use the <a href="http://getbootstrap.com/2.3.2/" target="_blank">Bootstrap framework (v2.3.2)</a> for the front-end of my applications. Go ahead and download the Bootstrap package and unzip it in the 'ui' directory. The 'ui' directory structure should look like this:</p>
+<ul>
+<li>ui/
+<ul>
+<li>js/
+<ul>
+<li>bootstrap.js</li>
+<li>bootstrap.min.js</li>
+<li>jquery.js</li>
+</ul>
+</li>
+<li>css/
+<ul>
+<li>base.css</li>
+<li>bootstrap-responsive.css</li>
+<li>bootstrap-responsive.min.css</li>
+<li>bootstrap.css</li>
+<li>bootstrap.min.css</li>
+<li>theme.css</li>
+</ul>
+</li>
+<li>img/
+<ul>
+<li>glyphicons-halflings-white.png</li>
+<li>glyphicons-halflings.png</li>
+</ul>
+</li>
+<li>welcome.htm (from the f3 package)</li>
+</ul>
+</li>
+</ul>
+<p>Now we have the components that we need to start building pages. Let's start by building a layout.htm file - this will be the base HTML file (with a common header, footer, styles and script tags) that will be populated with content for each page. These types of pages/files are referred to as templates.</p>
+<p><!--more--></p>
+<p>Again... I'm a terrible UI developer so I blatantly 'borrowed' the majority of this page from one of the <a href="http://getbootstrap.com/2.3.2/examples/justified-nav.html" target="_blank">Bootstrap examples</a>.</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">"en"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"utf-8"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;title&gt;</span>ShareYourSalary.Info<span class="nt">&lt;/title&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">"viewport"</span> <span class="na">content=</span><span class="s">"width=device-width, initial-scale=1.0"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">"description"</span> <span class="na">content=</span><span class="s">""</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">"author"</span> <span class="na">content=</span><span class="s">""</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"/ui/js/jquery.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"/ui/js/bootstrap.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
+      <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+        <span class="nx">$</span><span class="p">(</span><span class="dl">'</span><span class="s1">[data-toggle="popover"]</span><span class="dl">'</span><span class="p">).</span><span class="nx">popover</span><span class="p">({</span>
+    <span class="na">placement</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">top</span><span class="dl">'</span>
+        <span class="p">});</span>
+      <span class="p">});</span>
+    <span class="nt">&lt;/script&gt;</span>
+
+    <span class="c">&lt;!-- Le styles --&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"/ui/css/bootstrap.css"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;style </span><span class="na">type=</span><span class="s">"text/css"</span><span class="nt">&gt;</span>
+      <span class="nt">body</span> <span class="p">{</span>
+        <span class="nl">padding-top</span><span class="p">:</span> <span class="m">20px</span><span class="p">;</span>
+        <span class="nl">padding-bottom</span><span class="p">:</span> <span class="m">60px</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="c">/* Custom container */</span>
+      <span class="nc">.container</span> <span class="p">{</span>
+        <span class="nl">margin</span><span class="p">:</span> <span class="m">0</span> <span class="nb">auto</span><span class="p">;</span>
+        <span class="nl">max-width</span><span class="p">:</span> <span class="m">1000px</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nc">.container</span> <span class="o">&gt;</span> <span class="nt">hr</span> <span class="p">{</span>
+        <span class="nl">margin</span><span class="p">:</span> <span class="m">60px</span> <span class="m">0</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="c">/* Main marketing message and sign up button */</span>
+      <span class="nc">.jumbotron</span> <span class="p">{</span>
+        <span class="nl">margin</span><span class="p">:</span> <span class="m">80px</span> <span class="m">0</span><span class="p">;</span>
+        <span class="nl">text-align</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nc">.jumbotron</span> <span class="nt">h1</span> <span class="p">{</span>
+        <span class="nl">font-size</span><span class="p">:</span> <span class="m">100px</span><span class="p">;</span>
+        <span class="nl">line-height</span><span class="p">:</span> <span class="m">1</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nc">.jumbotron</span> <span class="nc">.lead</span> <span class="p">{</span>
+        <span class="nl">font-size</span><span class="p">:</span> <span class="m">24px</span><span class="p">;</span>
+        <span class="nl">line-height</span><span class="p">:</span> <span class="m">1.25</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nc">.jumbotron</span> <span class="nc">.btn</span> <span class="p">{</span>
+        <span class="nl">font-size</span><span class="p">:</span> <span class="m">21px</span><span class="p">;</span>
+        <span class="nl">padding</span><span class="p">:</span> <span class="m">14px</span> <span class="m">24px</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="c">/* Supporting marketing content */</span>
+      <span class="nc">.marketing</span> <span class="p">{</span>
+        <span class="nl">margin</span><span class="p">:</span> <span class="m">60px</span> <span class="m">0</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nc">.marketing</span> <span class="nt">p</span> <span class="o">+</span> <span class="nt">h4</span> <span class="p">{</span>
+        <span class="nl">margin-top</span><span class="p">:</span> <span class="m">28px</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="c">/* Customize the navbar links to be fill the entire space of the .navbar */</span>
+      <span class="nc">.navbar</span> <span class="nc">.navbar-inner</span> <span class="p">{</span>
+        <span class="nl">padding</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nc">.navbar</span> <span class="nc">.nav</span> <span class="p">{</span>
+        <span class="nl">margin</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+        <span class="nl">display</span><span class="p">:</span> <span class="n">table</span><span class="p">;</span>
+        <span class="nl">width</span><span class="p">:</span> <span class="m">100%</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nc">.navbar</span> <span class="nc">.nav</span> <span class="nt">li</span> <span class="p">{</span>
+        <span class="nl">display</span><span class="p">:</span> <span class="nb">table-cell</span><span class="p">;</span>
+        <span class="nl">width</span><span class="p">:</span> <span class="m">1%</span><span class="p">;</span>
+        <span class="nl">float</span><span class="p">:</span> <span class="nb">none</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nc">.navbar</span> <span class="nc">.nav</span> <span class="nt">li</span> <span class="nt">a</span> <span class="p">{</span>
+        <span class="nl">font-weight</span><span class="p">:</span> <span class="nb">bold</span><span class="p">;</span>
+        <span class="nl">text-align</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span>
+        <span class="nl">border-left</span><span class="p">:</span> <span class="m">1px</span> <span class="nb">solid</span> <span class="n">rgba</span><span class="p">(</span><span class="m">255</span><span class="p">,</span><span class="m">255</span><span class="p">,</span><span class="m">255</span><span class="p">,</span><span class="m">.75</span><span class="p">);</span>
+        <span class="nl">border-right</span><span class="p">:</span> <span class="m">1px</span> <span class="nb">solid</span> <span class="n">rgba</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">.1</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="nc">.navbar</span> <span class="nc">.nav</span> <span class="nt">li</span><span class="nd">:first-child</span> <span class="nt">a</span> <span class="p">{</span>
+        <span class="nl">border-left</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+        <span class="nl">border-radius</span><span class="p">:</span> <span class="m">3px</span> <span class="m">0</span> <span class="m">0</span> <span class="m">3px</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nc">.navbar</span> <span class="nc">.nav</span> <span class="nt">li</span><span class="nd">:last-child</span> <span class="nt">a</span> <span class="p">{</span>
+        <span class="nl">border-right</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+        <span class="nl">border-radius</span><span class="p">:</span> <span class="m">0</span> <span class="m">3px</span> <span class="m">3px</span> <span class="m">0</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="nt">&lt;/style&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"/ui/css/bootstrap-responsive.css"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span><span class="nt">&gt;</span>
+
+    <span class="c">&lt;!-- HTML5 shim, for IE6-8 support of HTML5 elements --&gt;</span>
+    <span class="c">&lt;!--[if lt IE 9]&gt;
+      &lt;script src="ui/js/html5shiv.js"&gt;&lt;/script&gt;
+    &lt;![endif]--&gt;</span>
+
+    <span class="c">&lt;!-- Fav and touch icons --&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"apple-touch-icon-precomposed"</span> <span class="na">sizes=</span><span class="s">"144x144"</span> <span class="na">href=</span><span class="s">"/ui/ico/apple-touch-icon-144-precomposed.png"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"apple-touch-icon-precomposed"</span> <span class="na">sizes=</span><span class="s">"114x114"</span> <span class="na">href=</span><span class="s">"/ui/ico/apple-touch-icon-114-precomposed.png"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"apple-touch-icon-precomposed"</span> <span class="na">sizes=</span><span class="s">"72x72"</span> <span class="na">href=</span><span class="s">"/ui/ico/apple-touch-icon-72-precomposed.png"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"apple-touch-icon-precomposed"</span> <span class="na">href=</span><span class="s">"/ui/ico/apple-touch-icon-57-precomposed.png"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"shortcut icon"</span> <span class="na">href=</span><span class="s">"/ui/ico/favicon.png"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"container"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"masthead"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;h1</span> <span class="na">class=</span><span class="s">"muted"</span><span class="nt">&gt;</span>ShareYourSalary<span class="nt">&lt;/h1&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"navbar"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"navbar-inner"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"container"</span><span class="nt">&gt;</span>
+              <span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">"nav"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"active"</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">"/"</span><span class="nt">&gt;</span>Home<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+                <span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">"/swagger/dist/index.html"</span><span class="nt">&gt;</span>API Documentation<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+                <span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">"https://github.com/alexdglover/shareyoursalary"</span><span class="nt">&gt;</span>Github Project<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+              <span class="nt">&lt;/ul&gt;</span>
+            <span class="nt">&lt;/div&gt;</span>
+          <span class="nt">&lt;/div&gt;</span>
+        <span class="nt">&lt;/div&gt;</span><span class="c">&lt;!-- /.navbar --&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+
+  <span class="c">&lt;!-- Put content here --&gt;</span>
+  <span class="cp">&lt;?php echo $this-&gt;render(Base::instance()-&gt;get('content')); ?&gt;</span>
+      <span class="nt">&lt;hr&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"footer"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;p&gt;</span><span class="ni">&amp;copy;</span> alexdglover 2014<span class="nt">&lt;/p&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span> <span class="c">&lt;!-- /container --&gt;</span>
+    <span class="c">&lt;!-- Le javascript
+    ================================================== --&gt;</span>
+    <span class="c">&lt;!-- Placed at the end of the document so the pages load faster --&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"/ui/js/jquery.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"/ui/js/bootstrap.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+<p>Now the important piece we've added here is between the 'masthead' and 'footer' divs:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- Put content here --&gt;</span>
+<span class="cp">&lt;?php</span> <span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">render</span><span class="p">(</span><span class="nc">Base</span><span class="o">::</span><span class="nf">instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="nf">get</span><span class="p">(</span><span class="s1">'content'</span><span class="p">));</span> <span class="cp">?&gt;</span>
+</code></pre></div></div>
+
+<p>Now we can just set the 'content' variable in our F3 code to populate the body of the template and we will get consistent and clean looking pages. That's the whole purpose of templates and template engines - build a solid base page (or pages) and just populate the contents dynamically. This makes for great code re-use and you don't have to propagate changes across dozens of files.</p>
+<h3>Static Pages</h3>
+<p>For populating the content with a static page, we don't really need a Controller class, we just need F3's routing functionality to set the 'content' variable to a static HTML file. The ShareYourSalary app home page is going to be static, so let's use that as an example.</p>
+<p>For the home page, we'll want a simple explanation of what the site/app does and an entry form for users to create a new survey. Our entry form will POST values to the API using jQuery and route us to a result page if it's successful. Remember, we don't have to worry about JavaScript or CSS references because our layout.htm already includes all of that. Let's take a look at the home page (welcome.htm):</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"span5"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;h2&gt;</span>Share your salary!<span class="nt">&lt;/h2&gt;</span>
+    <span class="nt">&lt;p&gt;</span>Have you ever worried that your colleagues, doing the same job, make more money than you? According to a recent Glassdoor survey, 39% of Americans feel they're underpaid.<span class="nt">&lt;/p&gt;</span>
+    <span class="nt">&lt;p&gt;</span>Or maybe you're curious how you rank compared to your high school class?<span class="nt">&lt;/p&gt;</span>
+    <span class="nt">&lt;p&gt;</span>Maybe someone on your team is getting underpaid, but you're not comfortable talking about salaries.<span class="nt">&lt;/p&gt;</span>
+    <span class="nt">&lt;p&gt;</span>Then create a free, anonymous salary survey!<span class="nt">&lt;/p&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"span5"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;form&gt;</span>
+      <span class="nt">&lt;fieldset&gt;</span>
+        <span class="nt">&lt;legend&gt;</span>Create a survey<span class="nt">&lt;/legend&gt;</span>
+        <span class="nt">&lt;label&gt;</span>Survey Name<span class="nt">&lt;/label&gt;</span>
+        <span class="nt">&lt;input</span> <span class="na">class=</span><span class="s">"input-xlarge"</span> <span class="na">name=</span><span class="s">"surveyName"</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">placeholder=</span><span class="s">"Employer, team name, or totally arbitratry"</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;label&gt;</span>Currency<span class="nt">&lt;/label&gt;</span>
+        <span class="nt">&lt;select</span> <span class="na">class=</span><span class="s">"input-medium"</span> <span class="na">name=</span><span class="s">"currency"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">""</span> <span class="na">disabled=</span><span class="s">""</span><span class="nt">&gt;</span>Select Currency<span class="nt">&lt;/option&gt;</span>
+          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"AUD"</span><span class="nt">&gt;</span>Australian Dollar<span class="nt">&lt;/option&gt;</span>
+          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"BRL"</span><span class="nt">&gt;</span>Brazilian Real <span class="nt">&lt;/option&gt;</span>
+          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"CAD"</span><span class="nt">&gt;</span>Canadian Dollar<span class="nt">&lt;/option&gt;</span>
+          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"CZK"</span><span class="nt">&gt;</span>Czech Koruna<span class="nt">&lt;/option&gt;</span>
+          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"DKK"</span><span class="nt">&gt;</span>Danish Krone<span class="nt">&lt;/option&gt;</span>
+          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"EUR"</span><span class="nt">&gt;</span>Euro<span class="nt">&lt;/option&gt;</span>
+          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"HKD"</span><span class="nt">&gt;</span>Hong Kong Dollar<span class="nt">&lt;/option&gt;</span>
+          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"HUF"</span><span class="nt">&gt;</span>Hungarian Forint <span class="nt">&lt;/option&gt;</span>
+          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"ILS"</span><span class="nt">&gt;</span>Israeli New Sheqel<span class="nt">&lt;/option&gt;</span>
+          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"JPY"</span><span class="nt">&gt;</span>Japanese Yen<span class="nt">&lt;/option&gt;</span>
+          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"MYR"</span><span class="nt">&gt;</span>Malaysian Ringgit<span class="nt">&lt;/option&gt;</span>
+          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"MXN"</span><span class="nt">&gt;</span>Mexican Peso<span class="nt">&lt;/option&gt;</span>
+          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"NOK"</span><span class="nt">&gt;</span>Norwegian Krone<span class="nt">&lt;/option&gt;</span>
+          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"NZD"</span><span class="nt">&gt;</span>New Zealand Dollar<span class="nt">&lt;/option&gt;</span>
+          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"PHP"</span><span class="nt">&gt;</span>Philippine Peso<span class="nt">&lt;/option&gt;</span>
+          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"PLN"</span><span class="nt">&gt;</span>Polish Zloty<span class="nt">&lt;/option&gt;</span>
+          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"GBP"</span><span class="nt">&gt;</span>Pound Sterling<span class="nt">&lt;/option&gt;</span>
+          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"SGD"</span><span class="nt">&gt;</span>Singapore Dollar<span class="nt">&lt;/option&gt;</span>
+          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"SEK"</span><span class="nt">&gt;</span>Swedish Krona<span class="nt">&lt;/option&gt;</span>
+          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"CHF"</span><span class="nt">&gt;</span>Swiss Franc<span class="nt">&lt;/option&gt;</span>
+          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"TWD"</span><span class="nt">&gt;</span>Taiwan New Dollar<span class="nt">&lt;/option&gt;</span>
+          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"THB"</span><span class="nt">&gt;</span>Thai Baht<span class="nt">&lt;/option&gt;</span>
+          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"TRY"</span><span class="nt">&gt;</span>Turkish Lira<span class="nt">&lt;/option&gt;</span>
+          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"USD"</span> <span class="na">selected=</span><span class="s">"YES"</span><span class="nt">&gt;</span>U.S. Dollar<span class="nt">&lt;/option&gt;</span>
+        <span class="nt">&lt;/select&gt;</span>
+        <span class="nt">&lt;label&gt;</span>Period<span class="nt">&lt;/label&gt;</span>
+          <span class="nt">&lt;select</span> <span class="na">class=</span><span class="s">"input-medium"</span> <span class="na">name=</span><span class="s">"period"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"Per Year"</span><span class="nt">&gt;</span>Per Year<span class="nt">&lt;/option&gt;</span>
+            <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"Per Hour"</span><span class="nt">&gt;</span>Per Hour<span class="nt">&lt;/option&gt;</span>
+          <span class="nt">&lt;/select&gt;</span>
+        <span class="nt">&lt;label&gt;</span>Minimum number of responses <span class="nt">&lt;i</span> <span class="na">class=</span><span class="s">"icon-question-sign"</span> <span class="na">data-toggle=</span><span class="s">"popover"</span> <span class="na">data-placement=</span><span class="s">"top"</span> <span class="na">title=</span><span class="s">"Miniumum number of responses"</span> <span class="na">data-content=</span><span class="s">"In order to ensure anonymity, salary survey results won't be published until a minimum number of salary responses are submitted. Set this to '0' if you don't care about anonymity."</span><span class="nt">&gt;&lt;/i&gt;&lt;/label&gt;</span>
+        <span class="nt">&lt;input</span> <span class="na">class=</span><span class="s">"input-mini"</span> <span class="na">name=</span><span class="s">"minEntries"</span> <span class="na">type=</span><span class="s">"number"</span> <span class="na">value=</span><span class="s">5</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;p&gt;&lt;input</span> <span class="na">id=</span><span class="s">"submit"</span> <span class="na">type=</span><span class="s">"submit"</span> <span class="na">class=</span><span class="s">"btn btn-success"</span> <span class="na">value=</span><span class="s">"Submit"</span> <span class="nt">/&gt;&lt;/p&gt;</span>
+      <span class="nt">&lt;/fieldset&gt;</span>
+    <span class="nt">&lt;/form&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;script&gt;</span>
+  <span class="nx">$</span><span class="p">(</span> <span class="dl">"</span><span class="s2">form</span><span class="dl">"</span> <span class="p">).</span><span class="nx">on</span><span class="p">(</span> <span class="dl">"</span><span class="s2">submit</span><span class="dl">"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">event</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+    <span class="kd">var</span> <span class="nx">datastring</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span> <span class="dl">"</span><span class="s2">form</span><span class="dl">"</span> <span class="p">).</span><span class="nx">serialize</span><span class="p">();</span>
+    <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+      <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">POST</span><span class="dl">"</span><span class="p">,</span>
+      <span class="na">url</span><span class="p">:</span> <span class="dl">"</span><span class="s2">/api/v1/survey/AddSurvey</span><span class="dl">"</span><span class="p">,</span>
+      <span class="na">data</span><span class="p">:</span> <span class="nx">datastring</span><span class="p">,</span>
+      <span class="na">dataType</span><span class="p">:</span> <span class="dl">"</span><span class="s2">json</span><span class="dl">"</span><span class="p">,</span>
+      <span class="na">success</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">href</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">/thanks/</span><span class="dl">"</span> <span class="o">+</span> <span class="nx">data</span><span class="p">.</span><span class="nx">URLName</span><span class="p">;</span>
+      <span class="p">},</span>
+      <span class="na">error</span><span class="p">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="nx">alert</span><span class="p">(</span><span class="dl">'</span><span class="s1">Oops... something went wrong. Please try again.</span><span class="dl">'</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">});</span>    
+  <span class="p">});</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div></div>
+
+<p>Perfect. The default index.php that's included in the F3 package will include a route for "GET /" that we can use. This section should already exist in the index.php if you're using the default file that came with the F3 zip file, but just confirm that these lines exist in your index.php:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$f3</span><span class="o">-&gt;</span><span class="nf">route</span><span class="p">(</span><span class="s1">'GET /'</span><span class="p">,</span>
+  <span class="k">function</span><span class="p">(</span><span class="nv">$f3</span><span class="p">)</span> <span class="p">{</span>
+    <span class="mf">...</span>
+    <span class="c1">// lots of default F3 code</span>
+    <span class="mf">...</span>
+    <span class="nv">$f3</span><span class="o">-&gt;</span><span class="nf">set</span><span class="p">(</span><span class="s1">'content'</span><span class="p">,</span><span class="s1">'welcome.htm'</span><span class="p">);</span>
+    <span class="k">echo</span> <span class="nc">View</span><span class="o">::</span><span class="nf">instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="nf">render</span><span class="p">(</span><span class="s1">'layout.htm'</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<p>If you want to use a different file name for your home page (instead of welcome.htm) just change it in this line of the index.php file. Now if we browse to our site, we should see our home page:</p>
+<p><a href="https://www.alexdglover.com/assets/ShareYourSalary-HomePage.png"><img class="aligncenter size-large wp-image-914" src="https://www.alexdglover.com/assets/ShareYourSalary-HomePage-1024x654.png" alt="ShareYourSalary Home Page" width="860" height="549" /></a></p>
+<p>Now we can partially test this form if we want. If we submit a survey and the API processes it successfully, we'll get routed to a page that doesn't exist yet (that's OK, that's expected behavior). But how do we know the submission worked? We can go back to our API test page we created in <a title="Share Your Salary App Part 2" href="http://www.alexdglover.com/share-your-salary-app-part-2/">Part 2</a> and execute a getByName API call.</p>
+<p><a href="https://www.alexdglover.com/assets/ShareYourSalary-APIDemo.png"><img class="aligncenter size-full wp-image-915" src="/assets/ShareYourSalary-APIDemo.png" alt="ShareYourSalary API Demo" width="987" height="731" /></a></p>
+<p>If we tried to create a survey called 'demo' then all we need to do is execute the /survey/getByName/{name} API with that value. You can do this in Swagger, or since it's just a GET request, you can do it directly in your browser. Just browse to <a title="http://shareyoursalary-alexdglover.rhcloud.com/api/v1/survey/getByName/demo" href="http://shareyoursalary-alexdglover.rhcloud.com/api/v1/survey/getByName/demo" target="_blank">/api/v1/survey/getByName/demo</a> and you should see the JSON response.</p>
+<p>OK, at this point we should have a static home page and a working form. Next, we'll have to create dynamic pages for each survey that's created.</p>
+<h3>Dynamic Pages</h3>
+<p>For populating dynamic content, you can write your logic directly in F3's index.php, abstract it into individual classes, or you can do what I did and consolidate it all into one PageGenerator class. This will simplify our F3 routes (more on this later) and manage all of our dynamic views in one place.</p>
+<p>For this project, we need 3 pages or Views (excluding the static home page):</p>
+<ol>
+<li>A page users hit after creating a survey. We'll call this 'thanks' as we'll be thanking users for creating a survey and enable them to invite others to participate</li>
+<li>A page for users who've been invited to participate in an existing survey. We'll call this 'addResponse' because ultimately that's the only purpose for this page</li>
+<li>A page for users (both invitees and the original survey creator) to review the results of the survey. We'll call this 'report'</li>
+</ol>
+<p>First, let's construct our controller that will get all of the relevant variables for these pages and then set the content. Let's review the code:</p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+<span class="kd">class</span> <span class="nc">PageGenerator</span> <span class="p">{</span>
+  <span class="c1">// Instantiate variables</span>
+  <span class="k">var</span> <span class="nv">$surveyName</span><span class="p">;</span>
+  <span class="k">var</span> <span class="nv">$currency</span><span class="p">;</span>
+  <span class="k">var</span> <span class="nv">$period</span><span class="p">;</span>
+  <span class="k">var</span> <span class="nv">$minentries</span><span class="p">;</span>
+  <span class="k">private</span> <span class="nv">$db</span><span class="p">;</span>
+
+  <span class="c1">// Construct the PageGenerator object with a Database object</span>
+  <span class="k">public</span> <span class="k">function</span> <span class="n">__construct</span><span class="p">(){</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="n">db</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Database</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Utility function to convert survey names to a URL-friendly name</span>
+  <span class="k">private</span> <span class="k">function</span> <span class="n">convertNameToURLName</span><span class="p">(</span><span class="nv">$string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//Lower case everything</span>
+    <span class="nv">$string</span> <span class="o">=</span> <span class="nb">strtolower</span><span class="p">(</span><span class="nv">$string</span><span class="p">);</span>
+    <span class="c1">//Make alphanumeric (removes all other characters)</span>
+    <span class="nv">$string</span> <span class="o">=</span> <span class="nb">preg_replace</span><span class="p">(</span><span class="s2">"/[^a-z0-9_\s-]/"</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="nv">$string</span><span class="p">);</span>
+    <span class="c1">//Clean up multiple dashes or whitespaces</span>
+    <span class="nv">$string</span> <span class="o">=</span> <span class="nb">preg_replace</span><span class="p">(</span><span class="s2">"/[\s-]+/"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">,</span> <span class="nv">$string</span><span class="p">);</span>
+    <span class="c1">//Convert whitespaces and underscore to dash</span>
+    <span class="nv">$string</span> <span class="o">=</span> <span class="nb">preg_replace</span><span class="p">(</span><span class="s2">"/[\s_]/"</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">,</span> <span class="nv">$string</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nv">$string</span><span class="p">;</span>
+  <span class="p">}</span>
+
+
+  <span class="c1">// Function for populating the 'thanks' page (after a user creates a survey). This collects all of the relevant survey information into the 'survey' JSON object and sets the 'content' variable to the code in the thanks.htm file</span>
+
+  <span class="k">public</span> <span class="k">function</span> <span class="n">thanks</span><span class="p">(</span><span class="nv">$f3</span><span class="p">,</span><span class="nv">$args</span><span class="p">){</span>
+    <span class="nv">$surveys</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="n">db</span><span class="o">-&gt;</span><span class="nf">get_collection</span><span class="p">(</span><span class="s1">'surveys'</span><span class="p">);</span>
+    <span class="c1">// Convert name to URL friendly name</span>
+    <span class="nv">$URLName</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">convertNameToURLName</span><span class="p">(</span><span class="nv">$args</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]);</span>
+    <span class="nv">$query</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s1">'URLName'</span> <span class="o">=&gt;</span> <span class="nv">$URLName</span><span class="p">);</span>
+    <span class="nv">$cursor</span> <span class="o">=</span> <span class="nv">$surveys</span><span class="o">-&gt;</span><span class="nf">find</span><span class="p">(</span><span class="nv">$query</span><span class="p">);</span>
+    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$cursor</span> <span class="k">as</span> <span class="nv">$doc</span><span class="p">){</span>
+      <span class="nv">$f3</span><span class="o">-&gt;</span><span class="nf">set</span><span class="p">(</span><span class="s1">'survey'</span><span class="p">,</span><span class="nv">$doc</span><span class="p">);</span>                  
+    <span class="p">}</span>
+    <span class="nv">$f3</span><span class="o">-&gt;</span><span class="nf">set</span><span class="p">(</span><span class="s1">'content'</span><span class="p">,</span><span class="s1">'thanks.htm'</span><span class="p">);</span>
+    <span class="k">echo</span> <span class="nc">View</span><span class="o">::</span><span class="nf">instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="nf">render</span><span class="p">(</span><span class="s1">'layout.htm'</span><span class="p">);</span>
+  <span class="p">}</span>
+
+
+  <span class="c1">// Function for populating the 'addResponse' page (the page invited users see). This collects all of the relevant survey information into the 'survey' JSON object and sets the 'content' variable to the code in the addResponse.htm file</span>
+
+  <span class="k">public</span> <span class="k">function</span> <span class="n">addResponse</span><span class="p">(</span><span class="nv">$f3</span><span class="p">,</span><span class="nv">$args</span><span class="p">){</span>
+    <span class="nv">$surveys</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="n">db</span><span class="o">-&gt;</span><span class="nf">get_collection</span><span class="p">(</span><span class="s1">'surveys'</span><span class="p">);</span>
+    <span class="c1">// Convert name to URL friendly name</span>
+    <span class="nv">$URLName</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">convertNameToURLName</span><span class="p">(</span><span class="nv">$args</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]);</span>
+    <span class="nv">$query</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s1">'URLName'</span> <span class="o">=&gt;</span> <span class="nv">$URLName</span><span class="p">);</span>
+    <span class="nv">$cursor</span> <span class="o">=</span> <span class="nv">$surveys</span><span class="o">-&gt;</span><span class="nf">find</span><span class="p">(</span><span class="nv">$query</span><span class="p">);</span>
+    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$cursor</span> <span class="k">as</span> <span class="nv">$doc</span><span class="p">){</span>
+      <span class="nv">$f3</span><span class="o">-&gt;</span><span class="nf">set</span><span class="p">(</span><span class="s1">'survey'</span><span class="p">,</span><span class="nv">$doc</span><span class="p">);</span>                  
+    <span class="p">}</span>
+    <span class="nv">$f3</span><span class="o">-&gt;</span><span class="nf">set</span><span class="p">(</span><span class="s1">'content'</span><span class="p">,</span><span class="s1">'addResponse.htm'</span><span class="p">);</span>
+    <span class="k">echo</span> <span class="nc">View</span><span class="o">::</span><span class="nf">instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="nf">render</span><span class="p">(</span><span class="s1">'layout.htm'</span><span class="p">);</span>
+  <span class="p">}</span>
+
+
+  <span class="c1">// Function for populating the 'report' page. This collects all of the relevant survey information into the 'survey' JSON object and sets the 'content' variable to the code in the report.htm file</span>
+
+  <span class="k">public</span> <span class="k">function</span> <span class="n">report</span><span class="p">(</span><span class="nv">$f3</span><span class="p">,</span><span class="nv">$args</span><span class="p">){</span>
+    <span class="nv">$surveys</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="n">db</span><span class="o">-&gt;</span><span class="nf">get_collection</span><span class="p">(</span><span class="s1">'surveys'</span><span class="p">);</span>
+    <span class="c1">// Convert name to URL friendly name</span>
+    <span class="nv">$URLName</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">convertNameToURLName</span><span class="p">(</span><span class="nv">$args</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]);</span>
+    <span class="nv">$query</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s1">'URLName'</span> <span class="o">=&gt;</span> <span class="nv">$URLName</span><span class="p">);</span>    
+    <span class="nv">$cursor</span> <span class="o">=</span> <span class="nv">$surveys</span><span class="o">-&gt;</span><span class="nf">find</span><span class="p">(</span><span class="nv">$query</span><span class="p">);</span>
+    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$cursor</span> <span class="k">as</span> <span class="nv">$doc</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nb">count</span><span class="p">(</span><span class="nv">$doc</span><span class="p">[</span><span class="s1">'responses'</span><span class="p">])</span> <span class="o">&lt;</span> <span class="nv">$doc</span><span class="p">[</span><span class="s1">'minEntries'</span><span class="p">])</span>
+      <span class="p">{</span>
+        <span class="nv">$f3</span><span class="o">-&gt;</span><span class="nf">set</span><span class="p">(</span><span class="s1">'minEntriesMet'</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">else</span>
+      <span class="p">{</span>
+        <span class="nb">asort</span><span class="p">(</span><span class="nv">$doc</span><span class="p">[</span><span class="s1">'responses'</span><span class="p">]);</span>
+        <span class="nv">$f3</span><span class="o">-&gt;</span><span class="nf">set</span><span class="p">(</span><span class="s1">'minEntriesMet'</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+        <span class="nv">$averageSalary</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="nb">array_sum</span><span class="p">(</span><span class="nv">$doc</span><span class="p">[</span><span class="s1">'responses'</span><span class="p">]))</span><span class="o">/</span><span class="p">(</span><span class="nb">count</span><span class="p">(</span><span class="nv">$doc</span><span class="p">[</span><span class="s1">'responses'</span><span class="p">])),</span><span class="mi">2</span><span class="p">);</span>
+        <span class="nv">$f3</span><span class="o">-&gt;</span><span class="nf">set</span><span class="p">(</span><span class="s1">'averageSalary'</span><span class="p">,</span><span class="nv">$averageSalary</span><span class="p">);</span>
+        <span class="nv">$percentDeltas</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="k">foreach</span><span class="p">(</span><span class="nv">$doc</span><span class="p">[</span><span class="s1">'responses'</span><span class="p">]</span> <span class="k">as</span> <span class="nv">$response</span><span class="p">)</span>
+        <span class="p">{</span>
+          <span class="nb">array_push</span><span class="p">(</span><span class="nv">$percentDeltas</span><span class="p">,</span> <span class="p">(</span><span class="nb">round</span><span class="p">(((</span><span class="nv">$response</span><span class="o">-</span><span class="nv">$averageSalary</span><span class="p">)</span><span class="o">/</span><span class="nv">$averageSalary</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span> <span class="p">)</span> <span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nb">asort</span><span class="p">(</span><span class="nv">$percentDeltas</span><span class="p">);</span>
+        <span class="nv">$f3</span><span class="o">-&gt;</span><span class="nf">set</span><span class="p">(</span><span class="s1">'percentDeltas'</span><span class="p">,</span><span class="nv">$percentDeltas</span><span class="p">);</span>
+        <span class="c1">// Median code borrowed from http://www.mdj.us/web-development/php-programming/calculating-the-median-average-values-of-an-array-with-php/      </span>
+        <span class="nb">sort</span><span class="p">(</span><span class="nv">$doc</span><span class="p">[</span><span class="s1">'responses'</span><span class="p">]);</span>
+        <span class="nv">$count</span> <span class="o">=</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$doc</span><span class="p">[</span><span class="s1">'responses'</span><span class="p">]);</span> <span class="c1">//total numbers in array</span>
+        <span class="nv">$middleval</span> <span class="o">=</span> <span class="nb">floor</span><span class="p">((</span><span class="nv">$count</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">);</span> <span class="c1">// find the middle value, or the lowest middle value</span>
+        <span class="k">if</span><span class="p">(</span><span class="nv">$count</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// odd number, middle is the median</span>
+          <span class="nv">$median</span> <span class="o">=</span> <span class="nv">$doc</span><span class="p">[</span><span class="s1">'responses'</span><span class="p">][</span><span class="nv">$middleval</span><span class="p">];</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="c1">// even number, calculate avg of 2 medians</span>
+          <span class="nv">$low</span> <span class="o">=</span> <span class="nv">$doc</span><span class="p">[</span><span class="s1">'responses'</span><span class="p">][</span><span class="nv">$middleval</span><span class="p">];</span>
+          <span class="nv">$high</span> <span class="o">=</span> <span class="nv">$doc</span><span class="p">[</span><span class="s1">'responses'</span><span class="p">][</span><span class="nv">$middleval</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+          <span class="nv">$median</span> <span class="o">=</span> <span class="p">((</span><span class="nv">$low</span><span class="o">+</span><span class="nv">$high</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nv">$f3</span><span class="o">-&gt;</span><span class="nf">set</span><span class="p">(</span><span class="s1">'median'</span><span class="p">,</span><span class="nv">$median</span><span class="p">);</span>
+      <span class="p">}</span> <span class="c1">//End of minEntriesMet==true block</span>
+      <span class="nv">$f3</span><span class="o">-&gt;</span><span class="nf">set</span><span class="p">(</span><span class="s1">'survey'</span><span class="p">,</span><span class="nv">$doc</span><span class="p">);</span>      
+    <span class="p">}</span>
+    <span class="nv">$f3</span><span class="o">-&gt;</span><span class="nf">set</span><span class="p">(</span><span class="s1">'content'</span><span class="p">,</span><span class="s1">'report.htm'</span><span class="p">);</span>
+    <span class="k">echo</span> <span class="nc">View</span><span class="o">::</span><span class="nf">instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="nf">render</span><span class="p">(</span><span class="s1">'layout.htm'</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span>
+</code></pre></div></div>
+<p>As you can see, the functions follow a very similar pattern - we get a survey name input (via F3's $args variable), grab the relevant survey data from the DB, set one (or more) JSON objects to be consumed in the page, and set the 'content' variable to the appropriate page. From inside of the View, we'll grab the individual elements out of the array and use it in the display or JavaScript.</p>
+<p>Now for the Views. Let's walk through the app as a user would, just for intuitiveness. Our user has created a survey successfully, so let's thank them for creating it and show them the details of the survey so they can confirm everything is right. Let's also add a mechanism for the user to invite their friends and colleagues through social media. Our survey creator might also be participating, so let's enable them to add a response right away as well. Finally, we need to provide a link to the survey report where users can view the results. Remember, our PageGenerator controller is going to pass us all of the data we need in one array object titled $survey. Let's take a look at the HTML:</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;h2&gt;</span>Thanks for creating a survey!<span class="nt">&lt;/h1&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"span5"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;legend&gt;</span>Survey Details<span class="nt">&lt;/legend&gt;</span>
+    <span class="nt">&lt;p&gt;&lt;strong&gt;</span>Survey name<span class="nt">&lt;/strong&gt;&lt;br</span> <span class="nt">/&gt;</span><span class="cp">&lt;?php echo $survey['name']; ?&gt;</span><span class="nt">&lt;/p&gt;</span>
+    <span class="nt">&lt;p&gt;&lt;strong&gt;</span>Salary currency<span class="nt">&lt;/strong&gt;&lt;br</span> <span class="nt">/&gt;</span><span class="cp">&lt;?php echo $survey['currency']; ?&gt;</span><span class="nt">&lt;/p&gt;</span>
+    <span class="nt">&lt;p&gt;&lt;strong&gt;</span>Salary period<span class="nt">&lt;/strong&gt;&lt;br</span> <span class="nt">/&gt;</span><span class="cp">&lt;?php echo $survey['period']; ?&gt;</span><span class="nt">&lt;/p&gt;</span>
+    <span class="nt">&lt;p&gt;&lt;strong&gt;</span>Minimum number of responses before results published<span class="nt">&lt;/strong&gt;&lt;br</span> <span class="nt">/&gt;</span><span class="cp">&lt;?php echo $survey['minEntries']; ?&gt;</span><span class="nt">&lt;/p&gt;</span>
+    <span class="nt">&lt;p&gt;&lt;strong&gt;</span>Current number of responses<span class="nt">&lt;/strong&gt;&lt;br</span> <span class="nt">/&gt;</span><span class="cp">&lt;?php echo count($survey['responses']); ?&gt;</span><span class="nt">&lt;/p&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"span5"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;legend&gt;</span>Next Steps<span class="nt">&lt;/legend&gt;</span>
+    <span class="nt">&lt;ol&gt;</span>
+      <span class="nt">&lt;li&gt;</span>Invite others to participate by sharing<span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">target=</span><span class="s">"_blank"</span> <span class="na">href=</span><span class="s">"&lt;?php echo "</span><span class="na">http:</span><span class="err">//</span><span class="na">www.facebook.com</span><span class="err">/</span><span class="na">sharer</span><span class="err">/</span><span class="na">sharer.php</span><span class="err">?</span><span class="na">u=</span><span class="s">" . "</span><span class="na">http:</span><span class="err">//$</span><span class="na">_SERVER</span><span class="err">[</span><span class="na">HTTP_HOST</span><span class="err">]"</span> <span class="err">.</span> <span class="err">"/</span><span class="na">addResponse</span><span class="err">/"</span> <span class="err">.</span> <span class="err">$</span><span class="na">survey</span><span class="err">['</span><span class="na">URLName</span><span class="err">'];</span> <span class="err">?</span><span class="nt">&gt;</span>"&gt;<span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"/ui/img/facebook_001.jpg"</span> <span class="na">style=</span><span class="s">"width:32px; height:32px;"</span> <span class="nt">/&gt;&lt;/a&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">target=</span><span class="s">"_blank"</span> <span class="na">href=</span><span class="s">"&lt;?php echo "</span><span class="na">https:</span><span class="err">//</span><span class="na">twitter.com</span><span class="err">/</span><span class="na">intent</span><span class="err">/</span><span class="na">tweet</span><span class="err">?</span><span class="na">text=</span><span class="s">How%20much%20do%20you%20make%3F&amp;url="</span> <span class="err">.</span> <span class="err">"</span><span class="na">http:</span><span class="err">//$</span><span class="na">_SERVER</span><span class="err">[</span><span class="na">HTTP_HOST</span><span class="err">]"</span> <span class="err">.</span> <span class="err">"/</span><span class="na">addResponse</span><span class="err">/"</span> <span class="err">.</span> <span class="err">$</span><span class="na">survey</span><span class="err">['</span><span class="na">URLName</span><span class="err">'];</span> <span class="err">?</span><span class="nt">&gt;</span>"&gt;<span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"/ui/img/Twitter_001.jpg"</span> <span class="na">style=</span><span class="s">"width:32px; height:32px;"</span> <span class="nt">/&gt;&lt;/a&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">target=</span><span class="s">"_blank"</span> <span class="na">href=</span><span class="s">"&lt;?php echo "</span><span class="na">http:</span><span class="err">//</span><span class="na">www.linkedin.com</span><span class="err">/</span><span class="na">shareArticle</span><span class="err">?</span><span class="na">mini=</span><span class="s">true&amp;url="</span> <span class="err">.</span> <span class="err">"</span><span class="na">http:</span><span class="err">//$</span><span class="na">_SERVER</span><span class="err">[</span><span class="na">HTTP_HOST</span><span class="err">]"</span> <span class="err">.</span> <span class="err">"/</span><span class="na">addResponse</span><span class="err">/"</span> <span class="err">.</span> <span class="err">$</span><span class="na">survey</span><span class="err">['</span><span class="na">URLName</span><span class="err">']</span> <span class="err">.</span> <span class="err">"&amp;</span><span class="na">title=</span><span class="s">Salary%20Survey";</span> <span class="err">?</span><span class="nt">&gt;</span>"&gt;<span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"/ui/img/Linkedin_001.jpg"</span> <span class="na">style=</span><span class="s">"width:32px; height:32px;"</span> <span class="nt">/&gt;&lt;/a&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"&lt;?php echo "</span><span class="na">http:</span><span class="err">//</span><span class="na">pinterest.com</span><span class="err">/</span><span class="na">pin</span><span class="err">/</span><span class="na">create</span><span class="err">/</span><span class="na">button</span><span class="err">/?</span><span class="na">url=</span><span class="s">" . "</span><span class="na">http:</span><span class="err">//$</span><span class="na">_SERVER</span><span class="err">[</span><span class="na">HTTP_HOST</span><span class="err">]"</span> <span class="err">.</span> <span class="err">"/</span><span class="na">addResponse</span><span class="err">/"</span> <span class="err">.</span> <span class="err">$</span><span class="na">survey</span><span class="err">['</span><span class="na">URLName</span><span class="err">'];</span> <span class="err">?</span><span class="nt">&gt;</span>"  class="pin-it-button" count-layout="horizontal"&gt;<span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"/ui/img/Pinterest_001.jpg"</span> <span class="na">style=</span><span class="s">"width:32px; height:32px;"</span> <span class="nt">/&gt;&lt;/a&gt;</span>
+      <span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
+      Or by sending them this link:<span class="nt">&lt;br</span> <span class="nt">/&gt;&lt;a</span> <span class="na">href=</span><span class="s">"&lt;?php echo "</span><span class="na">http:</span><span class="err">//$</span><span class="na">_SERVER</span><span class="err">[</span><span class="na">HTTP_HOST</span><span class="err">]"</span> <span class="err">.</span> <span class="err">"/</span><span class="na">addResponse</span><span class="err">/"</span> <span class="err">.</span> <span class="err">$</span><span class="na">survey</span><span class="err">['</span><span class="na">URLName</span><span class="err">'];</span> <span class="err">?</span><span class="nt">&gt;</span>"&gt;<span class="cp">&lt;?php echo "http://$_SERVER[HTTP_HOST]" . "/addResponse/" . $survey['URLName']; ?&gt;</span><span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+      <span class="nt">&lt;li&gt;</span>Enter your salary<span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;form&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"input-append"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">"response"</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">pattern=</span><span class="s">"[1-9]{1}[0-9]*\.?[0-9]{0,2}"</span> <span class="na">placeholder=</span><span class="s">"Enter your salary"</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"add-on"</span><span class="nt">&gt;</span><span class="cp">&lt;?php echo $survey['currency'] ?&gt;</span><span class="ni">&amp;nbsp;</span><span class="cp">&lt;?php echo $survey['period'] ?&gt;</span><span class="nt">&lt;/span&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+        <span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">"submit"</span> <span class="na">type=</span><span class="s">"submit"</span> <span class="na">class=</span><span class="s">"btn btn-success"</span> <span class="na">value=</span><span class="s">"Submit"</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/form&gt;</span>
+      <span class="nt">&lt;/li&gt;</span>
+      <span class="nt">&lt;li&gt;</span>
+        Once the minimum number of entries are met, see the salary analysis report here: <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"&lt;?php echo "</span><span class="na">http:</span><span class="err">//$</span><span class="na">_SERVER</span><span class="err">[</span><span class="na">HTTP_HOST</span><span class="err">]"</span> <span class="err">.</span> <span class="err">"/</span><span class="na">report</span><span class="err">/"</span> <span class="err">.</span> <span class="err">$</span><span class="na">survey</span><span class="err">['</span><span class="na">URLName</span><span class="err">'];</span> <span class="err">?</span><span class="nt">&gt;</span>"&gt;<span class="cp">&lt;?php echo "http://$_SERVER[HTTP_HOST]" . "/report/" . $survey['URLName']; ?&gt;</span><span class="nt">&lt;/a&gt;</span>
+      <span class="nt">&lt;/li&gt;</span>
+    <span class="nt">&lt;/ol&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;script&gt;</span>
+  <span class="nx">$</span><span class="p">(</span> <span class="dl">"</span><span class="s2">form</span><span class="dl">"</span> <span class="p">).</span><span class="nx">on</span><span class="p">(</span> <span class="dl">"</span><span class="s2">submit</span><span class="dl">"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">event</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+    <span class="kd">var</span> <span class="nx">datastring</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span> <span class="dl">"</span><span class="s2">form</span><span class="dl">"</span> <span class="p">).</span><span class="nx">serialize</span><span class="p">();</span>
+    <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+        <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">POST</span><span class="dl">"</span><span class="p">,</span>
+        <span class="na">url</span><span class="p">:</span> <span class="dl">"</span><span class="s2">/api/v1/survey/addResponse/&lt;?php echo $survey['URLName'] ?&gt;</span><span class="dl">"</span><span class="p">,</span>
+        <span class="na">data</span><span class="p">:</span> <span class="nx">datastring</span><span class="p">,</span>
+        <span class="na">dataType</span><span class="p">:</span> <span class="dl">"</span><span class="s2">json</span><span class="dl">"</span><span class="p">,</span>
+        <span class="na">success</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">alert</span><span class="p">(</span><span class="dl">"</span><span class="s2">Thanks! You've successfully entered your salary information.</span><span class="dl">"</span><span class="p">);</span>
+        <span class="p">},</span>
+        <span class="na">error</span><span class="p">:</span> <span class="kd">function</span><span class="p">(){</span>
+              <span class="nx">alert</span><span class="p">(</span><span class="dl">'</span><span class="s1">Oops... something wrong</span><span class="dl">'</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">});</span>    
+  <span class="p">});</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div></div>
+<p>One point of interest - you may have noticed the "pattern" property set on the one ofthe HTML inputs. This is a regular expression that tells the input field what valuesare allowed. Let's examine this pattern by breaking it up:<br />
+pattern="[1-9]{1}[0-9]*\.?[0-9]{0,2}"</p>
+<p>[1-9]{1} - this means we want one and only one character, and it has to be a digit 1-9. This prevents users from submitting a value that starts with a leading zero.</p>
+<p>[0-9]* - this means any character 0-9, an unlimited number of times.</p>
+<p>\.? - this means we're expecting zero or one period. This allows our users to enter a decimal point if they want, but at most one.</p>
+<p>[0-9]{0,2} - this means we'll accept zero, one, or two of any characters between 0 and 9.</p>
+<p>What this all boils down to is a user can enter any number with no decimal places, a single decimal place, or two decimal places, and nothing else. No symbols, letters, or illegitimate formats. This ensures we have clean valid numbers to do mathematical operations on later for the 'report' page.</p>
+<p>The 'addResponse' page is simpler and re-uses a lot of the same code as the 'thanks' page, so let's jut jump right into it.</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;h2&gt;</span>You've been invited!<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"span5"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;legend&gt;</span>Wait, what's going on?<span class="nt">&lt;/legend&gt;</span>
+    <span class="nt">&lt;p&gt;</span>You've been invited to participate in an anonymous survey about salaries. Someone has already created the survey and invited you and others to participate. Your salary information is totally anonymous - no login or email address is required. To ensure anonymity, the results of the survey aren't published until a minimum number of responses are made (see below).<span class="nt">&lt;/p&gt;</span>
+
+    <span class="nt">&lt;p&gt;&lt;strong&gt;</span>Survey name<span class="nt">&lt;/strong&gt;&lt;br</span> <span class="nt">/&gt;</span><span class="cp">&lt;?php echo $survey['name']; ?&gt;</span><span class="nt">&lt;/p&gt;</span>
+    <span class="nt">&lt;p&gt;&lt;strong&gt;</span>Minimum number of responses before results published<span class="nt">&lt;/strong&gt;&lt;br</span> <span class="nt">/&gt;</span><span class="cp">&lt;?php echo $survey['minEntries']; ?&gt;</span><span class="nt">&lt;/p&gt;</span>
+    <span class="nt">&lt;p&gt;&lt;strong&gt;</span>Current number of responses<span class="nt">&lt;/strong&gt;&lt;br</span> <span class="nt">/&gt;</span><span class="cp">&lt;?php echo count($survey['responses']); ?&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"span5"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;legend&gt;</span>Next Steps<span class="nt">&lt;/legend&gt;</span>
+    <span class="nt">&lt;ol&gt;</span>
+      <span class="nt">&lt;li&gt;</span>Enter your salary<span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;form&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"input-append"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">"response"</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">pattern=</span><span class="s">"[1-9]{1}[0-9]*\.?[0-9]{0,2}"</span> <span class="na">placeholder=</span><span class="s">"Enter your salary"</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"add-on"</span><span class="nt">&gt;</span><span class="cp">&lt;?php echo $survey['currency'] ?&gt;</span><span class="ni">&amp;nbsp;</span><span class="cp">&lt;?php echo $survey['period'] ?&gt;</span><span class="nt">&lt;/span&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+        <span class="nt">&lt;p&gt;&lt;input</span> <span class="na">id=</span><span class="s">"submit"</span> <span class="na">type=</span><span class="s">"submit"</span> <span class="na">class=</span><span class="s">"btn btn-success"</span> <span class="na">value=</span><span class="s">"Submit"</span> <span class="nt">/&gt;&lt;/p&gt;</span>
+        <span class="nt">&lt;/form&gt;</span>
+      <span class="nt">&lt;/li&gt;</span>
+      <span class="nt">&lt;li&gt;</span>
+        Once the minimum number of entries are met, see the salary analysis report here: <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"&lt;?php echo "</span><span class="na">http:</span><span class="err">//$</span><span class="na">_SERVER</span><span class="err">[</span><span class="na">HTTP_HOST</span><span class="err">]"</span> <span class="err">.</span> <span class="err">"/</span><span class="na">report</span><span class="err">/"</span> <span class="err">.</span> <span class="err">$</span><span class="na">survey</span><span class="err">['</span><span class="na">URLName</span><span class="err">'];</span> <span class="err">?</span><span class="nt">&gt;</span>"&gt;<span class="cp">&lt;?php echo "http://$_SERVER[HTTP_HOST]" . "/report/" . $survey['URLName']; ?&gt;</span><span class="nt">&lt;/a&gt;</span>
+      <span class="nt">&lt;/li&gt;</span>
+    <span class="nt">&lt;/ol&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;script&gt;</span>
+  <span class="nx">$</span><span class="p">(</span> <span class="dl">"</span><span class="s2">form</span><span class="dl">"</span> <span class="p">).</span><span class="nx">on</span><span class="p">(</span> <span class="dl">"</span><span class="s2">submit</span><span class="dl">"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">event</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+    <span class="kd">var</span> <span class="nx">datastring</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span> <span class="dl">"</span><span class="s2">form</span><span class="dl">"</span> <span class="p">).</span><span class="nx">serialize</span><span class="p">();</span>
+    <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+        <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">POST</span><span class="dl">"</span><span class="p">,</span>
+        <span class="na">url</span><span class="p">:</span> <span class="dl">"</span><span class="s2">/api/v1/survey/addResponse/&lt;?php echo $survey['URLName'] ?&gt;</span><span class="dl">"</span><span class="p">,</span>
+        <span class="na">data</span><span class="p">:</span> <span class="nx">datastring</span><span class="p">,</span>
+        <span class="na">dataType</span><span class="p">:</span> <span class="dl">"</span><span class="s2">json</span><span class="dl">"</span><span class="p">,</span>
+        <span class="na">success</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">alert</span><span class="p">(</span><span class="dl">"</span><span class="s2">Thanks! You've successfully entered your salary information.</span><span class="dl">"</span><span class="p">);</span>
+        <span class="p">},</span>
+        <span class="na">error</span><span class="p">:</span> <span class="kd">function</span><span class="p">(){</span>
+              <span class="nx">alert</span><span class="p">(</span><span class="dl">'</span><span class="s1">Oops... something wrong</span><span class="dl">'</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">});</span>    
+  <span class="p">});</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div></div>
+<p>Easy right? OK, the last page is the 'report' page where we'll give some basic statistics from the survey results and a nice little chart. The statistics are pretty easy to calculate, and for the chart we'll use Google Charts API via JavaScript. Let's take a look.</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;h2&gt;</span>Salary Analysis for Survey '<span class="cp">&lt;?php echo $survey['name']; ?&gt;</span>'<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row"</span><span class="nt">&gt;</span>
+  <span class="cp">&lt;?php if($minEntriesMet) { ?&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"span5"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;legend&gt;</span>Survey Details<span class="nt">&lt;/legend&gt;</span>
+    <span class="nt">&lt;p&gt;&lt;strong&gt;</span>Survey name<span class="nt">&lt;/strong&gt;&lt;br</span> <span class="nt">/&gt;</span><span class="cp">&lt;?php echo $survey['name']; ?&gt;</span><span class="nt">&lt;/p&gt;</span>
+    <span class="nt">&lt;p&gt;&lt;strong&gt;</span>Average salary<span class="nt">&lt;/strong&gt;&lt;br</span> <span class="nt">/&gt;</span><span class="cp">&lt;?php echo $averageSalary ?&gt;</span> <span class="cp">&lt;?php echo $survey['currency']; ?&gt;</span> <span class="cp">&lt;?php echo $survey['period']; ?&gt;</span><span class="nt">&lt;/p&gt;</span>
+    <span class="nt">&lt;p&gt;&lt;strong&gt;</span>Median salary<span class="nt">&lt;/strong&gt;&lt;br</span> <span class="nt">/&gt;</span><span class="cp">&lt;?php echo $median ?&gt;</span> <span class="cp">&lt;?php echo $survey['currency']; ?&gt;</span> <span class="cp">&lt;?php echo $survey['period']; ?&gt;</span><span class="nt">&lt;/p&gt;</span>
+    <span class="c">&lt;!--&lt;p&gt;&lt;strong&gt;Salary currency&lt;/strong&gt;&lt;br /&gt;&lt;?php echo $survey['currency']; ?&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;Salary period&lt;/strong&gt;&lt;br /&gt;&lt;?php echo $survey['period']; ?&gt;&lt;/p&gt;--&gt;</span>
+    <span class="nt">&lt;p&gt;&lt;strong&gt;</span>Minimum number of responses before results published<span class="nt">&lt;/strong&gt;&lt;br</span> <span class="nt">/&gt;</span><span class="cp">&lt;?php echo $survey['minEntries']; ?&gt;</span><span class="nt">&lt;/p&gt;</span>
+    <span class="nt">&lt;p&gt;&lt;strong&gt;</span>Current number of responses<span class="nt">&lt;/strong&gt;&lt;br</span> <span class="nt">/&gt;</span><span class="cp">&lt;?php echo count($survey['responses']); ?&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"span5"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;legend&gt;</span>Relative Salary Comparison<span class="nt">&lt;/legend&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"chart_div"</span> <span class="na">style=</span><span class="s">"width: 100%; height: 300px;"</span><span class="nt">&gt;&lt;/div&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+  <span class="cp">&lt;?php } else { ?&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"span12"</span><span class="nt">&gt;</span>
+    Uh oh, minimum number of responses haven't been met yet. Minimum number of responses is <span class="cp">&lt;?php echo $survey['minEntries']; ?&gt;</span> and there have been <span class="cp">&lt;?php echo count($survey['responses']); ?&gt;</span> responses so far.<span class="nt">&lt;br</span> <span class="nt">/&gt;&lt;br</span> <span class="nt">/&gt;</span>No report data available.
+  <span class="nt">&lt;/div&gt;</span>
+  <span class="cp">&lt;?php } ?&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['corechart']}]}"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="c">&lt;!--&lt;div id="chart_div" style="width: 100%; height: 500px;"&gt;&lt;/div&gt;--&gt;</span>
+<span class="nt">&lt;script&gt;</span>
+  <span class="nx">google</span><span class="p">.</span><span class="nx">setOnLoadCallback</span><span class="p">(</span><span class="nx">drawChart</span><span class="p">);</span>
+  <span class="kd">function</span> <span class="nx">drawChart</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">dataTable</span> <span class="o">=</span>  <span class="k">new</span> <span class="nx">google</span><span class="p">.</span><span class="nx">visualization</span><span class="p">.</span><span class="nx">DataTable</span><span class="p">();</span>
+    <span class="nx">dataTable</span><span class="p">.</span><span class="nx">addColumn</span><span class="p">(</span><span class="dl">'</span><span class="s1">number</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">Salary</span><span class="dl">'</span><span class="p">);</span>
+    <span class="nx">dataTable</span><span class="p">.</span><span class="nx">addColumn</span><span class="p">(</span><span class="dl">'</span><span class="s1">number</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">% Delta</span><span class="dl">'</span><span class="p">);</span>
+    <span class="o">&lt;</span><span class="p">?</span><span class="nx">php</span> <span class="k">for</span><span class="p">(</span><span class="nx">$i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">$i</span> <span class="o">&lt;</span> <span class="nx">count</span><span class="p">(</span><span class="nx">$survey</span><span class="p">[</span><span class="dl">'</span><span class="s1">responses</span><span class="dl">'</span><span class="p">]);</span> <span class="nx">$i</span><span class="o">++</span><span class="p">){</span>
+      <span class="nx">echo</span> <span class="dl">'</span><span class="s1">dataTable.addRow([</span><span class="dl">'</span><span class="p">.</span> <span class="nx">$survey</span><span class="p">[</span><span class="dl">'</span><span class="s1">responses</span><span class="dl">'</span><span class="p">][</span><span class="nx">$i</span><span class="p">].</span> <span class="dl">'</span><span class="s1">,</span><span class="dl">'</span> <span class="p">.</span> <span class="nx">$percentDeltas</span><span class="p">[</span><span class="nx">$i</span><span class="p">]</span> <span class="p">.</span> <span class="dl">'</span><span class="s1">]);</span><span class="dl">'</span><span class="p">;</span>
+    <span class="p">};?</span><span class="o">&gt;</span>
+
+    <span class="kd">var</span> <span class="nx">formatter</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">google</span><span class="p">.</span><span class="nx">visualization</span><span class="p">.</span><span class="nx">NumberFormat</span><span class="p">({</span>
+        <span class="na">fractionDigits</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="na">prefix</span><span class="p">:</span> <span class="dl">'</span><span class="s1">$</span><span class="dl">'</span>
+    <span class="p">});</span>
+
+    <span class="nx">formatter</span><span class="p">.</span><span class="nx">format</span><span class="p">(</span><span class="nx">dataTable</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span> <span class="c1">// Apply formatter to salary column.</span>
+
+    <span class="kd">var</span> <span class="nx">formatter</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">google</span><span class="p">.</span><span class="nx">visualization</span><span class="p">.</span><span class="nx">NumberFormat</span><span class="p">({</span>
+        <span class="na">fractionDigits</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="na">pattern</span><span class="p">:</span> <span class="dl">'</span><span class="s1">###%</span><span class="dl">'</span>
+    <span class="p">});</span>
+
+    <span class="nx">formatter</span><span class="p">.</span><span class="nx">format</span><span class="p">(</span><span class="nx">dataTable</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span> <span class="c1">// Apply formatter to percent delta column.</span>
+
+    <span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="na">title</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Salary comparison</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">hAxis</span><span class="p">:</span> <span class="p">{</span><span class="na">title</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Salary</span><span class="dl">'</span><span class="p">,</span> <span class="na">minValue</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="na">maxValue</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="na">format</span><span class="p">:</span> <span class="dl">'</span><span class="s1">$#</span><span class="dl">'</span><span class="p">},</span>
+      <span class="na">vAxis</span><span class="p">:</span> <span class="p">{</span><span class="na">title</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Percent above/below average</span><span class="dl">'</span><span class="p">,</span> <span class="na">minValue</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="na">maxValue</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="na">format</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#%</span><span class="dl">'</span><span class="p">},</span>
+      <span class="na">legend</span><span class="p">:</span> <span class="dl">'</span><span class="s1">none</span><span class="dl">'</span>
+    <span class="p">};</span>
+
+    <span class="kd">var</span> <span class="nx">chart</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">google</span><span class="p">.</span><span class="nx">visualization</span><span class="p">.</span><span class="nx">ScatterChart</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">chart_div</span><span class="dl">'</span><span class="p">));</span>
+
+    <span class="nx">chart</span><span class="p">.</span><span class="nx">draw</span><span class="p">(</span><span class="nx">dataTable</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div></div>
+<p>OK, so theoretically our PageController and our four Views should all be working at this point, we just need to add routes to our index.php for these pages. Much like our API routes, we'll specify a URL that includes variables in the URL string itself. Let's create a route for each of our three new Views:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Page generator - class of functions for populating pages</span>
+<span class="nv">$f3</span><span class="o">-&gt;</span><span class="nf">route</span><span class="p">(</span><span class="s1">'GET /thanks/@name'</span><span class="p">,</span><span class="s1">'PageGenerator-&gt;thanks'</span><span class="p">);</span>
+<span class="nv">$f3</span><span class="o">-&gt;</span><span class="nf">route</span><span class="p">(</span><span class="s1">'GET /report/@name'</span><span class="p">,</span><span class="s1">'PageGenerator-&gt;report'</span><span class="p">);</span>
+<span class="nv">$f3</span><span class="o">-&gt;</span><span class="nf">route</span><span class="p">(</span><span class="s1">'GET /addResponse/@name'</span><span class="p">,</span><span class="s1">'PageGenerator-&gt;addResponse'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>Since these are normal web pages, we'll use the default GET method. Next we specify the path including the variable prefixed with the @ sign, and finally we tell F3 which class and function to map the route to (in the format of ClassName-&gt;functionName). Now we can hit those URLs with 'demo' as the name argument and we should see the pages populated with the details of the 'demo' survey object.</p>
+<p>That's it - we now have a full working application including an API and a very decent user interface (it's even mobile friendly, thanks to Bootstrap).</p>
+<h3>Deployment Notes and 'Cloudiness'</h3>
+<p>This is already an insanely long write-up for this project, but I want to push through to make a couple important comments.</p>
+<p>Before your F3 app is live in production, we need to make one more small change. By default, F3 will log error output directly to the browser. This is great for debugging, but unfortunately it can spit out sensitive information, like the username and password for our MongoDB. To disable this level of error logging, simply modify the 'DEBUG' F3 variable to 0, like this:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$f3</span><span class="o">-&gt;</span><span class="nf">set</span><span class="p">(</span><span class="s1">'DEBUG'</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>Simple.</p>
+<p>Deployment with OpenShift is trivial, as you're really doing continuous delivery - every time you push your code, OpenShift redeploys your environment with the new code. If you haven't been doing this along the way, you just need 3 commands to deploy your code:</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Execute this from within your OpenShift project directory</span>
+git add <span class="nt">-A</span> <span class="c"># add all changes to the git index</span>
+git commit <span class="nt">-m</span> <span class="s1">'add your commit message'</span>
+git push
+</code></pre></div></div>
+<p>Done. You can now hit the app by browsing to your OpenShift-generated DNS name. Adding your own custom DNS name is easy, and I'll cover that in a separate post.</p>
+<p>As for cloudiness - the application might not be that complex and my object-oriented skills are garbage, but from an infrastructure/hosting perspective, it's the Holy Grail. Here's why:</p>
+<ul>
+<li>The app doesn't care about DNS names. You can hit the app at <a href="http://shareyoursalary.alexdglover.com" target="_blank">http://shareyoursalary.alexdglover.com</a> or <a href="http://shareyoursalary-alexdglover.rhcloud.com" target="_blank">http://shareyoursalary-alexdglover.rhcloud.com</a>, or even <a href="http://www.shareyoursalary.gq/" target="_blank">http://www.shareyoursalary.gq/</a> and the app works perfectly. You can deploy it anywhere, change DNS names whenever, you can give customers/users their own custom 'vanity' URLs, and the app will give consistent results. It's extremely flexible and portable.</li>
+<li>There are no sessions to worry about, making load-balancing extremely easy.</li>
+<li>Since all of the app functionality is API based, we can scale the application horizontally just by adding more PHP instances behind the load balancer.</li>
+<li>By using a NoSQL database (MongoDB), the database layer can also be scaled horizontally.</li>
+<li>All of the code is deployment agnostic - since we're using environment variables for the database connection details, this same source can be deployed to development, QA, and production environments without any changes.</li>
+<li>There are no high-cost or proprietary application components. You can run this app in any cloud hosting environment, on a number of operating systems, using off-the-shelf images/services in many cases.</li>
+<li>The deployment is as easy as putting the contents of our project directory in the document root of the Apache/PHP servers. There's no configuration necessary.There is no DB schema to set up as part of the app deployment - the application will create the collection (read: table) on the fly and start inserting records.</li>
+</ul>
+<p>In short, it should be very easy for anybody with minimal cloud automation training to deploy this application in a highly available and scalable model. Specifically, the app can handle instance failures in any tier and can scale horizontally to support hundreds of thousands of concurrent users without human intervention or configuration. With all of the advancements in cloud and automation, this should be the de facto standard for all but the largest and most complex apps.</p>
+<p>As always, I hope this post has been helpful and let me know if you have any questions.</p>
+:ET

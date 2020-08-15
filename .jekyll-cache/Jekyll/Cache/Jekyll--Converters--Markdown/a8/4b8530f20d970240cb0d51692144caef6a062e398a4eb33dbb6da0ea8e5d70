@@ -1,0 +1,207 @@
+I"ig<p>In a previous project, I built "<a href="http://www.alexdglover.com/whos-that-person-in-that-thing-app/" target="_blank">Who's that person in that thing?</a>," a JavaScript web app that called The Movie DB's API to find common actors given two movies. That was fun, but I still wanted to build an API service myself and I wanted to experiment with some new tools. But first I needed a project idea as an excuse to use them.</p>
+<h2>Project Idea/Application Premise/The Excuse</h2>
+<p>People are funny about money, especially about their salary. With most people, it's a taboo to talk about it. But everyone's been curious at some point to know how they compare to their peers. Some people fear they are getting paid less to do the same work as others, and sometimes that fear is founded in fact. The "Share Your Salary" app is an anonymous salary survey tool to address these kinds of use cases.</p>
+<p>Before we get into any of the tools or how-to, feel free to check out the application first or look over the source.</p>
+
+<p class="text-center"><a href="http://shareyoursalary-alexdglover.rhcloud.com" class="btn btn--large btn--info">Demo</a>
+<a href="https://github.com/alexdglover/shareyoursalary" class="btn btn--large btn--info">GitHub Repo</a></p>
+
+<h2>New Tools</h2>
+<h3><a title="OpenShift.com" href="http://www.openshift.com" target="_blank" rel="nofollow">OpenShift</a></h3>
+<p>Well I started to write this section, turned out to be about a thousand words... so I moved it to <a title="Introduction to OpenShift" href="http://www.alexdglover.com/introduction-to-openshift/" target="_blank">it's own separate post</a>. In short, OpenShift is a PaaS hosting service. OpenShift hosts the entire Share Your Salary app, including a MongoDB container, an HAProxy load balancer, and Apache/PHP containers in an auto-scaling group.</p>
+<h3><a title="MongoDB.org" href="http://www.mongodb.org/" target="_blank">MongoDB</a></h3>
+<p>MongoDB is a highly scalable NoSQL database. MongoDB is a document database and uses JavaScript Object Notation (JSON) to represent those documents. I really like JSON, but PHP doesn't 'speak' JSON natively, which makes using MongoDB a little less intuitive. I wrote <a title="MongoDB and PHP Primer" href="http://www.alexdglover.com/mongodb-and-php-primer/" target="_blank">a separate MongoDB and PHP Primer post</a> to go over some of the basics.</p>
+<p>I used MongoDB as the backend for the "Share Your Salary" app.</p>
+<h3><a title="FatFreeFramework.com" href="http://fatfreeframework.com/" target="_blank">Fat Free Framework</a></h3>
+<p>Fat Free Framework (or F3 for short) is a tiny PHP framework (it's only ~65 KB in total) that provides URL routing, caching, page templating, and built-in database support for MySQL, SQLite, MSSQL/Sybase, PostgreSQL, MongoDB and F3's proprietary flat-file DB called Jig.</p>
+<p>I used F3 for both templating web front-end as well as the API.</p>
+<h3><a title="Swagger.IO" href="http://swagger.io/" target="_blank">Swagger UI</a></h3>
+<p>Swagger UI is a must if you are building a RESTful API service - it acts as both a documentation method and a test bed. As the developer, you complete a JSON file that describes your API routes, methods, parameters, etc. Swagger UI transforms that JSON into a web page and API client that uses JavaScript to send HTTP GET/POST/PUT/DELETE requests to your API service and displays the results. Check out the <a title="petstore.swagger.wordnik.com" href="http://petstore.swagger.wordnik.com/" target="_blank">Swagger Petstore Demo</a>.</p>
+<p><!--more--></p>
+<h3>Retrospective</h3>
+<p>I would normally title this section "How-to" or something along those lines, but trying to remember all of the steps I went through after the fact is difficult. I tend to get caught up in a project and document afterwards (shame on me).</p>
+<p>That said, I'll try to break down the highlights and lessons learned from this project.</p>
+<h5>The 'Database' Class</h5>
+<p>A quick disclaimer - I have a hard time thinking in object-oriented terms, I generally write functional programs. I tried to push myself to write more object-oriented with some simple classes to represent objects but I'm sure I botched it. Any criticisms or corrections are welcome.</p>
+<p>Now, with any good OO program, you'll want to create a database class that can be instantiated by other classes. This allows you to write the basic database code once and re-use it elsewhere, instead of having a separate set of database connection code in every class that needs it.</p>
+<p>Let's go over the code with some extra comments:</p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+
+<span class="c1">// Here we are defining a constant variable, OPENSHIFT_DB with the name</span>
+<span class="c1">// of the MongoDB database we'll be connecting to, 'shareyoursalary'</span>
+<span class="nb">define</span><span class="p">(</span><span class="s2">"OPENSHIFT_DB"</span><span class="p">,</span> <span class="s2">"shareyoursalary"</span><span class="p">);</span>
+
+<span class="kd">class</span> <span class="nc">Database</span><span class="p">{</span>
+
+  <span class="c1">// Here we define the constructor that will be called each time the</span>
+  <span class="c1">// Database class is instantiated. In this case, we're just going</span>
+  <span class="c1">// to call the get_db_connection() function</span>
+  <span class="k">function</span> <span class="n">__construct</span><span class="p">(){</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">get_db_connection</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Since I used OpenShift for this project, all of the database</span>
+  <span class="c1">// connection information was abstracted to environment variables.</span>
+  <span class="c1">// Ultimately, we are constructing a MongoClient class object and</span>
+  <span class="c1">// returning it to whatever called this function</span>
+  <span class="k">function</span> <span class="n">get_db_connection</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nv">$host</span> <span class="o">=</span> <span class="nv">$_ENV</span><span class="p">[</span><span class="s2">"OPENSHIFT_MONGODB_DB_HOST"</span><span class="p">];</span>
+    <span class="nv">$user</span> <span class="o">=</span> <span class="nv">$_ENV</span><span class="p">[</span><span class="s2">"OPENSHIFT_MONGODB_DB_USERNAME"</span><span class="p">];</span>
+    <span class="nv">$passwd</span> <span class="o">=</span> <span class="nv">$_ENV</span><span class="p">[</span><span class="s2">"OPENSHIFT_MONGODB_DB_PASSWORD"</span><span class="p">];</span>
+    <span class="nv">$port</span> <span class="o">=</span> <span class="nv">$_ENV</span><span class="p">[</span><span class="s2">"OPENSHIFT_MONGODB_DB_PORT"</span><span class="p">];</span>
+    <span class="nv">$uri</span> <span class="o">=</span> <span class="s2">"mongodb://"</span> <span class="mf">.</span> <span class="nv">$user</span> <span class="mf">.</span> <span class="s2">":"</span> <span class="mf">.</span> <span class="nv">$passwd</span> <span class="mf">.</span> <span class="s2">"@"</span> <span class="mf">.</span> <span class="nv">$host</span> <span class="mf">.</span> <span class="s2">":"</span> <span class="mf">.</span> <span class="nv">$port</span><span class="p">;</span>
+    <span class="nv">$mongo</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MongoClient</span><span class="p">(</span><span class="nv">$uri</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nv">$mongo</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Returns a database object based on a database name input parameter ($dbname)</span>
+  <span class="k">function</span> <span class="n">get_database</span><span class="p">(</span><span class="nv">$dbname</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$conn</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">get_db_connection</span><span class="p">();</span>
+    <span class="k">return</span> <span class="nv">$conn</span><span class="o">-&gt;</span><span class="nv">$dbname</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Returns a collection object based on a collection name input ($collection)</span>
+  <span class="k">function</span> <span class="n">get_collection</span><span class="p">(</span><span class="nv">$collection</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$db</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">get_database</span><span class="p">(</span><span class="no">OPENSHIFT_DB</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nv">$db</span><span class="o">-&gt;</span><span class="nv">$collection</span><span class="p">;</span>
+  <span class="p">}</span>
+
+<span class="p">}</span>
+<span class="cp">?&gt;</span>
+</code></pre></div></div>
+<p>This class is pretty straightforward and does little in the way of error handling. Basically we're just connecting to the database and abstracting some basic MongoDB functions to make them available as class functions.</p>
+<h5>The 'Survey' Class</h5>
+<p>The Survey object is the only real object in this program from an object-oriented programming perspective. This object (the survey) is the core of the application, and so most of the relevant data exists as properties of this class.</p>
+<p>Let's walk through the source with some comments:</p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+
+<span class="kd">class</span> <span class="nc">Survey</span> <span class="p">{</span>
+
+<span class="c1">// Class properties are defined here. These should probably be all marked as private varaiables</span>
+
+  <span class="k">var</span> <span class="nv">$surveyName</span><span class="p">;</span> <span class="c1">// Human-readable survey name</span>
+  <span class="k">var</span> <span class="nv">$URLName</span><span class="p">;</span> <span class="c1">// URL-friendly version of the surveyName property</span>
+  <span class="k">var</span> <span class="nv">$currency</span><span class="p">;</span> <span class="c1">// the currency that this survey is based on, e.g. USD</span>
+  <span class="k">var</span> <span class="nv">$period</span><span class="p">;</span> <span class="c1">// The period that the survey is based on, e.g. per hour or per year</span>
+  <span class="k">var</span> <span class="nv">$minentries</span><span class="p">;</span> <span class="c1">// The minimum number of entries needed before the results are published. This ensures anonymity</span>
+  <span class="k">private</span> <span class="nv">$db</span><span class="p">;</span> <span class="c1">// Property to hold the Database object</span>
+
+  <span class="c1">// This is the constructor function. It instantiates the database class and sets it to the local db property</span>
+  <span class="k">public</span> <span class="k">function</span> <span class="n">__construct</span><span class="p">(){</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="n">db</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Database</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Simple getter functions for each of the properties. These aren't actually used anywhere, but I created them as a standard practice</span>
+  <span class="k">public</span> <span class="k">function</span> <span class="n">get_name</span><span class="p">(){</span>
+    <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="n">surveyName</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">public</span> <span class="k">function</span> <span class="n">get_url_name</span><span class="p">(){</span>
+    <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="nc">URLName</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">public</span> <span class="k">function</span> <span class="n">get_currency</span><span class="p">(){</span>
+      <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="n">currency</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">public</span> <span class="k">function</span> <span class="n">get_period</span><span class="p">(){</span>
+    <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="n">period</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">public</span> <span class="k">function</span> <span class="n">get_minentries</span><span class="p">(){</span>
+    <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="n">minentries</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// This function will take the human-readable name as an input, then convert and return the URL-friendly version</span>
+  <span class="k">private</span> <span class="k">function</span> <span class="n">convertNameToURLName</span><span class="p">(</span><span class="nv">$string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//Lower case everything</span>
+    <span class="nv">$string</span> <span class="o">=</span> <span class="nb">strtolower</span><span class="p">(</span><span class="nv">$string</span><span class="p">);</span>
+    <span class="c1">//Make alphanumeric (removes all other characters)</span>
+    <span class="nv">$string</span> <span class="o">=</span> <span class="nb">preg_replace</span><span class="p">(</span><span class="s2">"/[^a-z0-9_\s-]/"</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="nv">$string</span><span class="p">);</span>
+    <span class="c1">//Clean up multiple dashes or whitespaces</span>
+    <span class="nv">$string</span> <span class="o">=</span> <span class="nb">preg_replace</span><span class="p">(</span><span class="s2">"/[\s-]+/"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">,</span> <span class="nv">$string</span><span class="p">);</span>
+    <span class="c1">//Convert whitespaces and underscore to dash</span>
+    <span class="nv">$string</span> <span class="o">=</span> <span class="nb">preg_replace</span><span class="p">(</span><span class="s2">"/[\s_]/"</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">,</span> <span class="nv">$string</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nv">$string</span><span class="p">;</span>
+  <span class="p">}</span>
+
+
+  <span class="c1">// This function finds a given survey in the database based on the surveyName</span>
+  <span class="c1">// passed as an input parameter. The surveyName will be sent as part of</span>
+  <span class="c1">// the $args parameter (sent as part of a URL path parameter via F3).</span>
+  <span class="c1">// If found, the survey will be echo'd in JSON format (this</span>
+  <span class="c1">// allows it to be consumed as an API)</span>
+  <span class="k">public</span> <span class="k">function</span> <span class="n">getByName</span><span class="p">(</span><span class="nv">$f3</span><span class="p">,</span><span class="nv">$args</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$surveys</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="n">db</span><span class="o">-&gt;</span><span class="nf">get_collection</span><span class="p">(</span><span class="s1">'surveys'</span><span class="p">);</span>
+
+    <span class="c1">// Convert name to URL friendly name</span>
+    <span class="nv">$URLName</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">convertNameToURLName</span><span class="p">(</span><span class="nv">$args</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]);</span>
+
+    <span class="nv">$query</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s1">'URLName'</span> <span class="o">=&gt;</span> <span class="nv">$URLName</span><span class="p">);</span>
+    <span class="nv">$cursor</span> <span class="o">=</span> <span class="nv">$surveys</span><span class="o">-&gt;</span><span class="nf">find</span><span class="p">(</span><span class="nv">$query</span><span class="p">);</span>
+    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$cursor</span> <span class="k">as</span> <span class="nv">$doc</span><span class="p">){</span>
+      <span class="k">if</span><span class="p">(</span><span class="nb">count</span><span class="p">(</span><span class="nv">$doc</span><span class="p">[</span><span class="s1">'responses'</span><span class="p">])</span> <span class="o">&lt;</span> <span class="nv">$doc</span><span class="p">[</span><span class="s1">'minEntries'</span><span class="p">])</span>
+      <span class="p">{</span>
+        <span class="k">for</span><span class="p">(</span><span class="nv">$i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="p">(</span><span class="nb">count</span><span class="p">(</span><span class="nv">$doc</span><span class="p">[</span><span class="s1">'responses'</span><span class="p">]));</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span>
+        <span class="p">{</span>
+          <span class="nv">$doc</span><span class="p">[</span><span class="s1">'responses'</span><span class="p">][</span><span class="nv">$i</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'0'</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">echo</span> <span class="nb">json_encode</span><span class="p">(</span><span class="nv">$doc</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">else</span> <span class="p">{</span>
+        <span class="k">echo</span> <span class="nb">json_encode</span><span class="p">(</span><span class="nv">$doc</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="c1">// The addSurvey function takes HTTP parameters (the $_REQUEST variables) as</span>
+  <span class="c1">// inputs and creates the new survey entry in the database. Once created, the</span>
+  <span class="c1">// function attempts to find the survey and echo it in JSON format (this allows it to be consumed as an API)</span>
+  <span class="k">public</span> <span class="k">function</span> <span class="n">addSurvey</span><span class="p">(</span><span class="nv">$f3</span><span class="p">,</span><span class="nv">$args</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Get surveys collection    </span>
+    <span class="nv">$surveys</span>  <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="n">db</span><span class="o">-&gt;</span><span class="nf">get_collection</span><span class="p">(</span><span class="s1">'surveys'</span><span class="p">);</span>
+    <span class="nv">$surveyName</span>   <span class="o">=</span> <span class="nv">$_REQUEST</span><span class="p">[</span><span class="s1">'surveyName'</span><span class="p">];</span>
+    <span class="c1">// Convert name to URL friendly name</span>
+    <span class="nv">$URLName</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">convertNameToURLName</span><span class="p">(</span><span class="nv">$surveyName</span><span class="p">);</span>
+    <span class="nv">$currency</span>  <span class="o">=</span> <span class="nv">$_REQUEST</span><span class="p">[</span><span class="s1">'currency'</span><span class="p">];</span>
+    <span class="nv">$period</span>    <span class="o">=</span> <span class="nv">$_REQUEST</span><span class="p">[</span><span class="s1">'period'</span><span class="p">];</span>
+    <span class="nv">$minEntries</span>   <span class="o">=</span> <span class="nv">$_REQUEST</span><span class="p">[</span><span class="s1">'minEntries'</span><span class="p">];</span>
+
+    <span class="c1">// Insert new data sent via API call</span>
+    <span class="nv">$surveys</span><span class="o">-&gt;</span><span class="nf">insert</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="nv">$surveyName</span><span class="p">,</span> <span class="s1">'URLName'</span> <span class="o">=&gt;</span> <span class="nv">$URLName</span><span class="p">,</span> <span class="s1">'currency'</span> <span class="o">=&gt;</span> <span class="nv">$currency</span><span class="p">,</span> <span class="s1">'period'</span><span class="o">=&gt;</span><span class="nv">$period</span><span class="p">,</span> <span class="s1">'minEntries'</span><span class="o">=&gt;</span><span class="nv">$minEntries</span><span class="p">,</span> <span class="s1">'responses'</span><span class="o">=&gt;</span><span class="p">(</span><span class="k">array</span><span class="p">())));</span>
+    <span class="c1">// Build a query object, basically a single item array with the name of the new survey input value</span>
+    <span class="nv">$query</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s1">'URLName'</span> <span class="o">=&gt;</span> <span class="nv">$URLName</span><span class="p">);</span>
+    <span class="c1">// Attempt to find the survey we just created</span>
+    <span class="nv">$cursor</span> <span class="o">=</span> <span class="nv">$surveys</span><span class="o">-&gt;</span><span class="nf">find</span><span class="p">(</span><span class="nv">$query</span><span class="p">);</span>
+    <span class="c1">// For each object that matches the query, echo the data as JSON</span>
+    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$cursor</span> <span class="k">as</span> <span class="nv">$doc</span><span class="p">){</span>
+      <span class="k">echo</span> <span class="nb">json_encode</span><span class="p">(</span><span class="nv">$doc</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="c1">// The addResponse function takes a survey name (as a URL parameter passed via F3)</span>
+  <span class="c1">// and a response input (via HTTP query parameters, the $_REQUEST variable below).</span>
+  <span class="c1">// It uses the survey name to find the survey in the database and then updates the</span>
+  <span class="c1">// embedded response array with the response value sent. Once updated, the function</span>
+  <span class="c1">// returns the newly updated survey in JSON format</span>
+  <span class="k">public</span> <span class="k">function</span> <span class="n">addResponse</span><span class="p">(</span><span class="nv">$f3</span><span class="p">,</span><span class="nv">$args</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$surveys</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="n">db</span><span class="o">-&gt;</span><span class="nf">get_collection</span><span class="p">(</span><span class="s1">'surveys'</span><span class="p">);</span>
+    <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$_REQUEST</span><span class="p">[</span><span class="s2">"response"</span><span class="p">];</span>
+
+    <span class="c1">// Convert name to URL friendly name</span>
+    <span class="nv">$URLName</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">convertNameToURLName</span><span class="p">(</span><span class="nv">$args</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]);</span>
+
+    <span class="nv">$surveys</span><span class="o">-&gt;</span><span class="nf">update</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">'URLName'</span> <span class="o">=&gt;</span> <span class="nv">$URLName</span><span class="p">),</span><span class="k">array</span><span class="p">(</span><span class="s1">'$push'</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">'responses'</span> <span class="o">=&gt;</span> <span class="nv">$response</span><span class="p">)));</span>
+    <span class="nv">$query</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s1">'URLName'</span> <span class="o">=&gt;</span> <span class="nv">$URLName</span><span class="p">);</span>
+    <span class="nv">$cursor</span> <span class="o">=</span> <span class="nv">$surveys</span><span class="o">-&gt;</span><span class="nf">find</span><span class="p">(</span><span class="nv">$query</span><span class="p">);</span>
+    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$cursor</span> <span class="k">as</span> <span class="nv">$doc</span><span class="p">){</span>
+        <span class="k">echo</span> <span class="nb">json_encode</span><span class="p">(</span><span class="nv">$doc</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span>
+</code></pre></div></div>
+<p>Looking back, this Survey class contains aspects of both a model and a controller. In a proper MVC project, this probably should have been split into two classes, a 'Survey' object (with just the basic properties and getters/setters) and a 'SurveyController' (with the addSurvey and addResponse).</p>
+<p>These classes might seem a bit abstract right now, but it'll make more sense once I explain the API routes in F3.</p>
+<p>At 1400+ words, this is a good place to take a break. Check out Part 2 for the PageGenerator class, the F3 routes, and a how-to for Swagger UI.</p>
+:ET

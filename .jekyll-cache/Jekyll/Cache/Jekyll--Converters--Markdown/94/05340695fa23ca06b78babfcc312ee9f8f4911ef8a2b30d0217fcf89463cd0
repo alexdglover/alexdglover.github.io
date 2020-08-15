@@ -1,0 +1,9 @@
+I"D<p>Well it's been awhile since I've posted since I started working on <a title="HUJ" href="http://www.hireupjob.com/" target="_blank">HireUpJob</a>, but this one's good. I recently had a use case where I needed to get the virtual hardware version of a client machine provisioned through vCloud Director. Now, that information is not accessible anywhere on the client machine, so I had to look to the vCloud Director API for it. The process for querying the API also had to be automated for future provisions, so it had to be scripted. Enough back story and context, lets look at the ruby code.</p>
+<p>```ruby
+#Need to import a few ruby packages
+require ‘net/http’
+require ‘uri’
+require ‘openssl’
+#Here we are ignoring any issues that may arise with SSL certificates
+OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE</p>
+:ET

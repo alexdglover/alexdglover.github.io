@@ -1,0 +1,199 @@
+I"��<p>I was recently working on a new HTML project when I came across the <a title="Scrollspy" href="http://getbootstrap.com/2.3.2/javascript.html#scrollspy" target="_blank">Scrollspy</a> feature in Bootstrap's framework (v2.3). The feature looks really good on Bootstrap's pages, I figured I'd use it in my project as well. I immediately had issues with the links aligning the content to the viewport and issues with the scrollspy highlighting the right link based on what content was in the viewport. This was all supposed to be out of the box functionality... After doing some research (read: Googling), I came across a few <a href="https://github.com/twbs/bootstrap/issues/3316" target="_blank">bug tickets</a> and workarounds, but no wholistic solutions to reproducing the functionality on Bootstrap's site. So I decided to build it manually.</p>
+<p>Let's get started.</p>
+<p><!--more Continue to the instructions--></p>
+<h2>Preparation</h2>
+<p>If you want to jump right into the project, you can download <a href="http://experimental.alexdglover.com/downloads/BootstrapScrollspyWorkaroundStarter.zip" target="_blank">the starter kit</a> (it's just Boostrap 2.3, a modified Hero Unit example page, and a very slightly modified Bootstrap CSS).</p>
+<p>If you want to start from a 100% clean version of Bootstrap 2.3, go <a href="http://getbootstrap.com/2.3.2/getting-started.html#download-bootstrap" target="_blank">download the source</a> and extract it. Keep your top-level folder name whatever you want it to be, but rename the 'bootstrap' folder assets (we are matching the existing folder structure in the source code we are going to borrow from one of their examples. Feel free to build your folder structure however you see fit). Create a sibling folder to contain your HTML files and create an index.html inside. Finally, go download <a href="http://jquery.com/download/" target="_blank">jQuery</a>, place it in your assets/js folder, and rename it 'jquery.js' (for simplicity). Your folder structure should look like this:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>topLevelFolder
+├── assets/
+│   ├── css/
+│   │   ├── bootstrap.css
+│   │   ├── bootstrap.min.css
+│   ├── js/
+│   │   ├── bootstrap.js
+│   │   ├── bootstrap.min.js
+│   │   ├── jquery.js
+│   └── img/
+│       ├── glyphicons-halflings.png
+│       └── glyphicons-halflings-white.png
+├── html/
+│   ├── index.html
+</code></pre></div></div>
+<p>Perfect. Now browse to the <a href="http://getbootstrap.com/2.3.2/examples/hero.html" target="_blank">Hero example</a> and <span style="text-decoration: line-through;">steal</span> borrow their source code (just right click anywhere, view source, Ctrl+A Ctrl+C) and paste it into your index.html file. We have to make a few minor changes here as well. Scroll to the bottom of the code and replace this:</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!--</span> <span class="nx">Le</span> <span class="nx">javascript</span> <span class="o">==================================================</span> <span class="o">--&gt;</span>
+    <span class="c">&lt;!--</span> <span class="nx">Placed</span> <span class="nx">at</span> <span class="nx">the</span> <span class="nx">end</span> <span class="k">of</span> <span class="nx">the</span> <span class="nb">document</span> <span class="nx">so</span> <span class="nx">the</span> <span class="nx">pages</span> <span class="nx">load</span> <span class="nx">faster</span> <span class="o">--&gt;</span>
+    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/jquery.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/bootstrap-transition.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/bootstrap-alert.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/bootstrap-modal.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/bootstrap-dropdown.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/bootstrap-scrollspy.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/bootstrap-tab.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/bootstrap-tooltip.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/bootstrap-popover.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/bootstrap-button.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/bootstrap-collapse.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/bootstrap-carousel.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/bootstrap-typeahead.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span></code></pre></div></div>
+
+<p>with this:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!--</span> <span class="nx">Le</span> <span class="nx">javascript</span> <span class="o">==================================================</span> <span class="o">--&gt;</span>
+    <span class="c">&lt;!--</span> <span class="nx">Placed</span> <span class="nx">at</span> <span class="nx">the</span> <span class="nx">end</span> <span class="k">of</span> <span class="nx">the</span> <span class="nb">document</span> <span class="nx">so</span> <span class="nx">the</span> <span class="nx">pages</span> <span class="nx">load</span> <span class="nx">faster</span> <span class="o">--&gt;</span>
+    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/jquery.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/bootstrap.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span></code></pre></div></div>
+
+<p>For sanity testing, open index.html in your browser - it should look like the original and function without errors.</p>
+<p>Now let's strip out the 3 sub-headings and replace them with a content area and a set of links in the sidebar.</p>
+<p>Replace this:</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"span4"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;h2&gt;</span>Heading<span class="nt">&lt;/h2&gt;</span>
+          <span class="nt">&lt;p&gt;</span>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. <span class="nt">&lt;/p&gt;</span>
+          <span class="nt">&lt;p&gt;&lt;a</span> <span class="na">class=</span><span class="s">"btn"</span> <span class="na">href=</span><span class="s">"#"</span><span class="nt">&gt;</span>View details <span class="ni">&amp;raquo;</span><span class="nt">&lt;/a&gt;&lt;/p&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"span4"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;h2&gt;</span>Heading<span class="nt">&lt;/h2&gt;</span>
+          <span class="nt">&lt;p&gt;</span>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. <span class="nt">&lt;/p&gt;</span>
+          <span class="nt">&lt;p&gt;&lt;a</span> <span class="na">class=</span><span class="s">"btn"</span> <span class="na">href=</span><span class="s">"#"</span><span class="nt">&gt;</span>View details <span class="ni">&amp;raquo;</span><span class="nt">&lt;/a&gt;&lt;/p&gt;</span>
+       <span class="nt">&lt;/div&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"span4"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;h2&gt;</span>Heading<span class="nt">&lt;/h2&gt;</span>
+          <span class="nt">&lt;p&gt;</span>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.<span class="nt">&lt;/p&gt;</span>
+          <span class="nt">&lt;p&gt;&lt;a</span> <span class="na">class=</span><span class="s">"btn"</span> <span class="na">href=</span><span class="s">"#"</span><span class="nt">&gt;</span>View details <span class="ni">&amp;raquo;</span><span class="nt">&lt;/a&gt;&lt;/p&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+</code></pre></div></div>
+<p>with this:</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"span3 sidebar"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">"nav nav-list nav-tabs nav-stacked sidebarNav affix-top"</span> <span class="na">style=</span><span class="s">"top:80px; width:255px;"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;li</span> <span class="na">id=</span><span class="s">"section1Nav"</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">"#section1"</span><span class="nt">&gt;</span>Section 1<span class="nt">&lt;i</span> <span class="na">class=</span><span class="s">"icon-chevron-right"</span> <span class="na">style=</span><span class="s">"float:right;"</span><span class="nt">&gt;&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="nt">&lt;li</span> <span class="na">id=</span><span class="s">"section2Nav"</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">"#section2"</span><span class="nt">&gt;</span>Section 2<span class="nt">&lt;i</span> <span class="na">class=</span><span class="s">"icon-chevron-right"</span> <span class="na">style=</span><span class="s">"float:right;"</span><span class="nt">&gt;&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="nt">&lt;li</span> <span class="na">id=</span><span class="s">"section3Nav"</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">"#section3"</span><span class="nt">&gt;</span>Section 3<span class="nt">&lt;i</span> <span class="na">class=</span><span class="s">"icon-chevron-right"</span> <span class="na">style=</span><span class="s">"float:right;"</span><span class="nt">&gt;&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="nt">&lt;li</span> <span class="na">id=</span><span class="s">"section4Nav"</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">"#section4"</span><span class="nt">&gt;</span>Section 4<span class="nt">&lt;i</span> <span class="na">class=</span><span class="s">"icon-chevron-right"</span> <span class="na">style=</span><span class="s">"float:right;"</span><span class="nt">&gt;&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;</span>
+      <span class="nt">&lt;/ul&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"span9"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;section</span> <span class="na">id=</span><span class="s">"section1"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"page-header"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;h1&gt;</span>section 1<span class="nt">&lt;/h1&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+        <span class="nt">&lt;h2&gt;</span>Sub Header<span class="nt">&lt;/h2&gt;</span>
+        <span class="nt">&lt;p&gt;</span>lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.<span class="nt">&lt;/p&gt;</span>
+        <span class="nt">&lt;p&gt;</span>lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.<span class="nt">&lt;/p&gt;</span>
+        <span class="nt">&lt;p&gt;</span>lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.<span class="nt">&lt;/p&gt;</span>
+        <span class="nt">&lt;p&gt;</span>lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.<span class="nt">&lt;/p&gt;</span>
+      <span class="nt">&lt;/section&gt;</span>
+      <span class="nt">&lt;section</span> <span class="na">id=</span><span class="s">"section2"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"page-header"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;h1&gt;</span>section 2<span class="nt">&lt;/h1&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+        <span class="nt">&lt;h2&gt;</span>Sub Header<span class="nt">&lt;/h2&gt;</span>
+        <span class="nt">&lt;p&gt;</span>lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.<span class="nt">&lt;/p&gt;</span>
+        <span class="nt">&lt;p&gt;</span>lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.<span class="nt">&lt;/p&gt;</span>
+      <span class="nt">&lt;/section&gt;</span>
+      <span class="nt">&lt;section</span> <span class="na">id=</span><span class="s">"section3"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"page-header"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;h1&gt;</span>section 3<span class="nt">&lt;/h1&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+        <span class="nt">&lt;h2&gt;</span>Sub Header<span class="nt">&lt;/h2&gt;</span>
+        <span class="nt">&lt;p&gt;</span>lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.<span class="nt">&lt;/p&gt;</span>
+        <span class="nt">&lt;p&gt;</span>lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.<span class="nt">&lt;/p&gt;</span>
+        <span class="nt">&lt;p&gt;</span>lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.<span class="nt">&lt;/p&gt;</span>
+      <span class="nt">&lt;/section&gt;</span>
+      <span class="nt">&lt;section</span> <span class="na">id=</span><span class="s">"section4"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"page-header"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;h1&gt;</span>section 4<span class="nt">&lt;/h1&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+        <span class="nt">&lt;h2&gt;</span>Sub Header<span class="nt">&lt;/h2&gt;</span>
+        <span class="nt">&lt;p&gt;</span>lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.<span class="nt">&lt;/p&gt;</span>
+        <span class="nt">&lt;p&gt;</span>lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.<span class="nt">&lt;/p&gt;</span>
+        <span class="nt">&lt;p&gt;</span>lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet.<span class="nt">&lt;/p&gt;</span>
+      <span class="nt">&lt;/section&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+</code></pre></div></div>
+
+<p>Open this up in your browser and verify everything is kosher. If so, we're all done with prep and can move on to the custom JavaScript.</p>
+<h2>The Offset Logic</h2>
+<p>At this point, you probably clicked the links and noticed that the viewport doesn't line up quite perfectly. This is because the height of the top nav bar isn't being taken into account. Let's fix that first, then reproduce the scrollspy effect.</p>
+<p>To fix this issue, we need to 'intercept' the normal link function and replace it with our own. Once intercepted, we'll scroll to that element with an offset equal to the height of the header.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&lt;</span><span class="nx">script</span><span class="o">&gt;</span>
+    <span class="c1">// Here we set the offset value to whatever the header height is</span>
+    <span class="kd">var</span> <span class="nx">offset</span> <span class="o">=</span> <span class="mi">60</span><span class="p">;</span>
+    <span class="c1">// If a user clicks on any anchor element (a) within a list item tag (li) on our sidebar with the class sidebarNav (.sidebarNav), execute this function</span>
+    <span class="nx">$</span><span class="p">(</span><span class="dl">'</span><span class="s1">.sidebarNav li a</span><span class="dl">'</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Prevent the normal scroll behavior</span>
+        <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+        <span class="c1">// Grab the clicked element's href tag, scroll that element into view</span>
+        <span class="nx">$</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="dl">'</span><span class="s1">href</span><span class="dl">'</span><span class="p">))[</span><span class="mi">0</span><span class="p">].</span><span class="nx">scrollIntoView</span><span class="p">();</span>
+        <span class="c1">// Scroll 0 pixels horizontally and -60 (really negative offset) vertically</span>
+        <span class="nx">scrollBy</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="nx">offset</span><span class="p">);</span>      
+    <span class="p">});</span>
+<span class="o">&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span></code></pre></div></div>
+<p>That's it. Add this block of javascript in your index.html just after your script source declaration for jQuery and boostrap.js. Test it in your browser, and experiment with changing the offset number and its effects.</p>
+<h2>The Scrollspy Effect</h2>
+<p>To create the Scrollspy effect, all we need to do is add the 'active' class to the li tags when the viewport is lined up with the corresponding section.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&lt;</span><span class="nx">script</span><span class="o">&gt;</span>
+<span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">menu</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="dl">'</span><span class="s1">.sidebarNav</span><span class="dl">'</span><span class="p">);</span>
+
+  <span class="nx">$</span><span class="p">(</span><span class="nb">window</span><span class="p">).</span><span class="nx">scroll</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">currPosition</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">scrollTop</span><span class="p">();</span>
+    <span class="kd">var</span> <span class="nx">section1Position</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="dl">'</span><span class="s1">#section1</span><span class="dl">'</span><span class="p">).</span><span class="nx">offset</span><span class="p">().</span><span class="nx">top</span> <span class="o">-</span> <span class="mi">100</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">section2Position</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="dl">'</span><span class="s1">#section2</span><span class="dl">'</span><span class="p">).</span><span class="nx">offset</span><span class="p">().</span><span class="nx">top</span> <span class="o">-</span> <span class="mi">100</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">section3Position</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="dl">'</span><span class="s1">#section3</span><span class="dl">'</span><span class="p">).</span><span class="nx">offset</span><span class="p">().</span><span class="nx">top</span> <span class="o">-</span> <span class="mi">100</span><span class="p">;</span>
+    <span class="c1">// The offset for section 4 is larger because it is at the bottom of the page,</span>
+    <span class="c1">// and if the offset was only 100, the window position would never 'enter' the</span>
+    <span class="c1">// section's field</span>
+    <span class="kd">var</span> <span class="nx">section4Position</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="dl">'</span><span class="s1">#section4</span><span class="dl">'</span><span class="p">).</span><span class="nx">offset</span><span class="p">().</span><span class="nx">top</span> <span class="o">-</span> <span class="mi">150</span><span class="p">;</span>
+
+    <span class="c1">// If the window is at or below the section 1 tag, then switch the</span>
+    <span class="c1">// sidebar's class from affix-top to affix so it will move with the window</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">currPosition</span> <span class="o">&gt;=</span> <span class="nx">section1Position</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">menu</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span><span class="dl">'</span><span class="s1">affix-top</span><span class="dl">'</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="dl">'</span><span class="s1">affix</span><span class="dl">'</span><span class="p">);</span>
+
+    <span class="p">}</span>
+    <span class="c1">// If the window is NOT at or below the section 1 tag, then switch the</span>
+    <span class="c1">// sidebar's class from affix to affix-top so it will position itself</span>
+    <span class="c1">// below the Hero Unit</span>
+    <span class="k">else</span><span class="p">{</span>
+      <span class="nx">menu</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span><span class="dl">'</span><span class="s1">affix</span><span class="dl">'</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="dl">'</span><span class="s1">affix-top</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// If the window is at or below the section 1 tag, then add the active class</span>
+    <span class="c1">// to the corresponding li tag and remove the active class from all other li</span>
+    <span class="c1">// tags in the side bar. Apply the same logic to all of the other sections</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">currPosition</span> <span class="o">&gt;=</span> <span class="nx">section1Position</span> <span class="o">&amp;&amp;</span> <span class="nx">currPosition</span> <span class="o">&lt;=</span> <span class="nx">section2Position</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="nx">$</span><span class="p">(</span><span class="dl">'</span><span class="s1">#section1Nav</span><span class="dl">'</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="dl">'</span><span class="s1">active</span><span class="dl">'</span><span class="p">).</span><span class="nx">siblings</span><span class="p">().</span><span class="nx">removeClass</span><span class="p">(</span><span class="dl">'</span><span class="s1">active</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nx">currPosition</span> <span class="o">&gt;=</span> <span class="nx">section2Position</span> <span class="o">&amp;&amp;</span> <span class="nx">currPosition</span> <span class="o">&lt;=</span> <span class="nx">section3Position</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="nx">$</span><span class="p">(</span><span class="dl">'</span><span class="s1">#section2Nav</span><span class="dl">'</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="dl">'</span><span class="s1">active</span><span class="dl">'</span><span class="p">).</span><span class="nx">siblings</span><span class="p">().</span><span class="nx">removeClass</span><span class="p">(</span><span class="dl">'</span><span class="s1">active</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nx">currPosition</span> <span class="o">&gt;=</span> <span class="nx">section3Position</span> <span class="o">&amp;&amp;</span> <span class="nx">currPosition</span> <span class="o">&lt;=</span> <span class="nx">section4Position</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="nx">$</span><span class="p">(</span><span class="dl">'</span><span class="s1">#section3Nav</span><span class="dl">'</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="dl">'</span><span class="s1">active</span><span class="dl">'</span><span class="p">).</span><span class="nx">siblings</span><span class="p">().</span><span class="nx">removeClass</span><span class="p">(</span><span class="dl">'</span><span class="s1">active</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nx">currPosition</span> <span class="o">&gt;=</span> <span class="nx">section4Position</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="nx">$</span><span class="p">(</span><span class="dl">'</span><span class="s1">#section4Nav</span><span class="dl">'</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="dl">'</span><span class="s1">active</span><span class="dl">'</span><span class="p">).</span><span class="nx">siblings</span><span class="p">().</span><span class="nx">removeClass</span><span class="p">(</span><span class="dl">'</span><span class="s1">active</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+<span class="o">&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span></code></pre></div></div>
+<p>Again, you'll need to add this code block after the script source declarations for jQuery boostrap.js. That's it. Now you've got a dead-accurate version of the scrollspy, with complete control. Demo and source for the complete package are below. </p>
+
+<p class="text-center"><a href="https://alexdglover.github.io/super-succotash/html/index.html" class="btn btn--large btn--info">Demo</a>
+<a href="https://github.com/alexdglover/super-succotash/" class="btn btn--large btn--info">GitHub Repo</a></p>
+
+<p>Enjoy.</p>
+:ET

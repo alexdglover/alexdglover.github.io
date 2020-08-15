@@ -1,0 +1,42 @@
+I"\<p>The Konami code... if you were born in 1990 or earlier, and play (or played) video games, you probably already know what I'm talking about.</p>
+<p>The history of the Konami code is awesome in it's own rite. Here's the short version: the Konami code is a famous cheat code (up, up, down, down, left, right, left, right, B, A) that first appeared in NES games like Contra. Many times the code was added to video games as a tribute to the classic games or as a tribute to Kazuhisa Hashimoto, the developer who accidentally left the cheat code in the game when it was sold to the public.</p>
+<p>That homage has been proliferated by nerds and techies through many games and, eventually, made it's way on websites.</p>
+<p>YES, THERE IS A CHEAT CODE FOR THE INTERNET.</p>
+<p>Sort of. It usually just reveals an easter egg on that site. You can find a whole list of websites that use Konami codes at Konami Code Sites. It's a lot of fun finding the secret content people have put behind respectable websites.</p>
+<p>Some of you are probably thinking "But how do I put a Konami code on MY site?!?!" Well, at least that's what I was wondering.</p>
+<p>There is a pretty robust Konami code javascript library that's even iPhone compatible, hosted at Google Code (on an iPhone, it's swiping and tapping, so it's "up, up, down, down, left, right, left, right, tap, tap, tap".</p>
+<p>For those who are looking for the quickest and easiest version, I found this over at snaptortoise.com:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&lt;</span><span class="nx">script</span> <span class="nx">type</span><span class="o">=</span><span class="dl">"</span><span class="s2">text/javascript</span><span class="dl">"</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">http://konami-js.googlecode.com/svn/trunk/konami.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span><span class="o">&lt;</span><span class="nx">script</span> <span class="nx">type</span><span class="o">=</span><span class="dl">"</span><span class="s2">text/javascript</span><span class="dl">"</span><span class="o">&gt;</span><span class="c1">// &lt;![CDATA[</span>
+<span class="nx">konami</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Konami</span><span class="p">()</span>
+<span class="nx">konami</span><span class="p">.</span><span class="nx">load</span><span class="p">(</span><span class="dl">"</span><span class="s2">http://www.google.com</span><span class="dl">"</span><span class="p">);</span>
+<span class="c1">// ]]&gt;&lt;/script&gt;</span>
+</code></pre></div></div>
+
+<p>But that… is almost too easy. And you may want to do more custom things than just loading a different page. Or maybe you want to do a slightly different cheat code. I found some simpler, flexible (albeit not as flashy) javascript code on another blog:&lt;/p&gt;</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// check to make sure that the browser can handle window.addEventListener</span>
+<span class="k">if</span> <span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// create the keys and konami variables</span>
+  <span class="kd">var</span> <span class="nx">keys</span> <span class="o">=</span> <span class="p">[],</span>
+  <span class="nx">konami</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">38,38,40,40,37,39,37,39,66,65</span><span class="dl">"</span><span class="p">;</span>
+  <span class="c1">// bind the keydown event to the Konami function</span>
+  <span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">"</span><span class="s2">keydown</span><span class="dl">"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+    <span class="c1">// push the keycode to the 'keys' array</span>
+    <span class="nx">keys</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">keyCode</span><span class="p">);</span>
+    <span class="c1">// and check to see if the user has entered the Konami code</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">keys</span><span class="p">.</span><span class="nx">toString</span><span class="p">().</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">konami</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// do something such as:</span>
+      <span class="nx">alert</span><span class="p">(</span><span class="dl">'</span><span class="s1">Konami</span><span class="dl">'</span><span class="p">);</span>
+      <span class="c1">// and finally clean up the keys array</span>
+      <span class="nx">keys</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="p">};</span>
+  <span class="p">},</span> <span class="kc">true</span><span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>The "38,38,40,40,37..." are keypress IDs, so you would change this portion if you wanted a different cheat code.</p>
+<p>There's even a WordPress plugin for Konami codes!</p>
+<p>Hope this was helpful, and enjoy the easter egg hunt!</p>
+:ET

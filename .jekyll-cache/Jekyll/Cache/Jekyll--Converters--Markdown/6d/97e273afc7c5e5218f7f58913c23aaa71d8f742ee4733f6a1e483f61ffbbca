@@ -1,0 +1,42 @@
+I"�<p class="notice--warning"><strong>Be advised</strong> This post is quite old (04 Nov 2012) and any code may be out of date. Proceed with caution.</p>
+
+<p>Recently I have been helping Make a Difference Wisconsin, a local non-profit, with their Wordpress website. Without going into details as to why,  I needed to create a simple 'page of posts' for menu hierarchy reasons. It needed to be a page, but I wanted it to display all of the posts from a particular category. Google took me to many solutions, including the <a href="http://codex.wordpress.org/Pages#A_Page_of_Posts" target="_blank">Wordpress Codex</a>, but none of them worked. Some used out of date or deprecated query functions and some didn't work with the custom theme that was already in place. This should have been a very easy task, but took me several  days to pin down my solution.</p>
+<p>So, if you want to create a simple page-of-posts that should work in any theme (with some minor tweaking, of course), feel free to use this code:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+<span class="cm">/*
+Template Name: pageofposts
+*/</span>
+<span class="cm">/*
+Author: Alex Glover
+Date: 4-Nov-2012
+*/</span>
+<span class="cp">?&gt;</span>
+<span class="cp">&lt;?php</span> <span class="nf">get_header</span><span class="p">();</span> <span class="cp">?&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"content-area"</span><span class="nt">&gt;</span>
+<span class="cp">&lt;?php</span>
+<span class="k">global</span> <span class="nv">$post</span><span class="p">;</span>
+<span class="nv">$args</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span> <span class="s1">'numberposts'</span> <span class="o">=&gt;</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">'category'</span> <span class="o">=&gt;</span> <span class="mi">47</span> <span class="p">);</span><span class="c1">//CHANGE THESE VALUES AS NEEDED</span>
+<span class="nv">$myposts</span> <span class="o">=</span> <span class="nf">get_posts</span><span class="p">(</span> <span class="nv">$args</span> <span class="p">);</span>
+<span class="k">foreach</span><span class="p">(</span> <span class="nv">$myposts</span> <span class="k">as</span> <span class="nv">$post</span> <span class="p">)</span> <span class="o">:</span> <span class="nf">setup_postdata</span><span class="p">(</span><span class="nv">$post</span><span class="p">);</span> <span class="cp">?&gt;</span>
+<span class="nt">&lt;h2&gt;&lt;a</span> <span class="na">href=</span><span class="s">"</span><span class="cp">&lt;?php</span> <span class="nf">the_permalink</span><span class="p">();</span> <span class="cp">?&gt;</span><span class="s">"</span><span class="nt">&gt;</span><span class="cp">&lt;?php</span> <span class="nf">the_title</span><span class="p">();</span> <span class="cp">?&gt;</span><span class="nt">&lt;/a&gt;&lt;/h2&gt;&lt;br</span> <span class="nt">/&gt;</span>
+<span class="cp">&lt;?php</span> <span class="k">if</span> <span class="p">(</span> <span class="nf">has_post_thumbnail</span><span class="p">())</span> <span class="o">:</span> <span class="cp">?&gt;</span>
+<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"</span><span class="cp">&lt;?php</span> <span class="nf">the_permalink</span><span class="p">();</span> <span class="cp">?&gt;</span><span class="s">"</span> <span class="na">title=</span><span class="s">"</span><span class="cp">&lt;?php</span> <span class="nf">the_title_attribute</span><span class="p">();</span> <span class="cp">?&gt;</span><span class="s"> "</span> <span class="na">style=</span><span class="s">"float:left; position: relative; margin: 0px 20px 0px 0px;"</span><span class="nt">&gt;</span>
+<span class="cp">&lt;?php</span> <span class="nf">the_post_thumbnail</span><span class="p">(</span><span class="s1">'thumbnail'</span><span class="p">);</span> <span class="cp">?&gt;</span>
+<span class="nt">&lt;/a&gt;&lt;p</span> <span class="na">style=</span><span class="s">"width:450px; float:left; position: relative;"</span><span class="nt">&gt;</span>
+<span class="cp">&lt;?php</span> <span class="nf">the_excerpt</span><span class="p">();</span> <span class="cp">?&gt;</span>
+<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;br</span> <span class="nt">/&gt;&lt;br</span> <span class="nt">/&gt;&lt;br</span> <span class="nt">/&gt;</span>
+<span class="cp">&lt;?php</span> <span class="k">endif</span><span class="p">;</span> <span class="cp">?&gt;</span>
+<span class="cp">&lt;?php</span> <span class="k">endforeach</span><span class="p">;</span> <span class="nf">wp_reset_postdata</span><span class="p">();</span> <span class="cp">?&gt;</span>
+<span class="nt">&lt;div&gt;&lt;/div&gt;</span>
+
+<span class="nt">&lt;/div&gt;</span> <span class="c">&lt;!-- #content-area --&gt;</span>
+
+<span class="cp">&lt;?php</span> <span class="nf">get_sidebar</span><span class="p">();</span> <span class="cp">?&gt;</span>
+<span class="cp">&lt;?php</span> <span class="nf">get_footer</span><span class="p">();</span> <span class="cp">?&gt;</span>
+</code></pre></div></div>
+
+<p>Here's a quick preview of what the 'page of posts' code looks like, but obviously aspects of this will be very different based on the theme that you are using.</p>
+<p><a href="https://www.alexdglover.com/assets/page_of_posts_screenshot.png"><img class="aligncenter size-full wp-image-152" title="page_of_posts_screenshot" alt="" src="/assets/page_of_posts_screenshot.png" width="595" height="477" /></a></p>
+:ET

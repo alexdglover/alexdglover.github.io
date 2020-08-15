@@ -1,0 +1,100 @@
+I"c4<p>This project is more of a warm-up than a full-blown project. I wanted to get a feel for the basic workings of an accelerometer in preparation for a larger undertaking (no spoilers!). I borrowed this project idea from a forum about Arduino and accelerometers but can't remember which forum, so I can't credit back to the original poster - sorry about that.</p>
+<p>Before we get to the how, let's take a look at the what. Basically we have an accelerometer and 5 LEDs mounted on a breadboard. Four of the LEDs are mounted to correspond with the X and Y accelerometer axes and one LED is in the middle.   When the accelerometer is level, only the middle LED is illuminated. If you tilt the accelerometer to the side, the LED on that side is illuminated.</p>
+
+<!-- Courtesy of embedresponsively.com //-->
+<div class="responsive-video-container">
+
+  <iframe src="http://player.vimeo.com/video/57800076" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+
+</div>
+
+<p><!--more--></p>
+<p>Remember the accelerometer measures force, not tilt - we can demonstrate this by quickly moving the accelerometer to one side, creating lateral force. The LED on the opposite side relative to the direction we move the board will illuminate - that is, if we move the board to the left, the LED on the right will illuminate.</p>
+
+<!-- Courtesy of embedresponsively.com //-->
+<div class="responsive-video-container">
+
+  <iframe src="http://player.vimeo.com/video/57800077" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+
+</div>
+
+<p>Let's move on to the how. Here are the parts I used:</p>
+<ul>
+<li><a href="http://www.amazon.com/gp/product/B0066XLWDE/ref=as_li_ss_tl?ie=UTF8&amp;tag=alexdgloverwo-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B0066XLWDE">Virtuabotix MMA7361 Three Axis Accelerometer Module</a> - $10</li>
+<li><a href="http://www.amazon.com/gp/product/B006H06TVG/ref=as_li_ss_tl?ie=UTF8&amp;tag=alexdgloverwo-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B006H06TVG">Arduino Uno R3</a> - $26</li>
+<li><a href="http://www.amazon.com/gp/product/B004RXKWDQ/ref=as_li_ss_tl?ie=UTF8&amp;tag=alexdgloverwo-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B004RXKWDQ">400-point Breadboard with Jumper Wires</a> - $9</li>
+<li><a href="http://www.amazon.com/gp/product/B004JO2PVA/ref=as_li_ss_tl?ie=UTF8&amp;tag=alexdgloverwo-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=B004JO2PVA">5mm LEDs with Resistors (5 Colors, Pack of 25)</a> - $7</li>
+</ul>
+<p>Total project cost of $52, plus you'll have some leftover jumper wires and LEDs.</p>
+<p>Since this is just a simple primer, I won't go into great detail. Basically we need to wire up the accelerometer as outlined in the Arduino sketch and we need to wire up each LED to an output pin and ground. If you need help with the wiring, here's a rough diagram. Note - Fritzing didn't include a piece that was identical to my accelerometer, so I used two 5 pin components - they represent one piece. Also, the wire colors don't have any logical meaning, they match my real-world build.</p>
+<p><a href="https://www.alexdglover.com/assets/accelerometer_primer.png"><img class="aligncenter size-full wp-image-350" alt="Accelerometer_Primer" src="/assets/accelerometer_primer.png" width="595" height="562" /></a></p>
+<p>Here's what it looks like up close.</p>
+<p><a href="https://www.alexdglover.com/assets/img_2740.jpg"><img class="aligncenter size-full wp-image-351" alt="alexdglover_accelerometer_primer_1" src="/assets/img_2740.jpg" width="595" height="446" /></a></p>
+<p>Here are a couple more angles of the wiring:</p>
+<p><a href="https://www.alexdglover.com/assets/img_2737.jpg"><img class="aligncenter size-full wp-image-352" alt="alexdglover_accelerometer_primer_2" src="/assets/img_2737.jpg" width="595" height="446" /></a></p>
+<p><a href="https://www.alexdglover.com/assets/img_2741.jpg"><img class="aligncenter size-full wp-image-353" alt="alexdglover_accelerometer_primer_3" src="/assets/img_2741.jpg" width="595" height="446" /></a></p>
+<p>As far as the programming goes, I started with the example on <a href="https://www.virtuabotix.com/reference/index.php?title=Accelerometer_Sensor_Library" target="_blank">this page of  the Virtuabotix wiki</a>. Here's the my finished sktech:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/*####################################################################
+accelerometerPrimer
+Alex Glover
+January 2013
+Based on autoCalibration.ino, provided by virtuabotix
+#######################################################################*/</span>
+<span class="cp">#include "Accelerometer.h"
+</span><span class="n">Accelerometer</span> <span class="n">myAccelerometer</span> <span class="o">=</span> <span class="n">Accelerometer</span><span class="p">();</span>
+<span class="kt">int</span> <span class="n">yPosPin</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">yNegPin</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">xPosPin</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">xNegPin</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">zPin</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
+<span class="kt">void</span> <span class="nf">setup</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
+  <span class="c1">//Connect up the following pins and your power rail</span>
+  <span class="c1">// SL GS 0G X Y Z</span>
+  <span class="n">myAccelerometer</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">A0</span><span class="p">,</span> <span class="n">A1</span><span class="p">,</span> <span class="n">A2</span><span class="p">);</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">yPosPin</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">yNegPin</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">xPosPin</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">xNegPin</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">zPin</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
+  <span class="c1">//calibration performed below</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">"Please place the Accelerometer on a flatnLevel surface"</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">2000</span><span class="p">);</span><span class="c1">//Give user 2 seconds to comply</span>
+  <span class="n">myAccelerometer</span><span class="p">.</span><span class="n">calibrate</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="nf">loop</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span><span class="c1">//delay for readability</span>
+  <span class="n">myAccelerometer</span><span class="p">.</span><span class="n">read</span><span class="p">();</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">myAccelerometer</span><span class="p">.</span><span class="n">_Zgs</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">9</span><span class="p">){</span> <span class="n">digitalWrite</span><span class="p">(</span><span class="n">zPin</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span> <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">myAccelerometer</span><span class="p">.</span><span class="n">_Zgs</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">9</span><span class="p">){</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">zPin</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">myAccelerometer</span><span class="p">.</span><span class="n">_Xgs</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">){</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">xPosPin</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">myAccelerometer</span><span class="p">.</span><span class="n">_Xgs</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">){</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">xPosPin</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">myAccelerometer</span><span class="p">.</span><span class="n">_Xgs</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">){</span> <span class="n">digitalWrite</span><span class="p">(</span><span class="n">xNegPin</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span> <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">myAccelerometer</span><span class="p">.</span><span class="n">_Xgs</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">){</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">xNegPin</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">myAccelerometer</span><span class="p">.</span><span class="n">_Ygs</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">){</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">yPosPin</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">myAccelerometer</span><span class="p">.</span><span class="n">_Ygs</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">){</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">yPosPin</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">myAccelerometer</span><span class="p">.</span><span class="n">_Ygs</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">){</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">yNegPin</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">myAccelerometer</span><span class="p">.</span><span class="n">_Ygs</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">){</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">yNegPin</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>You can adjust the values to increase/decrease sensitivity. Hope you enjoyed the post, and I hope this helps you jumpstart your project with your accelerometer!
+</p>
+:ET

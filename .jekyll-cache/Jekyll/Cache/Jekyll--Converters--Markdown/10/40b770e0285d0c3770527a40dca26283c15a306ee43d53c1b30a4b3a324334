@@ -1,0 +1,74 @@
+I"z$<p>I'm getting ready to start an Arduino home automation project, so I started looking at ways to interface with an Arduino across the internet. That way I'll be able to control all of the lights, locks, etc. anywhere I have internet access.</p>
+<p>Now, the obvious answer was to buy an Ethernet shield, but I already run a home web server so that seemed unnecessary. I saw a few solutions using Processing or Python scripts, but that seemed unnecessarily complicated. It took a fair amount of digging and brainstorming, but I've found an ultra-easy, ultra-flexible, and ultra-fast solution. <strong>Ultra</strong>.</p>
+<p>There are a few major assumptions here.</p>
+<ol>
+<li>You have a computer running a web server that is accessible from the open internet, using a static IP address or a Dynamic DNS name. Your computer is either directly connected to your ISP and using a public IP address or your router is set up for port forwarding. If you don't have this set up yet, just Google it - there are a lot of tutorials that explain how to set up a home web server.</li>
+<li>Your home web server has PHP. If not, this will still work, you'll just have to re-write it in Java or whatever server-side language you're using.</li>
+<li><span style="line-height: 13px;">The Arduino will be plugged into the web server via USB.</span></li>
+</ol>
+<p>Here's the basic concept: the Arduino can't read files from the server via the USB serial connection, so the server will have to "push" the message. The server side code (PHP, Java, whatever you choose) cannot talk directly to the serial COM port, so we need a local script on the web server that can talk to the serial (USB) port. Last, the Arduino sketch has to be written so it can "catch" and process the message.</p>
+<p>In this example, we'll just create a barebones web page for controls that will turn an LED on and off via the Arduino. Let's start with the sketch. The sketch is just listening on the serial connection for a 1 or 0. If it receives a 1 it will turn the LED on, if it receives a 0 it will turn the LED off.</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/*
+Alex Glover
+February 2013
+*/</span>
+
+<span class="kt">void</span> <span class="nf">setup</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
+  <span class="c1">//set the LED pin to OUTPUT</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">loop</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">//wait until the serial connection is open</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">Serial</span><span class="p">.</span><span class="n">available</span><span class="p">()</span> <span class="o">==</span><span class="mi">0</span><span class="p">);</span>
+
+  <span class="c1">//read from the serial connection; the - '0' is to cast the values as the int and not the ASCII code</span>
+  <span class="kt">int</span> <span class="n">val</span> <span class="o">=</span> <span class="n">Serial</span><span class="p">.</span><span class="n">read</span><span class="p">()</span> <span class="o">-</span> <span class="sc">'0'</span><span class="p">;</span>
+
+  <span class="c1">//print to the console for testing</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">val</span><span class="p">);</span>
+
+  <span class="c1">//if we've recieved a '1', turn on the LED and print a message</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">val</span><span class="o">==</span><span class="mi">1</span><span class="p">){</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">"Received a 1"</span><span class="p">);</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="c1">//if we've recieved a '0', turn off the LED and print a message</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">val</span><span class="o">==</span><span class="mi">0</span><span class="p">){</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">"Received a 0"</span><span class="p">);</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Pretty straightforward, right? OK, now we need two scripts, one to send a '1' and one to send a '0'. In Windows, simply create a text file (call it whatever you want), and give it a .bat extension. In my setup, my files are called serial_out_0.bat and serial_out_1.bat. Each script has only one line of code.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ECHO 0 &gt; COM3:
+</code></pre></div></div>
+<p>and</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ECHO 1 &gt; COM3:
+</code></pre></div></div>
+<p>Note that you might have to change the COM designation. You can check which COM your Arduino is connected to by looking in the Arduino IDE under Tools --&gt; Serial Port. If you're not using Windows, you should be able to do this pretty easily in a shell script. At this point you can test to see if the batch scripts will turn the LED off and on. Also ensure that the web server will be able to execute these scripts (don't assign user-specific privileges or save them in protected directories). If you're unsure, just put these scripts in the same web root directory where you'll host your web page.</p>
+<p>Easy right? Alright, the last piece is the web form. All you need are buttons within a form that will then execute the batch scripts we wrote earlier. Easiest solution is to use 'submit' buttons and then check for which post variables are set. The rest of the code is very straightforward so I'll let it speak for itself.</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;head&gt;</span>
+<span class="cp">&lt;?php</span>
+<span class="k">if</span><span class="p">(</span><span class="k">isset</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">'submitOn'</span><span class="p">]))</span> <span class="p">{</span>
+  <span class="nb">exec</span><span class="p">(</span><span class="err">‘</span><span class="nc">C</span><span class="o">:</span><span class="err">\</span><span class="n">xampp\htdocs\Home_Automation\serial_out_1</span><span class="mf">.</span><span class="n">bat</span><span class="err">’</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="k">isset</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">'submitOff'</span><span class="p">]))</span> <span class="p">{</span>
+  <span class="nb">exec</span><span class="p">(</span><span class="err">‘</span><span class="nc">C</span><span class="o">:</span><span class="err">\</span><span class="n">xampp\htdocs\Home_Automation\serial_out_0</span><span class="mf">.</span><span class="n">bat</span><span class="err">’</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+  <span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">”control.php”</span> <span class="na">method=</span><span class="s">”post”</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">”submit”</span> <span class="na">name=</span><span class="s">”submitOn”</span> <span class="na">value=</span><span class="s">”Submit</span> <span class="na">On</span><span class="err">”</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">”submit”</span> <span class="na">name=</span><span class="s">”submitOff”</span> <span class="na">value=</span><span class="s">”Submit</span> <span class="na">Off</span><span class="err">”</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;/form&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<p>You'll have to change the paths to correspond with the location of your scripts, but otherwise that's it. Add some CSS if you want to add some polish to your controls. This is a very simple example, but you should be able to adapt this code to any project.</p>
+:ET

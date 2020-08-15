@@ -1,0 +1,9 @@
+I"u<p>This one’s a short read, as most of the code and the concept was adopted from
+the <a href="http://zurb.com/playground/jquery-raptorize">jQuery Raptorize plugin</a>.
+Basically, I was admiring the Raptorize plug-in and thought how funny it would be
+to have Dennis Nedry pop up and deliver his famous line, “Ah ah ah, you didn’t
+say the magic word!” whenever you had a failed login. Thanks to the jQuery Raptorize
+plugin, the majority of the work was done. I just needed a picture of Dennis Nedry,
+an mp3 file for the audio, and tweak the code slightly. Then I put together a
+fake login page to demo the whole thing.</p>
+:ET

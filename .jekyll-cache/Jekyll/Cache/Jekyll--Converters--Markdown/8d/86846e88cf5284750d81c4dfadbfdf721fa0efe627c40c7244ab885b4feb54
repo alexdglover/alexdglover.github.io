@@ -1,0 +1,60 @@
+I"�<p>In my new job at <a href="https://www.zendesk.com/">Zendesk</a>, I deal with a lot of Ruby
+projects that leverage <a href="http://bundler.io/">bundler</a> for dependency management.
+Specifically, right now I’m working with
+<a href="http://www.sparkleformation.io/">SparkleFormation</a>,
+<a href="https://github.com/envato/stack_master">stack_master</a>, and
+<a href="https://github.com/99designs/aws-vault">aws-vault</a>. With that toolset, each
+command starts with a staggering <strong><em>43 static characters</em></strong> that don’t change
+between commands, like this:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws-vault <span class="nb">exec</span> &lt;AWS profile&gt; <span class="nt">--</span> bundle <span class="nb">exec </span>stack_master apply <span class="se">\</span>
+&lt;region or <span class="nb">alias</span><span class="o">&gt;</span> &lt;stack name&gt; <span class="nt">-c</span> &lt;stack_master config file&gt;
+</code></pre></div></div>
+
+<p>That’s way too long to type out every time I need to act on a stack. Initially I
+tried to solve this by setting an alias in my BASH profile to abstract the
+stack_master command:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">alias </span><span class="nv">sm</span><span class="o">=</span>”bundle <span class="nb">exec </span>stack_master”
+</code></pre></div></div>
+
+<p>One problem with this approach - if you use a command or binary that spawns a
+new shell (like aws-vault does), your bash_profile is ignored and your aliases
+don’t work, defeating the entire purpose.</p>
+
+<p>Fortunately this is an easy problem to solve. Because the default PATH is the
+same for all shells, we can recreate our alias as a script and place it in
+<code class="language-plaintext highlighter-rouge">/usr/local/bin</code> (or any other directory in the default PATH). We can also
+leverage BASH’s $@ variable, which captures all positional arguments that come
+after a script is invoked.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+bundle <span class="nb">exec </span>stack_master “<span class="nv">$@</span>”
+</code></pre></div></div>
+
+<p>Once I created <code class="language-plaintext highlighter-rouge">/usr/local/bin/sm</code> and populated it with those lines, executing
+<code class="language-plaintext highlighter-rouge">sm</code> behaved exactly as the original alias, but was also compatible with
+aws-vault.</p>
+
+<p>For those of you using the same toolset of aws-vault, stack_master, and
+SparkleFormation, I further condensed my command. Note that this only works if
+your aws-vault profile, region alias, and stack_master config files share the
+same name.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+<span class="c"># Example command for reference</span>
+<span class="c"># aws-vault exec dev -- bundle exec stack_master apply dev stack_name -c dev.yml</span>
+
+aws-vault <span class="nb">exec</span> <span class="nv">$1</span> <span class="nt">--</span> bundle <span class="nb">exec </span>stack_master <span class="nv">$2</span> <span class="nv">$1</span> <span class="nv">$3</span> <span class="nt">-c</span> <span class="nv">$1</span>.yml
+</code></pre></div></div>
+
+<p>I put the above code in <code class="language-plaintext highlighter-rouge">/usr/local/bin/zsm</code>, so now my stack commands
+are clean and short:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>zsm dev apply my_stack
+</code></pre></div></div>
+
+<p>As always, I hope you found this useful.</p>
+:ET

@@ -1,0 +1,877 @@
+I"��<p class="notice--warning"><strong>Dec 28 2017 Update</strong> OpenShift deprecated their original offering, so the API backend is completely dead. All functionality in the single page app (besides the Auth0 integration) is now broken.</p>
+
+<p>About a year ago, I had a use case for a simple redirect. I just needed to
+redirect developers from an old Jenkins DNS record (that pointed to an instance
+that was destroyed) to a new DNS record (pointing to the new, running Jenkins
+instance). Now this is a trivial task if you want to run NGINX or Apache, but
+becomes more challenging if you want to avoid that overhead. I tried hosting a
+simple JavaScript redirect using S3, but the bucket obviously didn’t match my
+DNS name, so that didn’t work. Route53 doesn’t support HTTP redirects. I was at
+a loss - how could something so trivial require a whole web server to
+accomplish?</p>
+
+<p>I started looking into 3rd party services that could do this, mostly out of
+curiosity. I stumbled across <a href="https://www.301redirect.it/">301redirect.it</a> and
+<a href="https://www.easyredir.com/">EasyRedir</a>. 301redirect.it is free, but
+easyredir.com charges between $10 and <em>$80 per month</em>. I’m sure their service
+is awesome, but that was a big enough price tag that I started thinking it
+might be worthwhile to try to compete in the same market. Especially since DNS
+redirection is so easy.</p>
+
+<p>This is probably the most feature complete software project I’ve ever done.
+It’s a “full SaaS platform,” meaning it has proper authentication (via
+ <a href="https://auth0.com/">Auth0</a>), billing capabilities (via <a href="https://stripe.com/">Stripe</a>)
+ , and is totally self-service for customers to consume. It should
+be a turnkey cash cow.</p>
+
+<p>But like most of my projects, I did effectively zero promotion or sales work, so of
+course it has zero customers (not just zero paying customers - zero customers
+ period). Before I sunset the project forever, I wanted to do this blog post
+ and put the site up for sale on Flippa.</p>
+
+<p>Before we breakdown the architecture and application, check out the walkthrough
+video or check out the site for yourself:</p>
+
+<p class="text-center"><a href="https://www.dnsreroute.xyz/" class="btn btn--large btn--info">DNSReRoute</a></p>
+
+<!-- Courtesy of embedresponsively.com //-->
+<div class="responsive-video-container">
+
+  <iframe src="https://www.youtube.com/embed/Y1rBVcrL3_E" frameborder="0" allowfullscreen=""></iframe>
+
+</div>
+
+<h2 id="architecture">Architecture</h2>
+<p>This architecture is not ideal, so before you “Principal Architect” types try to
+mouth off in the comments, know that I’m quite aware of its design flaws.</p>
+
+<p>At a high level, DNSReRoute is comprised of four components:</p>
+<ul>
+  <li>RESTful API backend built on Flask running on <a href="https://www.openshift.com/">OpenShift</a></li>
+  <li>“Dumb” redirect servers running Flask, in an autoscaling group, behind an ELB
+in AWS</li>
+  <li>A MongoDb instance running on <a href="https://mlab.com/">mLab</a> with a public
+endpoint. Both the RESTful API backend and the “dumb” redirect servers read
+from this DB.</li>
+  <li>A static, single page app (SPA) using jQuery and hosted on GitHub Pages.</li>
+</ul>
+
+<p>In case that doesn’t make any sense, here’s a sexy diagram to help you
+understand:</p>
+
+<p><a href="https://www.alexdglover.com/assets/img/DNSReRoute_Architecture.png"><img class="text-center" src="https://www.alexdglover.com/assets/img/DNSReRoute_Architecture.png" alt="DNSReRoute architecture" /></a></p>
+
+<p>Let’s do an example walkthrough. Let’s pretend we are “BlackLanternStudio” and
+we sell our product on Etsy, at <code class="language-plaintext highlighter-rouge">https://www.etsy.com/shop/BlackLanternStudio</code>.
+We want to capture more traffic and retain more brand identity, so we want
+<code class="language-plaintext highlighter-rouge">www.BlackLanternStudio.com</code> to redirect to <code class="language-plaintext highlighter-rouge">https://www.etsy.com/shop/BlackLanternStudio</code>.
+To do this, we would browse to <a href="https://www.dnsreroute.xyz/">www.dnsreroute.xyz</a>,
+which takes you to the static front-end site. From here we would create an
+account and then create a “route” to handle our redirect, including what
+incoming DNS names to expect (inbound routes), and where to redirect that
+traffic (outbound routes). All of the actions in the UI are making API calls to
+the Flask backend, which then writes that data to the database. Finally, we
+would log into our DNS system and create a CNAME record, pointing <code class="language-plaintext highlighter-rouge">www.BlackLanternStudio.com</code>
+to <code class="language-plaintext highlighter-rouge">service.dnsreroute.xyz</code>. Now when our customers browse to
+<code class="language-plaintext highlighter-rouge">www.BlackLanternStudio.com</code>, they are actually being sent to DNSReRoute’s
+redirect hosts. The redirect hosts are running some fairly simple Flask code,
+basically inspecting the <code class="language-plaintext highlighter-rouge">Host</code> header to get the inbound DNS name, looking up
+the “route” associated with that inbound DNS name in the database, and
+redirecting the user’s browser to the outbound DNS name.</p>
+
+<p>Originally I was going to host everything on OpenShift to keep things simple,
+but using custom and un-predictable customer CNAMEs wouldn’t work. In addition,
+moving the actual redirect work to a separate stack allows the two components
+to scale independently and prevents bad code/failed deploys to the API layer
+(where more complex logic resides, more likely to break) from affecting the
+ redirect layer (less complex, less likely to break).</p>
+
+<h2 id="third-party-services">Third Party services</h2>
+
+<h3 id="auth0"><a href="https://auth0.com/">Auth0</a></h3>
+<p>Setting up authentication with Auth0 was a little tricky at first, but it has
+been bulletproof ever since. Auth0 provides a
+<a href="https://auth0.com/docs/quickstart/backend/python/01-authorization">clean Flask example</a>
+that is easy to integrate with your Flask implementation. If I’m being honest,
+I think I re-used their authentication wrapper line for line. Most of the time
+I spent on Auth0 setup didn’t involve any code, but rather all of the ancillary
+pieces like SSL certificates, setting up the callback URI, registering domains for
+Cross Origin Requests (CORS) in Auth0’s web UI, etc.</p>
+
+<h3 id="stripe"><a href="https://stripe.com/">Stripe</a></h3>
+<p>Stripe makes handling subscriptions and one-time payments in your web application
+fun. They abstract all of the difficult parts of payment processing and record
+keeping, you just have to write your app to consume their APIs for creating new
+customers and looking up existing subscriptions. I really like Stripe because
+their ‘sandbox’ or development support is significantly easier than PayPal. With
+Stripe, you simply change which API client keys you are using, and you can use any
+fake credit card number to test your app. With PayPal, you have to set up a sandbox,
+you have to set up sandbox payer/payee accounts, and have to use certain credit
+card numbers.</p>
+
+<p>TL;DR stripe is awesome for payment processing.</p>
+
+<h2 id="database-design">Database design</h2>
+<p>When I first started this project, it had a much smaller scope. Based solely
+on storing route information, I decided a NoSQL database like MongoDB would be
+a perfect fit. Unfortunately, as I added features like user management,
+organizations, and subscriptions, I had to build relations between my
+tables/collections. So I’ve effectively created a relational DB on top of a
+non-relational DB, which is a little embarrassing to say the least.</p>
+
+<p>DNSReRoute uses four collections (like tables, if you’re not familiar):</p>
+<ul>
+  <li>orgs - comprised of an ID, orgName, and subscription</li>
+  <li>users - comprised of an ID, userName (used for display purposes), userEmail
+(used for auth purposes), and orgId as a “foreign key”</li>
+  <li>routes - comprised of an ID, incomingRoute, outgoingRoute, type (301 vs 302
+redirect), and orgId as a “foreign key”</li>
+  <li>subscriptions - comprised of an ID, subscriptionName (matches the subscription
+name in Stripe), title (for display purposes), and some boilerplate HTML
+describing the subscription, so it can be consumed consistently in the UI</li>
+</ul>
+
+<p>For the handful of people out there who can read an ER diagram and appreciate
+them, here it is:</p>
+
+<p><a href="https://www.alexdglover.com/assets/img/DNSReRoute_ER.png"><img class="text-center" src="https://www.alexdglover.com/assets/img/DNSReRoute_ER.png" alt="DNSReRoute ER diagram" /></a></p>
+
+<h2 id="static-spa-front-end">Static SPA Front-end</h2>
+<p>The front-end is made with DashGum, a pre-made Dashboard template built using
+bootstrap that I found on <a href="https://colorlib.com/wp/free-bootstrap-admin-dashboard-templates/">colorlib</a>.
+All of the logic is written in straight JavaScript and jQuery, nothing fancy
+like Angular or React. A true front-end developer would probably be appalled
+with my code, but it works and I was able to knock out a prototype very quickly.
+ The page itself is actually hosted on GitHub pages in a public repo, so the
+all of the code is available for you to peruse if you’re interested:</p>
+
+<p class="text-center"><a href="https://github.com/alexdglover/dnsreroute-site/tree/gh-pages" class="btn btn--info btn--large">Static SPA Repo</a></p>
+
+<h2 id="api-backend">API Backend</h2>
+<p>The API backend is a Flask app running on <a href="https://www.openshift.com/">OpenShift</a>.
+I chose OpenShift for this project as OpenShift will allow you to keep a certain
+number of free apps running 24/7, so long as you have a credit card on file. This
+is in contrast to Heroku (which I also love) that puts your “dynos” to sleep when
+they become inactive.</p>
+
+<p>The API backend can be hit at <a href="https://dnsrerouteprod-dnsreroute.rhcloud.com">https://dnsrerouteprod-dnsreroute.rhcloud.com</a>.
+You can browse through the <a href="https://www.dnsreroute.xyz/swagger/index.html">Swagger API doc</a>
+to get a feel for the routes. Note that you won’t be able to send any API calls
+via the Swagger doc unless the SAML Bearer token set. If you open the Swagger
+doc from the DNSReRoute dashboard (by clicking on the “API Playground” link in the left sidebar), it will set your SAML Bearer token for you.</p>
+
+<p>As for the code, all of the relevant logic is contained in <code class="language-plaintext highlighter-rouge">flaskapp.py</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">urlparse</span> <span class="kn">import</span> <span class="n">urlparse</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">flash</span><span class="p">,</span> <span class="n">url_for</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> \
+     <span class="n">render_template</span><span class="p">,</span> <span class="n">abort</span><span class="p">,</span> <span class="n">send_from_directory</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">_request_ctx_stack</span>
+<span class="kn">import</span> <span class="nn">jwt</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+<span class="kn">from</span> <span class="nn">werkzeug.local</span> <span class="kn">import</span> <span class="n">LocalProxy</span>
+<span class="kn">from</span> <span class="nn">flask.ext.cors</span> <span class="kn">import</span> <span class="n">CORS</span><span class="p">,</span> <span class="n">cross_origin</span>
+<span class="kn">import</span> <span class="nn">pymongo</span>
+<span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">MongoClient</span><span class="p">,</span> <span class="n">IndexModel</span><span class="p">,</span> <span class="n">ASCENDING</span><span class="p">,</span> <span class="n">DESCENDING</span><span class="p">,</span> <span class="n">errors</span>
+<span class="kn">from</span> <span class="nn">bson.json_util</span> <span class="kn">import</span> <span class="n">dumps</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">bson.objectid</span> <span class="kn">import</span> <span class="n">ObjectId</span>
+<span class="kn">import</span> <span class="nn">stripe</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span>
+<span class="n">client_id</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">[</span><span class="s">'AUTH0_CLIENT_ID'</span><span class="p">]</span>
+<span class="n">client_secret</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">[</span><span class="s">"AUTH0_CLIENT_SECRET"</span><span class="p">]</span>
+<span class="n">stripe</span><span class="p">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">[</span><span class="s">"STRIPE_API_KEY"</span><span class="p">]</span>
+
+<span class="n">requestorEmail</span> <span class="o">=</span> <span class="s">""</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="n">app</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">from_pyfile</span><span class="p">(</span><span class="s">'flaskapp.cfg'</span><span class="p">)</span>
+<span class="n">CORS</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+
+<span class="c1"># Format error response and append status code.
+</span><span class="k">def</span> <span class="nf">handle_error</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">status_code</span><span class="p">):</span>
+  <span class="n">resp</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+  <span class="n">resp</span><span class="p">.</span><span class="n">status_code</span> <span class="o">=</span> <span class="n">status_code</span>
+  <span class="k">return</span> <span class="n">resp</span>
+
+<span class="k">def</span> <span class="nf">requires_auth</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+  <span class="o">@</span><span class="n">wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">decorated</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">auth</span> <span class="o">=</span> <span class="n">request</span><span class="p">.</span><span class="n">headers</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'Authorization'</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">auth</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">handle_error</span><span class="p">({</span><span class="s">'code'</span><span class="p">:</span> <span class="s">'authorization_header_missing'</span><span class="p">,</span> <span class="s">'description'</span><span class="p">:</span> <span class="s">'Authorization header is expected'</span><span class="p">},</span> <span class="mi">401</span><span class="p">)</span>
+
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">auth</span><span class="p">.</span><span class="n">split</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s">'bearer'</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">handle_error</span><span class="p">({</span><span class="s">'code'</span><span class="p">:</span> <span class="s">'invalid_header'</span><span class="p">,</span> <span class="s">'description'</span><span class="p">:</span> <span class="s">'Authorization header must start with Bearer'</span><span class="p">},</span> <span class="mi">401</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">handle_error</span><span class="p">({</span><span class="s">'code'</span><span class="p">:</span> <span class="s">'invalid_header'</span><span class="p">,</span> <span class="s">'description'</span><span class="p">:</span> <span class="s">'Token not found'</span><span class="p">},</span> <span class="mi">401</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">handle_error</span><span class="p">({</span><span class="s">'code'</span><span class="p">:</span> <span class="s">'invalid_header'</span><span class="p">,</span> <span class="s">'description'</span><span class="p">:</span> <span class="s">'Authorization header must be Bearer + \s + token'</span><span class="p">},</span> <span class="mi">401</span><span class="p">)</span>
+
+    <span class="c1"># This is the bearer token
+</span>    <span class="n">token</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">jwt</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span>
+            <span class="n">token</span><span class="p">,</span>
+            <span class="n">base64</span><span class="p">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">client_secret</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">"_"</span><span class="p">,</span><span class="s">"/"</span><span class="p">).</span><span class="n">replace</span><span class="p">(</span><span class="s">"-"</span><span class="p">,</span><span class="s">"+"</span><span class="p">)),</span>
+            <span class="n">audience</span><span class="o">=</span><span class="n">client_id</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="n">jwt</span><span class="p">.</span><span class="n">ExpiredSignature</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">handle_error</span><span class="p">({</span><span class="s">'code'</span><span class="p">:</span> <span class="s">'token_expired'</span><span class="p">,</span> <span class="s">'description'</span><span class="p">:</span> <span class="s">'token is expired'</span><span class="p">},</span> <span class="mi">401</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">jwt</span><span class="p">.</span><span class="n">InvalidAudienceError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">handle_error</span><span class="p">({</span><span class="s">'code'</span><span class="p">:</span> <span class="s">'invalid_audience'</span><span class="p">,</span> <span class="s">'description'</span><span class="p">:</span> <span class="s">'incorrect audience, expected: '</span> <span class="o">+</span> <span class="n">client_id</span><span class="p">},</span> <span class="mi">401</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">jwt</span><span class="p">.</span><span class="n">DecodeError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">handle_error</span><span class="p">({</span><span class="s">'code'</span><span class="p">:</span> <span class="s">'token_invalid_signature'</span><span class="p">,</span> <span class="s">'description'</span><span class="p">:</span> <span class="s">'token signature is invalid'</span><span class="p">},</span> <span class="mi">401</span><span class="p">)</span>
+    <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">handle_error</span><span class="p">({</span><span class="s">'code'</span><span class="p">:</span> <span class="s">'invalid_header'</span><span class="p">,</span> <span class="s">'description'</span><span class="p">:</span><span class="s">'Unable to parse authentication token.'</span><span class="p">},</span> <span class="mi">400</span><span class="p">)</span>
+
+    <span class="n">endpoint</span> <span class="o">=</span> <span class="s">"https://alexdglover.auth0.com/tokeninfo"</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s">"Authorization"</span><span class="p">:</span><span class="s">"Bearer "</span> <span class="o">+</span> <span class="n">token</span><span class="p">}</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s">"id_token"</span><span class="p">:</span> <span class="n">token</span><span class="p">}</span>
+    <span class="k">global</span> <span class="n">requestorEmail</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">requestorEmail</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">post</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span><span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">).</span><span class="n">json</span><span class="p">()[</span><span class="s">'email'</span><span class="p">]</span>
+    <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">handle_error</span><span class="p">({</span><span class="s">'code'</span><span class="p">:</span> <span class="s">'failed_user_lookup'</span><span class="p">,</span> <span class="s">'description'</span><span class="p">:</span> <span class="s">'Unable to look up user with that token'</span><span class="p">})</span>
+
+    <span class="n">_request_ctx_stack</span><span class="p">.</span><span class="n">top</span><span class="p">.</span><span class="n">current_user</span> <span class="o">=</span> <span class="n">user</span> <span class="o">=</span> <span class="n">payload</span>
+    <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+  <span class="k">return</span> <span class="n">decorated</span>
+
+<span class="k">def</span> <span class="nf">connect</span><span class="p">():</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">[</span><span class="s">'OPENSHIFT_MONGODB_DB_URL'</span><span class="p">],</span><span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">[</span><span class="s">'OPENSHIFT_MONGODB_DB_PORT'</span><span class="p">]))</span>
+    <span class="n">handle</span> <span class="o">=</span> <span class="n">connection</span><span class="p">[</span><span class="s">"dnsreroute"</span><span class="p">]</span>
+    <span class="n">handle</span><span class="p">.</span><span class="n">authenticate</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">[</span><span class="s">'OPENSHIFT_MONGODB_DB_USERNAME'</span><span class="p">],</span><span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">[</span><span class="s">'OPENSHIFT_MONGODB_DB_PASSWORD'</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">handle</span>
+
+<span class="k">def</span> <span class="nf">initializeDb</span><span class="p">():</span>
+    <span class="n">handle</span><span class="p">.</span><span class="n">routes</span><span class="p">.</span><span class="n">create_index</span><span class="p">(</span> <span class="p">[</span> <span class="p">(</span><span class="s">"incomingRoute"</span><span class="p">,</span> <span class="n">ASCENDING</span><span class="p">)],</span> <span class="n">unique</span><span class="o">=</span><span class="bp">True</span> <span class="p">)</span>
+    <span class="n">handle</span><span class="p">.</span><span class="n">users</span><span class="p">.</span><span class="n">create_index</span><span class="p">(</span> <span class="p">[</span> <span class="p">(</span><span class="s">"userEmail"</span><span class="p">,</span> <span class="n">ASCENDING</span><span class="p">)],</span> <span class="n">unique</span><span class="o">=</span><span class="bp">True</span> <span class="p">)</span>
+
+<span class="n">handle</span> <span class="o">=</span> <span class="n">connect</span><span class="p">()</span>
+
+<span class="n">initializeDb</span><span class="p">()</span>
+
+<span class="c1"># Sets response headers for all requests received. This is needed to allow
+# pre-flight OPTIONS requests to get the information they need to do PUTs
+# and DELETEs
+</span><span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">after_request</span>
+<span class="k">def</span> <span class="nf">after_request</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+  <span class="n">response</span><span class="p">.</span><span class="n">headers</span><span class="p">[</span><span class="s">'Access-Control-Allow-Origin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">request</span><span class="p">.</span><span class="n">headers</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'Origin'</span><span class="p">,</span><span class="s">'*'</span><span class="p">)</span>
+  <span class="n">response</span><span class="p">.</span><span class="n">headers</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="s">'Access-Control-Allow-Headers'</span><span class="p">,</span> <span class="s">'Content-Type,Authorization'</span><span class="p">)</span>
+  <span class="n">response</span><span class="p">.</span><span class="n">headers</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="s">'Access-Control-Allow-Methods'</span><span class="p">,</span> <span class="s">'PUT,POST,OPTIONS,DELETE,GET'</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">response</span>
+
+<span class="c1"># Controllers API
+</span><span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">home</span><span class="p">():</span>
+    <span class="n">host</span> <span class="o">=</span> <span class="n">request</span><span class="p">.</span><span class="n">headers</span><span class="p">[</span><span class="s">'Host'</span><span class="p">]</span>
+    <span class="n">host</span> <span class="o">=</span> <span class="n">host</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">':'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">host</span> <span class="o">!=</span> <span class="s">'service.dnsreroute.xyz'</span><span class="p">:</span>
+        <span class="n">route</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">routes</span><span class="p">.</span><span class="n">find_one</span><span class="p">({</span><span class="s">'incomingRoute'</span><span class="p">:</span> <span class="n">host</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">route</span><span class="p">:</span>
+            <span class="n">outgoingRoute</span> <span class="o">=</span> <span class="n">route</span><span class="p">[</span><span class="s">'outgoingRoute'</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">route</span><span class="p">[</span><span class="s">'type'</span><span class="p">]</span> <span class="o">==</span> <span class="s">"301"</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">outgoingRoute</span><span class="p">,</span> <span class="mi">301</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">route</span><span class="p">[</span><span class="s">'type'</span><span class="p">]</span> <span class="o">==</span> <span class="s">"302"</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">outgoingRoute</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s">'{"message": "Error - not able to determine redirect type"}'</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">'{"message": "Could not find a matching route"}'</span><span class="p">,</span> <span class="mi">404</span>
+
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">return</span> <span class="s">"The Host header is {hostHeader}.This is the unsecured home page"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">hostHeader</span><span class="o">=</span><span class="n">request</span><span class="p">.</span><span class="n">headers</span><span class="p">[</span><span class="s">'Host'</span><span class="p">])</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/ping"</span><span class="p">,</span><span class="n">host</span><span class="o">=</span><span class="s">"*"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">ping</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s">"All good. You don't need to be authenticated to call this"</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/secured/ping"</span><span class="p">)</span>
+<span class="o">@</span><span class="n">requires_auth</span>
+<span class="k">def</span> <span class="nf">securedPing</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s">"All good. You only get this message if you're authenticated"</span>
+
+<span class="c1">###################################
+###   Route URIs
+###################################
+</span>
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/routes/byUserEmail/&lt;userEmail&gt;"</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'GET'</span><span class="p">])</span>
+<span class="o">@</span><span class="n">requires_auth</span>
+<span class="k">def</span> <span class="nf">getRoutesByUserEmail</span><span class="p">(</span><span class="n">userEmail</span><span class="p">):</span>
+    <span class="n">orgId</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">users</span><span class="p">.</span><span class="n">find_one</span><span class="p">({</span><span class="s">"userEmail"</span><span class="p">:</span> <span class="n">userEmail</span><span class="p">})[</span><span class="s">'orgId'</span><span class="p">]</span>
+    <span class="k">print</span> <span class="s">'orgId is {orgId}'</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">orgId</span><span class="o">=</span><span class="n">orgId</span><span class="p">)</span>
+    <span class="n">routes</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">routes</span><span class="p">.</span><span class="n">find</span><span class="p">({</span><span class="s">"orgId"</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="n">orgId</span><span class="p">)})</span>
+    <span class="k">if</span> <span class="n">routes</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">dumps</span><span class="p">(</span><span class="n">routes</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"No routes found with that orgId"</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">message</span><span class="p">),</span> <span class="mi">404</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/routes/byOrg/&lt;orgId&gt;"</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'GET'</span><span class="p">])</span>
+<span class="o">@</span><span class="n">requires_auth</span>
+<span class="k">def</span> <span class="nf">getRoutesByOrgId</span><span class="p">(</span><span class="n">orgId</span><span class="p">):</span>
+    <span class="n">orgId</span> <span class="o">=</span> <span class="n">validateObjectId</span><span class="p">(</span><span class="n">orgId</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">orgId</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Invalid org ID, uanble to convert to ObjectId. Must be a 12-byte input or a 24-character hex string"</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">message</span><span class="p">),</span> <span class="mi">400</span>
+
+    <span class="n">routes</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">routes</span><span class="p">.</span><span class="n">find</span><span class="p">({</span><span class="s">"orgId"</span><span class="p">:</span> <span class="n">orgId</span><span class="p">})</span>
+    <span class="k">if</span> <span class="n">routes</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">dumps</span><span class="p">(</span><span class="n">routes</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"No routes found with that orgId"</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">message</span><span class="p">),</span> <span class="mi">404</span>
+
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/routes"</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'POST'</span><span class="p">])</span>
+<span class="o">@</span><span class="n">requires_auth</span>
+<span class="k">def</span> <span class="nf">addRoute</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">isAuthorized</span><span class="p">(</span><span class="n">requestorEmail</span><span class="p">,</span> <span class="s">'addRoute'</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">handle</span><span class="p">.</span><span class="n">routes</span><span class="p">.</span><span class="n">insert</span><span class="p">({</span><span class="s">"orgId"</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="s">'orgId'</span><span class="p">]),</span> <span class="s">"type"</span><span class="p">:</span> <span class="n">request</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="s">'type'</span><span class="p">],</span>
+                <span class="s">"incomingRoute"</span><span class="p">:</span> <span class="n">request</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="s">'incomingRoute'</span><span class="p">],</span> <span class="s">"outgoingRoute"</span><span class="p">:</span> <span class="n">request</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="s">'outgoingRoute'</span><span class="p">]})</span>
+            <span class="k">return</span> <span class="s">'{"message": "successfully added route"}'</span>
+        <span class="k">except</span> <span class="n">pymongo</span><span class="p">.</span><span class="n">errors</span><span class="p">.</span><span class="n">DuplicateKeyError</span><span class="p">:</span>
+            <span class="n">errorDict</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Failed to add route - that incoming DNS name is already in use"</span><span class="p">}</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">errorDict</span><span class="p">),</span> <span class="mi">400</span>
+        <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">errorDict</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Failed to add route. Error message: {error}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="n">e</span><span class="p">)}</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">errorDict</span><span class="p">),</span> <span class="mi">400</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Not authorized
+</span>        <span class="n">errorDict</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"You are not authorized to add another route!"</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">errorDict</span><span class="p">),</span> <span class="mi">403</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/routes/&lt;incomingRoute&gt;"</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'DELETE'</span><span class="p">])</span>
+<span class="o">@</span><span class="n">requires_auth</span>
+<span class="k">def</span> <span class="nf">deleteRoute</span><span class="p">(</span><span class="n">incomingRoute</span><span class="p">):</span>
+    <span class="c1"># Validate incomingRoute is valid first
+</span>    <span class="n">route</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">routes</span><span class="p">.</span><span class="n">find_one</span><span class="p">({</span><span class="s">"incomingRoute"</span><span class="p">:</span> <span class="n">incomingRoute</span><span class="p">})</span>
+    <span class="k">if</span> <span class="n">route</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">isAuthorized</span><span class="p">(</span><span class="n">requestorEmail</span><span class="p">,</span> <span class="s">'deleteRoute'</span><span class="p">,</span> <span class="n">incomingRoute</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">routes</span><span class="p">.</span><span class="n">remove</span><span class="p">({</span><span class="s">"incomingRoute"</span><span class="p">:</span> <span class="n">incomingRoute</span><span class="p">})</span>
+                <span class="k">return</span> <span class="s">'{"message": "Successfully deleted route"}'</span>
+            <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">errorDict</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Failed to delete route. Error message: {error}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="n">e</span><span class="p">)}</span>
+                <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">errorDict</span><span class="p">),</span> <span class="mi">400</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Not authorized
+</span>            <span class="n">errorDict</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"You are not authorized to delete that route!"</span><span class="p">}</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">errorDict</span><span class="p">),</span> <span class="mi">403</span>
+    <span class="c1"># If the route targeted for deletion wasn't found, return a 200 with explanation
+</span>    <span class="k">else</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Route doesn't exist, but that's OK! HTTP DELETE is an idempotent operation dude"</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+<span class="c1">###################################
+###   End of Route URIs
+###################################
+</span>
+<span class="c1">###################################
+###   User URIs
+###################################
+</span>
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/users"</span><span class="p">)</span>
+<span class="o">@</span><span class="n">requires_auth</span>
+<span class="k">def</span> <span class="nf">getUsers</span><span class="p">():</span>
+    <span class="n">actor</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">users</span><span class="p">.</span><span class="n">find_one</span><span class="p">({</span><span class="s">"userEmail"</span><span class="p">:</span> <span class="n">requestorEmail</span><span class="p">})</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">users</span><span class="p">.</span><span class="n">find</span><span class="p">({</span><span class="s">"orgId"</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="n">actor</span><span class="p">[</span><span class="s">'orgId'</span><span class="p">])})</span>
+    <span class="k">if</span> <span class="n">users</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">dumps</span><span class="p">(</span><span class="n">users</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"No users found"</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">message</span><span class="p">),</span> <span class="mi">404</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/users/byOrg/&lt;orgId&gt;"</span><span class="p">)</span>
+<span class="o">@</span><span class="n">requires_auth</span>
+<span class="k">def</span> <span class="nf">getUsersByOrg</span><span class="p">(</span><span class="n">orgId</span><span class="p">):</span>
+    <span class="n">orgId</span> <span class="o">=</span> <span class="n">validateObjectId</span><span class="p">(</span><span class="n">orgId</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">orgId</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Invalid org ID, uanble to convert to ObjectId. Must be a 12-byte input or a 24-character hex string"</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">message</span><span class="p">),</span> <span class="mi">400</span>
+
+    <span class="n">users</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">users</span><span class="p">.</span><span class="n">find</span><span class="p">({</span><span class="s">"orgId"</span><span class="p">:</span> <span class="n">orgId</span><span class="p">})</span>
+    <span class="k">if</span> <span class="n">users</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">dumps</span><span class="p">(</span><span class="n">users</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"No users found with that org ID"</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">message</span><span class="p">),</span> <span class="mi">404</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/users/&lt;userEmail&gt;"</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'GET'</span><span class="p">])</span>
+<span class="o">@</span><span class="n">requires_auth</span>
+<span class="k">def</span> <span class="nf">getUserByEmail</span><span class="p">(</span><span class="n">userEmail</span><span class="p">):</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">users</span><span class="p">.</span><span class="n">find_one</span><span class="p">({</span><span class="s">"userEmail"</span><span class="p">:</span> <span class="n">userEmail</span><span class="p">})</span>
+    <span class="k">if</span> <span class="n">user</span><span class="p">:</span>
+        <span class="n">user</span><span class="p">[</span><span class="s">'_id'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">user</span><span class="p">[</span><span class="s">'_id'</span><span class="p">])</span>
+        <span class="n">user</span><span class="p">[</span><span class="s">'orgId'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">user</span><span class="p">[</span><span class="s">'orgId'</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">dumps</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"No user found with that email address"</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">message</span><span class="p">),</span> <span class="mi">404</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/users/&lt;userEmail&gt;"</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'PUT'</span><span class="p">])</span>
+<span class="o">@</span><span class="n">requires_auth</span>
+<span class="k">def</span> <span class="nf">updateUser</span><span class="p">(</span><span class="n">userEmail</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">requestorEmail</span> <span class="o">==</span> <span class="n">userEmail</span><span class="p">:</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">users</span><span class="p">.</span><span class="n">find_one</span><span class="p">({</span><span class="s">"userEmail"</span><span class="p">:</span> <span class="n">userEmail</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">user</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">users</span><span class="p">.</span><span class="n">update_one</span><span class="p">(</span> <span class="p">{</span> <span class="s">"userEmail"</span><span class="p">:</span> <span class="n">userEmail</span> <span class="p">},</span>
+                <span class="p">{</span>
+                  <span class="s">"$set"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="c1"># "userEmail": userEmail,
+</span>                    <span class="s">"userName"</span><span class="p">:</span> <span class="n">request</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="s">'userName'</span><span class="p">],</span>
+                    <span class="s">"orgId"</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="s">'orgId'</span><span class="p">])</span>
+                  <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"User updated successfully"</span><span class="p">}</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"No user found with that email address"</span><span class="p">}</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">message</span><span class="p">),</span> <span class="mi">404</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"You are not authorized to update that user. You may only update your own user information"</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">message</span><span class="p">),</span> <span class="mi">403</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/users"</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'POST'</span><span class="p">])</span>
+<span class="o">@</span><span class="n">requires_auth</span>
+<span class="k">def</span> <span class="nf">addUser</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">isAuthorized</span><span class="p">(</span><span class="n">requestorEmail</span><span class="p">,</span> <span class="s">'addUser'</span><span class="p">,</span> <span class="n">request</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="s">'orgId'</span><span class="p">]):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">handle</span><span class="p">.</span><span class="n">users</span><span class="p">.</span><span class="n">insert</span><span class="p">({</span><span class="s">"userEmail"</span><span class="p">:</span><span class="n">request</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="s">'userEmail'</span><span class="p">],</span> <span class="s">"userName"</span><span class="p">:</span><span class="n">request</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="s">'userName'</span><span class="p">],</span> <span class="s">"orgId"</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="s">'orgId'</span><span class="p">])</span> <span class="p">})</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Successfully added user"</span><span class="p">}</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">pymongo</span><span class="p">.</span><span class="n">errors</span><span class="p">.</span><span class="n">DuplicateKeyError</span><span class="p">:</span>
+            <span class="n">errorDict</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"User with that email already exists"</span><span class="p">}</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">errorDict</span><span class="p">),</span> <span class="mi">409</span>
+        <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">errorDict</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Failed to add user. Error message: {error}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="n">e</span><span class="p">)}</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">errorDict</span><span class="p">),</span> <span class="mi">400</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Not authorized
+</span>        <span class="n">errorDict</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"You are not authorized to add another user!"</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">errorDict</span><span class="p">),</span> <span class="mi">403</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/users/register"</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'POST'</span><span class="p">])</span>
+<span class="o">@</span><span class="n">requires_auth</span>
+<span class="k">def</span> <span class="nf">registerNewUser</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">orgId</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">orgs</span><span class="p">.</span><span class="n">insert</span><span class="p">({</span><span class="s">"orgName"</span><span class="p">:</span> <span class="n">request</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="s">'userEmail'</span><span class="p">],</span> <span class="s">"subscription"</span><span class="p">:</span> <span class="s">"freeTier"</span><span class="p">})</span>
+        <span class="n">handle</span><span class="p">.</span><span class="n">users</span><span class="p">.</span><span class="n">insert</span><span class="p">({</span><span class="s">"userEmail"</span><span class="p">:</span><span class="n">request</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="s">'userEmail'</span><span class="p">],</span> <span class="s">"userName"</span><span class="p">:</span><span class="n">request</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="s">'userName'</span><span class="p">],</span> <span class="s">"orgId"</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="n">orgId</span><span class="p">)</span> <span class="p">})</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Successfully registered user"</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">pymongo</span><span class="p">.</span><span class="n">errors</span><span class="p">.</span><span class="n">DuplicateKeyError</span><span class="p">:</span>
+        <span class="n">errorDict</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"User with that email already exists"</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">errorDict</span><span class="p">),</span> <span class="mi">409</span>
+    <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">errorDict</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Failed to add user. Error message: {error}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="n">e</span><span class="p">)}</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">errorDict</span><span class="p">),</span> <span class="mi">400</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/users/&lt;userEmail&gt;"</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'DELETE'</span><span class="p">])</span>
+<span class="o">@</span><span class="n">requires_auth</span>
+<span class="k">def</span> <span class="nf">deleteUser</span><span class="p">(</span><span class="n">userEmail</span><span class="p">):</span>
+    <span class="n">targetUser</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">users</span><span class="p">.</span><span class="n">find_one</span><span class="p">({</span><span class="s">"userEmail"</span><span class="p">:</span> <span class="n">userEmail</span><span class="p">})</span>
+    <span class="k">if</span> <span class="n">targetUser</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">isAuthorized</span><span class="p">(</span><span class="n">requestorEmail</span><span class="p">,</span> <span class="s">'deleteUser'</span><span class="p">,</span> <span class="n">userEmail</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">users</span><span class="p">.</span><span class="n">remove</span><span class="p">({</span><span class="s">"userEmail"</span><span class="p">:</span> <span class="n">userEmail</span><span class="p">})</span>
+                <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Successfully deleted user"</span><span class="p">}</span>
+                <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+            <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">errorDict</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Failed to delete user. Error message: {error}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="n">e</span><span class="p">)}</span>
+                <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">errorDict</span><span class="p">),</span> <span class="mi">400</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Not authorized
+</span>            <span class="n">errorDict</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"You are not authorized to delete that user!"</span><span class="p">}</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">errorDict</span><span class="p">),</span> <span class="mi">403</span>
+    <span class="c1"># If the user targeted for deletion wasn't found, return a 200 with explanation
+</span>    <span class="k">else</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"User doesn't exist, but that's OK! HTTP DELETE is an idempotent operation dude"</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+<span class="c1">###################################
+###   End of User URIs
+###################################
+</span>
+<span class="c1">###################################
+###   Org URIs
+###################################
+</span><span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/orgs"</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'POST'</span><span class="p">])</span>
+<span class="o">@</span><span class="n">requires_auth</span>
+<span class="k">def</span> <span class="nf">addOrg</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">orgId</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">orgs</span><span class="p">.</span><span class="n">insert</span><span class="p">({</span><span class="s">"orgName"</span><span class="p">:</span> <span class="n">request</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="s">'userEmail'</span><span class="p">],</span> <span class="s">"subscription"</span><span class="p">:</span> <span class="s">"freeTier"</span><span class="p">})</span>
+        <span class="k">return</span> <span class="s">'{"message": "Successfully added org"}'</span>
+    <span class="k">except</span> <span class="n">pymongo</span><span class="p">.</span><span class="n">errors</span><span class="p">.</span><span class="n">DuplicateKeyError</span><span class="p">:</span>
+        <span class="n">errorDict</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Org already exists"</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">errorDict</span><span class="p">),</span> <span class="mi">400</span>
+    <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">errorDict</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Failed to add org. Error message: {error}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="n">e</span><span class="p">)}</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">errorDict</span><span class="p">),</span> <span class="mi">400</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/orgs/&lt;orgId&gt;"</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'PUT'</span><span class="p">])</span>
+<span class="o">@</span><span class="n">requires_auth</span>
+<span class="k">def</span> <span class="nf">updateOrg</span><span class="p">(</span><span class="n">orgId</span><span class="p">):</span>
+    <span class="n">orgId</span> <span class="o">=</span> <span class="n">validateObjectId</span><span class="p">(</span><span class="n">orgId</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">orgId</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Invalid org ID, uanble to convert to ObjectId. Must be a 12-byte input or a 24-character hex string"</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">message</span><span class="p">),</span> <span class="mi">400</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">org</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">orgs</span><span class="p">.</span><span class="n">find_one</span><span class="p">(</span> <span class="p">{</span><span class="s">"_id"</span><span class="p">:</span> <span class="n">orgId</span><span class="p">}</span> <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">org</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">orgs</span><span class="p">.</span><span class="n">update_one</span><span class="p">(</span> <span class="p">{</span><span class="s">"_id"</span><span class="p">:</span> <span class="n">orgId</span><span class="p">},</span>
+                <span class="p">{</span>
+                  <span class="s">"$set"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s">"orgName"</span><span class="p">:</span> <span class="n">request</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="s">'orgName'</span><span class="p">]</span>
+                  <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Org updated successfully"</span><span class="p">}</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"No org with that id"</span><span class="p">}</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">message</span><span class="p">),</span> <span class="mi">404</span>
+    <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">errorDict</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Failed to update org. Error message: {error}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="n">e</span><span class="p">)}</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">errorDict</span><span class="p">),</span> <span class="mi">400</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/orgs/&lt;orgId&gt;"</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'GET'</span><span class="p">])</span>
+<span class="o">@</span><span class="n">requires_auth</span>
+<span class="k">def</span> <span class="nf">getOrg</span><span class="p">(</span><span class="n">orgId</span><span class="p">):</span>
+    <span class="n">orgId</span> <span class="o">=</span> <span class="n">validateObjectId</span><span class="p">(</span><span class="n">orgId</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">orgId</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Invalid org ID, uanble to convert to ObjectId. Must be a 12-byte input or a 24-character hex string"</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">message</span><span class="p">),</span> <span class="mi">400</span>
+
+    <span class="n">org</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">orgs</span><span class="p">.</span><span class="n">find_one</span><span class="p">({</span><span class="s">"_id"</span><span class="p">:</span> <span class="n">orgId</span><span class="p">})</span>
+    <span class="k">if</span> <span class="n">org</span><span class="p">:</span>
+        <span class="n">org</span><span class="p">[</span><span class="s">'_id'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">org</span><span class="p">[</span><span class="s">'_id'</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">dumps</span><span class="p">(</span><span class="n">org</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"No org found with that orgId"</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">message</span><span class="p">),</span> <span class="mi">404</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/orgs/&lt;orgId&gt;"</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'DELETE'</span><span class="p">])</span>
+<span class="o">@</span><span class="n">requires_auth</span>
+<span class="k">def</span> <span class="nf">deleteOrg</span><span class="p">(</span><span class="n">orgId</span><span class="p">):</span>
+    <span class="n">orgId</span> <span class="o">=</span> <span class="n">validateObjectId</span><span class="p">(</span><span class="n">orgId</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">orgId</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Invalid org ID, uanble to convert to ObjectId. Must be a 12-byte input or a 24-character hex string"</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">message</span><span class="p">),</span> <span class="mi">400</span>
+
+    <span class="n">org</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">orgs</span><span class="p">.</span><span class="n">find_one</span><span class="p">({</span><span class="s">"_id"</span><span class="p">:</span> <span class="n">orgId</span><span class="p">})</span>
+
+    <span class="k">if</span> <span class="n">isAuthorized</span><span class="p">(</span><span class="n">requestorEmail</span><span class="p">,</span> <span class="s">'deleteOrg'</span><span class="p">,</span> <span class="n">orgId</span><span class="p">):</span>
+        <span class="c1"># Cancel Stripe subscription
+</span>        <span class="k">if</span> <span class="s">'subscriptionId'</span> <span class="ow">in</span> <span class="n">org</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">subscriptionId</span> <span class="o">=</span> <span class="n">org</span><span class="p">[</span><span class="s">'subscriptionId'</span><span class="p">]</span>
+                <span class="n">subscription</span> <span class="o">=</span> <span class="n">stripe</span><span class="p">.</span><span class="n">Subscription</span><span class="p">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">subscriptionId</span><span class="p">)</span>
+                <span class="n">subscription</span><span class="p">.</span><span class="n">delete</span><span class="p">()</span>
+            <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">errorDict</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Error occurred while updating existing subscription. Error message: {error}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="n">e</span><span class="p">)}</span>
+                <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">errorDict</span><span class="p">),</span> <span class="mi">400</span>
+
+        <span class="c1"># Delete all associated user accounts
+</span>        <span class="n">handle</span><span class="p">.</span><span class="n">users</span><span class="p">.</span><span class="n">remove</span><span class="p">({</span><span class="s">"orgId"</span><span class="p">:</span> <span class="n">orgId</span><span class="p">})</span>
+
+        <span class="c1"># Delete all associated routes
+</span>        <span class="n">handle</span><span class="p">.</span><span class="n">routes</span><span class="p">.</span><span class="n">remove</span><span class="p">({</span><span class="s">"orgId"</span><span class="p">:</span> <span class="n">orgId</span><span class="p">})</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">orgs</span><span class="p">.</span><span class="n">remove</span><span class="p">({</span><span class="s">"_id"</span><span class="p">:</span> <span class="n">orgId</span><span class="p">})</span>
+            <span class="k">return</span> <span class="s">'{"message": "Successfully deleted org"}'</span>
+        <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">errorDict</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Failed to delete org. Error message: {error}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="n">e</span><span class="p">)}</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">errorDict</span><span class="p">),</span> <span class="mi">400</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Not authorized
+</span>        <span class="n">errorDict</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"You are not authorized to delete that org!"</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">errorDict</span><span class="p">),</span> <span class="mi">403</span>
+
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/orgs/&lt;orgId&gt;/subscription"</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'PUT'</span><span class="p">])</span>
+<span class="o">@</span><span class="n">requires_auth</span>
+<span class="k">def</span> <span class="nf">addSubscriptionToOrg</span><span class="p">(</span><span class="n">orgId</span><span class="p">):</span>
+    <span class="n">orgId</span> <span class="o">=</span> <span class="n">validateObjectId</span><span class="p">(</span><span class="n">orgId</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">orgId</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Invalid org ID, uanble to convert to ObjectId. Must be a 12-byte input or a 24-character hex string"</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">message</span><span class="p">),</span> <span class="mi">400</span>
+
+    <span class="c1"># Check org for existing customer ID
+</span>    <span class="k">try</span><span class="p">:</span>
+        <span class="n">org</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">orgs</span><span class="p">.</span><span class="n">find_one</span><span class="p">(</span> <span class="p">{</span><span class="s">"_id"</span><span class="p">:</span> <span class="n">orgId</span><span class="p">}</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="n">org</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">"org is:"</span>
+            <span class="k">print</span> <span class="n">org</span>
+            <span class="k">if</span> <span class="s">'subscriptionId'</span> <span class="ow">in</span> <span class="n">org</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">subscriptionId</span> <span class="o">=</span> <span class="n">org</span><span class="p">[</span><span class="s">'subscriptionId'</span><span class="p">]</span>
+                    <span class="n">subscription</span> <span class="o">=</span> <span class="n">stripe</span><span class="p">.</span><span class="n">Subscription</span><span class="p">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">subscriptionId</span><span class="p">)</span>
+                    <span class="n">subscription</span><span class="p">.</span><span class="n">plan</span> <span class="o">=</span> <span class="n">request</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="s">'subscription'</span><span class="p">]</span>
+                    <span class="n">subscription</span><span class="p">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">errorDict</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Error occurred while updating existing subscription. Error message: {error}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="n">e</span><span class="p">)}</span>
+                    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">errorDict</span><span class="p">),</span> <span class="mi">400</span>
+
+                <span class="n">result</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">orgs</span><span class="p">.</span><span class="n">update_one</span><span class="p">(</span> <span class="p">{</span><span class="s">"_id"</span><span class="p">:</span> <span class="n">orgId</span><span class="p">},</span>
+                    <span class="p">{</span>
+                      <span class="s">"$set"</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s">"subscription"</span><span class="p">:</span> <span class="n">request</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="s">'subscription'</span><span class="p">]</span>
+                      <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">)</span>
+                <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Org updated with subscription successfully"</span><span class="p">}</span>
+                <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">stripeCustomer</span> <span class="o">=</span> <span class="n">stripe</span><span class="p">.</span><span class="n">Customer</span><span class="p">.</span><span class="n">create</span><span class="p">(</span>
+                      <span class="n">source</span><span class="o">=</span><span class="n">request</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="s">'tokenId'</span><span class="p">],</span> <span class="c1"># obtained from Stripe.js
+</span>                      <span class="n">plan</span><span class="o">=</span><span class="n">request</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="s">'subscription'</span><span class="p">],</span>
+                      <span class="n">email</span><span class="o">=</span><span class="n">request</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="s">'userEmail'</span><span class="p">]</span>
+                    <span class="p">)</span>
+                    <span class="k">print</span> <span class="s">"stripeCustomer is:"</span>
+                    <span class="k">print</span> <span class="n">stripeCustomer</span>
+                    <span class="n">subscriptionId</span> <span class="o">=</span> <span class="n">stripeCustomer</span><span class="p">.</span><span class="n">subscriptions</span><span class="p">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nb">id</span>
+                <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">errorDict</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Error occurred while creating new user and subscription. Error message: {error}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="n">e</span><span class="p">)}</span>
+                    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">errorDict</span><span class="p">),</span> <span class="mi">400</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">orgs</span><span class="p">.</span><span class="n">update_one</span><span class="p">(</span> <span class="p">{</span><span class="s">"_id"</span><span class="p">:</span> <span class="n">orgId</span><span class="p">},</span>
+                    <span class="p">{</span>
+                      <span class="s">"$set"</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s">"subscription"</span><span class="p">:</span> <span class="n">request</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="s">'subscription'</span><span class="p">],</span>
+                        <span class="s">"subscriptionId"</span><span class="p">:</span> <span class="n">subscriptionId</span>
+                      <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">)</span>
+                <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Org updated with subscription successfully"</span><span class="p">}</span>
+                <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"No org with that id"</span><span class="p">}</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">message</span><span class="p">),</span> <span class="mi">404</span>
+    <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">errorDict</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"Failed to update org. Error message: {error}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="n">e</span><span class="p">)}</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">errorDict</span><span class="p">),</span> <span class="mi">400</span>
+
+<span class="c1">###################################
+###   End of Org URIs
+###################################
+</span>
+
+
+<span class="c1">###################################
+###   Subscription URIs
+###################################
+</span>
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/subscriptions/&lt;subscriptionName&gt;"</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'GET'</span><span class="p">])</span>
+<span class="o">@</span><span class="n">requires_auth</span>
+<span class="k">def</span> <span class="nf">getSubscription</span><span class="p">(</span><span class="n">subscriptionName</span><span class="p">):</span>
+    <span class="n">subscription</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">subscriptions</span><span class="p">.</span><span class="n">find_one</span><span class="p">({</span><span class="s">"subscriptionName"</span><span class="p">:</span> <span class="n">subscriptionName</span><span class="p">})</span>
+    <span class="k">if</span> <span class="n">subscription</span><span class="p">:</span>
+        <span class="n">subscription</span><span class="p">[</span><span class="s">'_id'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">subscription</span><span class="p">[</span><span class="s">'_id'</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">dumps</span><span class="p">(</span><span class="n">subscription</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s">"message"</span><span class="p">:</span> <span class="s">"No subscription found with that subscriptionName"</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">message</span><span class="p">),</span> <span class="mi">404</span>
+
+<span class="c1">###################################
+###   End of Subscription URIs
+###################################
+</span>
+<span class="c1">###################################
+###   Non-URI Functions
+###################################
+</span>
+<span class="k">def</span> <span class="nf">validateObjectId</span><span class="p">(</span><span class="n">objectId</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">objectId</span> <span class="o">=</span> <span class="n">ObjectId</span><span class="p">(</span><span class="n">objectId</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">objectId</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+<span class="k">def</span> <span class="nf">isAuthorized</span><span class="p">(</span><span class="n">actorEmail</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">actor</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">users</span><span class="p">.</span><span class="n">find_one</span><span class="p">({</span><span class="s">"userEmail"</span><span class="p">:</span> <span class="n">actorEmail</span><span class="p">})</span>
+    <span class="n">org</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">orgs</span><span class="p">.</span><span class="n">find_one</span><span class="p">({</span><span class="s">"_id"</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="n">actor</span><span class="p">[</span><span class="s">'orgId'</span><span class="p">])})</span>
+    <span class="k">print</span> <span class="n">org</span>
+    <span class="n">maxRoutes</span> <span class="o">=</span> <span class="p">{</span> <span class="s">'freeTier'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">'developerTier'</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s">'enterpriseTier'</span><span class="p">:</span> <span class="mi">100</span> <span class="p">}</span>
+    <span class="k">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s">'addUser'</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">org</span><span class="p">[</span><span class="s">'subscription'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'developerTier'</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">org</span><span class="p">[</span><span class="s">'subscription'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'enterpriseTier'</span><span class="p">):</span>
+            <span class="k">print</span> <span class="s">'Subscription is not freeTier, requesting user is authorized to add that user. Checking target org'</span>
+            <span class="k">if</span> <span class="n">ObjectId</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="o">==</span> <span class="n">actor</span><span class="p">[</span><span class="s">'orgId'</span><span class="p">]:</span>
+                <span class="k">print</span> <span class="s">'Target org matches requesting users org, request is authorized'</span>
+                <span class="k">return</span> <span class="bp">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">'Subscription is freeTier or some unhandled value, requesting user is NOT authorized to add target user'</span>
+            <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="s">'deleteUser'</span><span class="p">:</span>
+        <span class="n">targetUser</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">users</span><span class="p">.</span><span class="n">find_one</span><span class="p">({</span><span class="s">"userEmail"</span><span class="p">:</span> <span class="n">target</span><span class="p">})</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">org</span><span class="p">[</span><span class="s">'subscription'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'developerTier'</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">org</span><span class="p">[</span><span class="s">'subscription'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'enterpriseTier'</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">actorEmail</span> <span class="o">!=</span> <span class="n">target</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">actor</span><span class="p">[</span><span class="s">'orgId'</span><span class="p">]</span> <span class="o">==</span> <span class="n">targetUser</span><span class="p">[</span><span class="s">'orgId'</span><span class="p">]:</span>
+                    <span class="k">print</span> <span class="s">'Subscription is not freeTier, the user is not deleting themself, and this user is part of the same org. Requesting user is authorized to delete target user'</span>
+                    <span class="k">return</span> <span class="bp">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">print</span> <span class="s">'Subscription is not freeTier, the user is not deleting themself, but the user is NOT part of the same org. Requesting user is NOT authorized to delete target user'</span>
+                    <span class="k">return</span> <span class="bp">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">print</span> <span class="s">'Subscription is not freeTier, but the user is attempting to delete themself. Requesting user is NOT authorized to delete target user'</span>
+                <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">'Subscription is freeTier or some unhandled value, requesting user is NOT authorized to delete target user'</span>
+            <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="s">'addRoute'</span><span class="p">:</span>
+        <span class="n">routeCount</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">routes</span><span class="p">.</span><span class="n">find</span><span class="p">({</span><span class="s">"orgId"</span><span class="p">:</span> <span class="n">org</span><span class="p">[</span><span class="s">'_id'</span><span class="p">]}).</span><span class="n">count</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">routeCount</span> <span class="o">&lt;</span> <span class="n">maxRoutes</span><span class="p">[</span><span class="n">org</span><span class="p">[</span><span class="s">'subscription'</span><span class="p">]]:</span>
+            <span class="k">print</span> <span class="s">'Current routeCount is less than maxRoutes, requesting user is authorized to create target route'</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">'Current routeCount is equal to or greater than maxRoutes, requesting user is NOT authorized to create target route'</span>
+            <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="s">'deleteRoute'</span><span class="p">:</span>
+        <span class="n">targetRoute</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">routes</span><span class="p">.</span><span class="n">find_one</span><span class="p">({</span><span class="s">"incomingRoute"</span><span class="p">:</span> <span class="n">target</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">org</span><span class="p">[</span><span class="s">'_id'</span><span class="p">]</span> <span class="o">==</span> <span class="n">targetRoute</span><span class="p">[</span><span class="s">'orgId'</span><span class="p">]:</span>
+            <span class="k">print</span> <span class="s">'User is trying to delete a route that is owned by their org, requesting user is authorized to delete target route'</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">'User is trying to delete a route that is NOT owned by their org, requesting user is NOT authorized to delete target route'</span>
+            <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="s">'deleteOrg'</span><span class="p">:</span>
+        <span class="n">targetOrg</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">orgs</span><span class="p">.</span><span class="n">find_one</span><span class="p">({</span><span class="s">"_id"</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="n">target</span><span class="p">)})</span>
+        <span class="k">if</span> <span class="n">org</span><span class="p">[</span><span class="s">'_id'</span><span class="p">]</span> <span class="o">==</span> <span class="n">targetOrg</span><span class="p">[</span><span class="s">'_id'</span><span class="p">]:</span>
+            <span class="k">print</span> <span class="s">'User is trying to delete their own org, requesting user is authorized to delete target org'</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">'User is trying to delete some other org, requesting user is NOT authorized to delete target org'</span>
+            <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">'Unable to determine action, requesting user is NOT authorized'</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+
+<span class="c1">###################################
+###   End of Non-URI Functions
+###################################
+</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">app</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">app</span><span class="p">.</span><span class="n">config</span><span class="p">[</span><span class="s">'IP'</span><span class="p">],</span> <span class="n">app</span><span class="p">.</span><span class="n">config</span><span class="p">[</span><span class="s">'PORT'</span><span class="p">])</span>
+</code></pre></div></div>
+
+<p>If you want to see the rest of the files or fork my repo, you can find it on
+GitHub:</p>
+
+<p class="text-center"><a href="https://github.com/alexdglover/dnsreroute-api" class="btn btn--info btn--large">Flask Backend Repo</a></p>
+
+<h2 id="redirecting-backend">Redirecting Backend</h2>
+<p>The “dumb” redirect hosts are running a stripped down, simpler version of the
+Flask app used by the API backend. The redirect hosts are part of an auto-scaling
+group with an Elastic Load Balancer distributing requests. The configuration of
+the hosts is all done through a userdata script, which makes auto-scaling simple
+and removes the need for configuration management tools.</p>
+
+<p>In my haste, I lumped together all of the code for the redirecting app and the
+CloudFormation code into one repo. Check out the repo here:</p>
+
+<p class="text-center"><a href="https://github.com/alexdglover/dnsreroute-aws" class="btn btn--info btn--large">Redirecting Backend Repo</a></p>
+
+<p>The Flask app for handling redirects is pretty straightforward. All of the
+relevant logic is written in the redirectorApp.py file:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">flash</span><span class="p">,</span> <span class="n">url_for</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> \
+     <span class="n">render_template</span><span class="p">,</span> <span class="n">abort</span><span class="p">,</span> <span class="n">send_from_directory</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">_request_ctx_stack</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">werkzeug.local</span> <span class="kn">import</span> <span class="n">LocalProxy</span>
+<span class="kn">from</span> <span class="nn">flask.ext.cors</span> <span class="kn">import</span> <span class="n">CORS</span><span class="p">,</span> <span class="n">cross_origin</span>
+<span class="kn">import</span> <span class="nn">pymongo</span>
+<span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">MongoClient</span><span class="p">,</span> <span class="n">IndexModel</span><span class="p">,</span> <span class="n">ASCENDING</span><span class="p">,</span> <span class="n">DESCENDING</span><span class="p">,</span> <span class="n">errors</span>
+
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="n">app</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">from_pyfile</span><span class="p">(</span><span class="s">'flaskapp.cfg'</span><span class="p">)</span>
+<span class="n">CORS</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">connect</span><span class="p">():</span>
+    <span class="k">print</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">[</span><span class="s">'OPENSHIFT_MONGODB_DB_URL'</span><span class="p">]</span>
+    <span class="k">print</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">[</span><span class="s">'OPENSHIFT_MONGODB_DB_PORT'</span><span class="p">])</span>
+    <span class="k">print</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">[</span><span class="s">'OPENSHIFT_MONGODB_DB_USERNAME'</span><span class="p">]</span>
+    <span class="k">print</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">[</span><span class="s">'OPENSHIFT_MONGODB_DB_PASSWORD'</span><span class="p">]</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">[</span><span class="s">'OPENSHIFT_MONGODB_DB_URL'</span><span class="p">],</span><span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">[</span><span class="s">'OPENSHIFT_MONGODB_DB_PORT'</span><span class="p">]))</span>
+    <span class="n">handle</span> <span class="o">=</span> <span class="n">connection</span><span class="p">[</span><span class="s">"dnsreroute"</span><span class="p">]</span>
+    <span class="n">handle</span><span class="p">.</span><span class="n">authenticate</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">[</span><span class="s">'OPENSHIFT_MONGODB_DB_USERNAME'</span><span class="p">],</span><span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">[</span><span class="s">'OPENSHIFT_MONGODB_DB_PASSWORD'</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">handle</span>
+
+<span class="n">handle</span> <span class="o">=</span> <span class="n">connect</span><span class="p">()</span>
+
+<span class="c1"># Controllers API
+</span><span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">home</span><span class="p">():</span>
+    <span class="n">host</span> <span class="o">=</span> <span class="n">request</span><span class="p">.</span><span class="n">headers</span><span class="p">[</span><span class="s">'Host'</span><span class="p">]</span>
+    <span class="n">host</span> <span class="o">=</span> <span class="n">host</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">':'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">host</span> <span class="o">!=</span> <span class="s">'service.dnsreroute.xyz'</span><span class="p">:</span>
+        <span class="n">route</span> <span class="o">=</span> <span class="n">handle</span><span class="p">.</span><span class="n">routes</span><span class="p">.</span><span class="n">find_one</span><span class="p">({</span><span class="s">'incomingRoute'</span><span class="p">:</span> <span class="n">host</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">route</span><span class="p">:</span>
+            <span class="n">outgoingRoute</span> <span class="o">=</span> <span class="n">route</span><span class="p">[</span><span class="s">'outgoingRoute'</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">route</span><span class="p">[</span><span class="s">'type'</span><span class="p">]</span> <span class="o">==</span> <span class="s">"301"</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">outgoingRoute</span><span class="p">,</span> <span class="mi">301</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">route</span><span class="p">[</span><span class="s">'type'</span><span class="p">]</span> <span class="o">==</span> <span class="s">"302"</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">outgoingRoute</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s">'{"message": "Error - not able to determine redirect type"}'</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">'{"message": "Could not find a matching route"}'</span><span class="p">,</span> <span class="mi">404</span>
+
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">return</span> <span class="s">"The Host header is {hostHeader}.This is the unsecured home page"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">hostHeader</span><span class="o">=</span><span class="n">request</span><span class="p">.</span><span class="n">headers</span><span class="p">[</span><span class="s">'Host'</span><span class="p">])</span>
+
+<span class="c1"># Controllers API
+</span><span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/health"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">healthCheck</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s">'{"message": "System OK!"}'</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">app</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">app</span><span class="p">.</span><span class="n">config</span><span class="p">[</span><span class="s">'IP'</span><span class="p">],</span> <span class="n">app</span><span class="p">.</span><span class="n">config</span><span class="p">[</span><span class="s">'PORT'</span><span class="p">])</span>
+</code></pre></div></div>
+
+<p>One implementation note - I was originally using the <code class="language-plaintext highlighter-rouge">eventlet</code> Gunicorn worker
+type, but as I was writing this blog post and testing things were still working
+I discovered that my instances were no longer bootstrapping successfully. Turns
+out it was some gunicorn/eventlet/monotonic error throwing a RuntimeError of
+<code class="language-plaintext highlighter-rouge">no suitable implementation for this system</code>. Rather than go down that rabbit
+hole, I just switched the worker type to <code class="language-plaintext highlighter-rouge">gevent</code> and moved on.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+<p>I’ll be leaving DNSReRoute running at least until July 2017, after which my 12 month
+free trial of AWS expires. If I haven’t stirred up any interest or customers by
+then, I’ll terminate the redirecting hosts, but keep the API backend and front-end
+running for reference purposes.</p>
+
+<p>I had a lot of fun writing this app, and I’m proud of it in spite of its flaws
+and lack of use. I hope you were able to cherry pick some code or ideas from
+this post, or some inspiration if nothing else.</p>
+
+<p>Thanks for stopping by.</p>
+:ET

@@ -1,0 +1,39 @@
+I"i<p>I was recently working on a new HTML project when I came across the <a title="Scrollspy" href="http://getbootstrap.com/2.3.2/javascript.html#scrollspy" target="_blank">Scrollspy</a> feature in Bootstrap's framework (v2.3). The feature looks really good on Bootstrap's pages, I figured I'd use it in my project as well. I immediately had issues with the links aligning the content to the viewport and issues with the scrollspy highlighting the right link based on what content was in the viewport. This was all supposed to be out of the box functionality... After doing some research (read: Googling), I came across a few <a href="https://github.com/twbs/bootstrap/issues/3316" target="_blank">bug tickets</a> and workarounds, but no wholistic solutions to reproducing the functionality on Bootstrap's site. So I decided to build it manually.</p>
+<p>Let's get started.</p>
+<p><!--more Continue to the instructions--></p>
+<h2>Preparation</h2>
+<p>If you want to jump right into the project, you can download <a href="http://experimental.alexdglover.com/downloads/BootstrapScrollspyWorkaroundStarter.zip" target="_blank">the starter kit</a> (it's just Boostrap 2.3, a modified Hero Unit example page, and a very slightly modified Bootstrap CSS).</p>
+<p>If you want to start from a 100% clean version of Bootstrap 2.3, go <a href="http://getbootstrap.com/2.3.2/getting-started.html#download-bootstrap" target="_blank">download the source</a> and extract it. Keep your top-level folder name whatever you want it to be, but rename the 'bootstrap' folder assets (we are matching the existing folder structure in the source code we are going to borrow from one of their examples. Feel free to build your folder structure however you see fit). Create a sibling folder to contain your HTML files and create an index.html inside. Finally, go download <a href="http://jquery.com/download/" target="_blank">jQuery</a>, place it in your assets/js folder, and rename it 'jquery.js' (for simplicity). Your folder structure should look like this:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>topLevelFolder
+├── assets/
+│   ├── css/
+│   │   ├── bootstrap.css
+│   │   ├── bootstrap.min.css
+│   ├── js/
+│   │   ├── bootstrap.js
+│   │   ├── bootstrap.min.js
+│   │   ├── jquery.js
+│   └── img/
+│       ├── glyphicons-halflings.png
+│       └── glyphicons-halflings-white.png
+├── html/
+│   ├── index.html
+</code></pre></div></div>
+<p>Perfect. Now browse to the <a href="http://getbootstrap.com/2.3.2/examples/hero.html" target="_blank">Hero example</a> and <span style="text-decoration: line-through;">steal</span> borrow their source code (just right click anywhere, view source, Ctrl+A Ctrl+C) and paste it into your index.html file. We have to make a few minor changes here as well. Scroll to the bottom of the code and replace this:</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!--</span> <span class="nx">Le</span> <span class="nx">javascript</span> <span class="o">==================================================</span> <span class="o">--&gt;</span>
+    <span class="c">&lt;!--</span> <span class="nx">Placed</span> <span class="nx">at</span> <span class="nx">the</span> <span class="nx">end</span> <span class="k">of</span> <span class="nx">the</span> <span class="nb">document</span> <span class="nx">so</span> <span class="nx">the</span> <span class="nx">pages</span> <span class="nx">load</span> <span class="nx">faster</span> <span class="o">--&gt;</span>
+    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/jquery.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/bootstrap-transition.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/bootstrap-alert.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/bootstrap-modal.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/bootstrap-dropdown.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/bootstrap-scrollspy.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/bootstrap-tab.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/bootstrap-tooltip.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/bootstrap-popover.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/bootstrap-button.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/bootstrap-collapse.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/bootstrap-carousel.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">../assets/js/bootstrap-typeahead.js</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span></code></pre></div></div>
+:ET

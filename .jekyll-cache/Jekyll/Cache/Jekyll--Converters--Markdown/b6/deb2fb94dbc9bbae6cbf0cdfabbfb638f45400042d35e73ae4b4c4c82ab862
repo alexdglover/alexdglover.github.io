@@ -1,0 +1,89 @@
+I"1<p>Well it's been awhile since I've posted since I started working on <a title="HUJ" href="http://www.hireupjob.com/" target="_blank">HireUpJob</a>, but this one's good. I recently had a use case where I needed to get the virtual hardware version of a client machine provisioned through vCloud Director. Now, that information is not accessible anywhere on the client machine, so I had to look to the vCloud Director API for it. The process for querying the API also had to be automated for future provisions, so it had to be scripted. Enough back story and context, lets look at the ruby code.</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#Need to import a few ruby packages</span>
+<span class="nb">require</span> <span class="s1">'net/http'</span>
+<span class="nb">require</span> <span class="s1">'uri'</span>
+<span class="nb">require</span> <span class="s1">'openssl'</span>
+<span class="c1">#Here we are ignoring any issues that may arise with SSL certificates</span>
+<span class="no">OpenSSL</span><span class="o">::</span><span class="no">SSL</span><span class="o">::</span><span class="no">VERIFY_PEER</span> <span class="o">=</span> <span class="no">OpenSSL</span><span class="o">::</span><span class="no">SSL</span><span class="o">::</span><span class="no">VERIFY_NONE</span>
+
+<span class="c1">#main fetch function takes an initial URL to fetch from and a limit for number of redirects to follow</span>
+<span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="n">uri_str</span><span class="p">,</span> <span class="n">limit</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="no">ArgumentError</span><span class="p">,</span> <span class="s1">'HTTP redirect too deep'</span> <span class="k">if</span> <span class="n">limit</span> <span class="o">==</span> <span class="mi">0</span>
+
+  <span class="c1">#Parse URL into URI object</span>
+  <span class="n">uri</span> <span class="o">=</span> <span class="no">URI</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">uri_str</span><span class="p">)</span>
+  <span class="c1">#Create new Net::HTTP object</span>
+  <span class="n">http</span> <span class="o">=</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTP</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">uri</span><span class="p">.</span><span class="nf">host</span><span class="p">,</span> <span class="n">uri</span><span class="p">.</span><span class="nf">port</span><span class="p">)</span>
+  <span class="c1">#Set the http object to use SSL</span>
+  <span class="n">http</span><span class="p">.</span><span class="nf">use_ssl</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="c1">#Ignore issues with SSL certs</span>
+  <span class="n">http</span><span class="p">.</span><span class="nf">verify_mode</span> <span class="o">=</span> <span class="no">OpenSSL</span><span class="o">::</span><span class="no">SSL</span><span class="o">::</span><span class="no">VERIFY_NONE</span>
+  <span class="c1">#Start the http session</span>
+  <span class="n">http</span><span class="p">.</span><span class="nf">start</span><span class="p">()</span>
+  <span class="c1">#Create an HTTP POST request to /api/sessions to authenticate</span>
+  <span class="n">req</span> <span class="o">=</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTP</span><span class="o">::</span><span class="no">Post</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'/api/sessions'</span><span class="p">)</span>
+  <span class="c1">#Set HTTP basic auth variables of username and password</span>
+  <span class="n">req</span><span class="p">.</span><span class="nf">basic_auth</span> <span class="s1">'&lt;your_username&gt;@&lt;your_org&gt;'</span><span class="p">,</span> <span class="s1">'&lt;your_password&gt;'</span>
+  <span class="n">req</span><span class="p">.</span><span class="nf">add_field</span> <span class="s1">'Accept:'</span><span class="p">,</span> <span class="s1">'application/*+xml;version=1.5'</span>
+  <span class="c1">#Send the request we created earlier, and capture the HTTP response</span>
+  <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="p">.</span><span class="nf">request</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+  <span class="c1">#Start case to handle various HTTP responses</span>
+  <span class="k">case</span> <span class="n">response</span>
+  <span class="c1">#If authentication is successful, a token is returned in the response header. So if we get an HTTP 200 response from the vCloud server, then we can grab the "x-vcloud-authorization" token from the header</span>
+  <span class="k">when</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTPSuccess</span>     <span class="k">then</span>
+  <span class="n">authKey</span> <span class="o">=</span> <span class="n">response</span><span class="p">.</span><span class="nf">header</span><span class="p">[</span><span class="s1">'x-vcloud-authorization'</span><span class="p">]</span>
+  <span class="c1">#if we get an HTTPfound instead, we are probably getting redirected and should try to follow it. You may need to tweak this section to suit your use case</span>
+  <span class="k">when</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTPFound</span>    <span class="k">then</span>
+        <span class="c1">#call the main fetch function again and decrement the overall redirect limit</span>
+  <span class="n">fetch</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">'location'</span><span class="p">],</span> <span class="n">limit</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="c1">#If we get an HTTP redirection, we are definitely getting redirected and should follow it</span>
+  <span class="k">when</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTPRedirection</span> <span class="k">then</span> <span class="n">fetch</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">'location'</span><span class="p">],</span> <span class="n">limit</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="k">else</span>
+    <span class="c1">#something went wrong - spit out whatever the response error is</span>
+    <span class="nb">puts</span> <span class="n">response</span><span class="p">.</span><span class="nf">error!</span>
+  <span class="k">end</span>
+
+  <span class="c1">#Set the headers as a variable to be re-used later, including the authorization token we grabbed earlier</span>
+  <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">'Accept'</span> <span class="o">=&gt;</span> <span class="s1">'application/*+xml;version=1.5'</span><span class="p">,</span>
+  <span class="s1">'x-vcloud-authorization'</span> <span class="o">=&gt;</span> <span class="s2">"</span><span class="si">#{</span><span class="n">authKey</span><span class="si">}</span><span class="s2">"</span>
+  <span class="p">}</span>
+
+  <span class="c1">#Build a new request, this time an HTTP GET, to grab a value from the API. Supply both the API call and the headers variable we just put together</span>
+  <span class="n">req</span> <span class="o">=</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTP</span><span class="o">::</span><span class="no">Get</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'/api/vApp/vm-insert-your-alphanumeric-UUID-here/virtualHardwareSection'</span><span class="p">,</span> <span class="n">headers</span><span class="p">)</span>
+  <span class="c1">#send the new request and grab the response again</span>
+  <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="p">.</span><span class="nf">request</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+  <span class="k">case</span> <span class="n">response</span>
+  <span class="k">when</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTPSuccess</span>     <span class="k">then</span>
+        <span class="c1">#In my case, the value I wanted was returned in the XML body that was returned, so if the server responds with HTTP 200 I just grab the entire response body and pass it to a variable</span>
+  <span class="n">result</span> <span class="o">=</span> <span class="n">response</span><span class="p">.</span><span class="nf">body</span><span class="p">()</span>
+  <span class="c1">#same as previous</span>
+  <span class="k">when</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTPFound</span>    <span class="k">then</span>
+  <span class="n">fetch</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">'location'</span><span class="p">],</span> <span class="n">limit</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="c1">#same as previous</span>
+  <span class="k">when</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTPRedirection</span> <span class="k">then</span> <span class="n">fetch</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">'location'</span><span class="p">],</span> <span class="n">limit</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="k">else</span>
+    <span class="nb">puts</span> <span class="n">response</span><span class="p">.</span><span class="nf">error!</span>
+  <span class="k">end</span>
+
+  <span class="c1">#Finally, build one more request to send an HTTP DELETE call to /api/sessions to kill your session</span>
+  <span class="n">req</span> <span class="o">=</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTP</span><span class="o">::</span><span class="no">Delete</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'/api/sessions'</span><span class="p">,</span> <span class="n">headers</span><span class="p">)</span>
+  <span class="n">http</span><span class="p">.</span><span class="nf">request</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+
+  <span class="c1">#Again, in my case, I wanted to confirm that the VM was using a specific virtual hardware version (vmx-08), so I did a quick string match to confirm this</span>
+  <span class="n">result</span><span class="p">.</span><span class="nf">include?</span><span class="p">(</span><span class="s1">'&lt;vssd:VirtualSystemType&gt;vmx-08&lt;/vssd:VirtualSystemType&gt;'</span><span class="p">)</span>
+
+<span class="k">end</span>
+
+<span class="nb">print</span> <span class="n">fetch</span><span class="p">(</span><span class="s1">'https://&lt;your_vcloud_server&gt;:443'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>If you're using my code more or less verbatim and everything executes properly, you should get a simple "true" or "false" as output. Now, this script is for a fairly specific use case, but I think the real potential value here is to use this enable Opscode Chef (written in Ruby) to communicate with vCloud Director. I'll be sure to post again as I develop some use cases.</p>
+<p>In case you have a very different use case but need some help, here are some of the pages I referred to for writing this script:</p>
+<ul>
+<li>Exploring the vCloud REST API - <a href="http://blogs.vmware.com/vsphere/2012/03/exploring-the-vcloud-rest-api-part-1.html" target="_blank">Part I</a> and <a href="http://blogs.vmware.com/vsphere/2012/03/exploring-the-vcloud-rest-api-part-2.html" target="_blank">Part II</a></li>
+<li><a href="http://www.vmware.com/support/vcd/doc/rest-api-doc-1.5-html/" target="_blank">vCloud Director REST API Reference</a></li>
+<li><a href="http://stackoverflow.com/questions/6934185/ruby-net-http-following-redirects" target="_blank">Ruby - Net::HTTP - following redirects</a></li>
+</ul>
+<p>Hope this helps some of you out there and let me know if you have any questions.</p>
+:ET

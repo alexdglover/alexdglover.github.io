@@ -1,0 +1,344 @@
+I"ö·<p class="notice--warning"><strong>Be advised</strong> This post is quite old (26 Mar 2013) and any code may be out of date. Proceed with caution.</p>
+
+<p>In a recent work project, we had to do some simple database calls to update records. I was going to do a simple form with a submit button, but decided checked in with one of my coworkers (who's a far better developer than I) to see what he thought. Since we were developing a 'flashier' application, he pushed me to do it all asynchronously with jQuery. I had a hard time finding some good examples at the time, so I decided to create some demos and do a write up.</p>
+<p>Before we start looking at the code, I need to mention two things. For thisÂ walk-through, we'll start with a simple PHP form and add in jQuery components. If this doesn't interest you, feel free to skip down to the final section. Second, if you want to follow my example to the letter, you'll need to setup a database (I'm using MySQL) and add a table 'customer' with the following structure:</p>
+<p><a href="https://www.alexdglover.com/assets/alexdglover_asynchDatabaseDemo_tableStructure.png"><img class="aligncenter size-full wp-image-525" alt="alexdglover_asynchDatabaseDemo_tableStructure" src="/assets/alexdglover_asynchDatabaseDemo_tableStructure.png" width="564" height="229" /></a></p>
+<p>Here's a quick script to create the table if you're feeling lazy:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="nv">`customer`</span> <span class="p">(</span>
+  <span class="nv">`id`</span> <span class="nb">int</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="n">AUTO_INCREMENT</span><span class="p">,</span>
+  <span class="nv">`Last_Name`</span> <span class="nb">varchar</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="k">COLLATE</span> <span class="n">latin1_general_ci</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="nv">`First_Name`</span> <span class="nb">varchar</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="k">COLLATE</span> <span class="n">latin1_general_ci</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="nv">`Phone_Number`</span> <span class="nb">varchar</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="k">COLLATE</span> <span class="n">latin1_general_ci</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="nv">`Street_Address`</span> <span class="nb">varchar</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="k">COLLATE</span> <span class="n">latin1_general_ci</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="nv">`City`</span> <span class="nb">varchar</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="k">COLLATE</span> <span class="n">latin1_general_ci</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="nv">`State`</span> <span class="nb">varchar</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span> <span class="k">COLLATE</span> <span class="n">latin1_general_ci</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="nv">`ZIP`</span> <span class="nb">varchar</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="k">COLLATE</span> <span class="n">latin1_general_ci</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="nv">`id`</span><span class="p">)</span>
+<span class="p">)</span> <span class="n">ENGINE</span><span class="o">=</span><span class="n">MyISAM</span>  <span class="k">DEFAULT</span> <span class="n">CHARSET</span><span class="o">=</span><span class="n">latin1</span> <span class="k">COLLATE</span><span class="o">=</span><span class="n">latin1_general_ci</span> <span class="n">AUTO_INCREMENT</span><span class="o">=</span><span class="mi">19</span> <span class="p">;</span>
+</code></pre></div></div>
+
+<p>Of course you can use a different database, different table name, columns etc., just keep that in mind as you write your code.</p>
+<h2>Part 1 - Simple PHP Form and Submit Button</h2>
+<p>Before we add anything new, let's just get a basic page working. This page will have a form with a text field input for each field in the database (except the ID, since it auto-increments), and a submit button. The page will also have a simple table to show the records currently in the database. If you're totally new to PHP forms and MySQL, check out the W3Schools PHP tutorials on <a href="http://www.w3schools.com/php/php_forms.asp" target="_blank">forms</a>,Â <a href="http://www.w3schools.com/php/php_get.asp" target="_blank">$_GET</a>/<a href="http://www.w3schools.com/php/php_post.asp" target="_blank">$_POST</a>, <a href="http://www.w3schools.com/php/php_mysql_insert.asp" target="_blank">INSERT</a> and <a href="http://www.w3schools.com/php/php_mysql_select.asp" target="_blank">SELECT</a>.</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;head&gt;</span>
+
+<span class="cp">&lt;?php</span>
+<span class="nv">$con</span><span class="o">=</span><span class="nb">mysqli_connect</span><span class="p">(</span><span class="s2">"&lt;hostname&gt;"</span><span class="p">,</span><span class="s2">"&lt;username&gt;"</span><span class="p">,</span><span class="s2">"&lt;password&gt;"</span><span class="p">,</span><span class="s2">"&lt;database_name&gt;"</span><span class="p">);</span>
+<span class="c1">// Check connection</span>
+<span class="k">if</span> <span class="p">(</span><span class="nf">mysqli_connect_errno</span><span class="p">())</span>
+  <span class="p">{</span>
+  <span class="k">echo</span> <span class="s2">"Failed to connect to MySQL: "</span> <span class="mf">.</span> <span class="nf">mysqli_connect_error</span><span class="p">();</span>
+  <span class="p">}</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="k">isset</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s2">"lastName"</span><span class="p">]))</span> <span class="p">{</span>
+  <span class="nv">$sql</span><span class="o">=</span><span class="s2">"INSERT INTO customer (Last_Name, First_Name, Phone_Number, Street_Address, City, State, Zip) VALUES ('</span><span class="nv">$_POST[lastName]</span><span class="s2">', '</span><span class="nv">$_POST[firstName]</span><span class="s2">', '</span><span class="nv">$_POST[phoneNumber]</span><span class="s2">', '</span><span class="nv">$_POST[address]</span><span class="s2">', '</span><span class="nv">$_POST[city]</span><span class="s2">', '</span><span class="nv">$_POST[state]</span><span class="s2">', '</span><span class="nv">$_POST[zip]</span><span class="s2">')"</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nf">mysqli_query</span><span class="p">(</span><span class="nv">$con</span><span class="p">,</span><span class="nv">$sql</span><span class="p">))</span>
+  <span class="p">{</span>
+    <span class="k">die</span><span class="p">(</span><span class="s1">'Error: '</span> <span class="mf">.</span> <span class="nf">mysqli_error</span><span class="p">());</span>
+  <span class="p">}</span>
+  <span class="k">echo</span> <span class="s2">"1 record added"</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span>
+
+<span class="nt">&lt;title&gt;</span>Alex Glover's Portfolio Site<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+<span class="nt">&lt;h1&gt;</span>Asynchronous Database Calls Demo<span class="nt">&lt;/h1&gt;</span>
+
+<span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">"asynchDatabaseDemo.php"</span> <span class="na">method=</span><span class="s">"post"</span><span class="nt">&gt;</span>
+Last Name: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"lastName"</span><span class="nt">&gt;&lt;br</span> <span class="nt">/&gt;</span>
+First Name: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"firstName"</span><span class="nt">&gt;&lt;br</span> <span class="nt">/&gt;</span>
+Phone: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"phoneNumber"</span><span class="nt">&gt;&lt;br</span> <span class="nt">/&gt;</span>
+Address: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"address"</span><span class="nt">&gt;&lt;br</span> <span class="nt">/&gt;</span>
+City: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"city"</span><span class="nt">&gt;&lt;br</span> <span class="nt">/&gt;</span>
+State: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"state"</span><span class="nt">&gt;&lt;br</span> <span class="nt">/&gt;</span>
+ZIP: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"zip"</span><span class="nt">&gt;&lt;br</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;button</span> <span class="na">type=</span><span class="s">"submit"</span><span class="nt">&gt;</span>Submit<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;/form&gt;</span>
+
+<span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
+
+<span class="nt">&lt;table&gt;</span>
+<span class="nt">&lt;tr&gt;&lt;th&gt;</span>Last Name<span class="nt">&lt;/th&gt;&lt;th&gt;</span>First Name<span class="nt">&lt;/th&gt;&lt;th&gt;</span>Phone Number<span class="nt">&lt;/th&gt;&lt;th&gt;</span>Address<span class="nt">&lt;/th&gt;&lt;th&gt;</span>City<span class="nt">&lt;/th&gt;&lt;th&gt;</span>State<span class="nt">&lt;/th&gt;&lt;th&gt;</span>Zip<span class="nt">&lt;/th&gt;&lt;/tr&gt;</span>
+
+<span class="cp">&lt;?php</span>
+<span class="cm">/* Get the entire appgen table to fill out the table on the page */</span>
+<span class="nv">$query</span> <span class="o">=</span> <span class="s2">"SELECT * FROM customer order by Last_Name desc;"</span><span class="p">;</span>
+<span class="k">if</span><span class="p">(</span><span class="nv">$result</span> <span class="o">=</span> <span class="nv">$con</span><span class="o">-&gt;</span><span class="nf">query</span><span class="p">(</span><span class="nv">$query</span><span class="p">))</span> <span class="p">{</span>
+  <span class="k">while</span> <span class="p">(</span><span class="nv">$row</span> <span class="o">=</span> <span class="nv">$result</span><span class="o">-&gt;</span><span class="nf">fetch_row</span><span class="p">()){</span>
+    <span class="k">echo</span> <span class="s2">"&lt;tr&gt;"</span><span class="p">;</span>
+    <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+    <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+    <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+    <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+    <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+    <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+    <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+    <span class="k">echo</span> <span class="s2">"&lt;/tr&gt;"</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nv">$result</span><span class="o">-&gt;</span><span class="nf">close</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span>
+<span class="nt">&lt;/table&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<p>So now we can insert new records, and see all the records in the table. This is all Web Development 101, but it's important that we've built a working foundation. This way if we have issues later we can narrow it down to JavaScript or database issues.</p>
+<h2>Part 2 - Introducing jQuery and Serialize</h2>
+<p>OK, we're going to take a small step. Instead of using a button within a form to submit the page and all of the form values, we'll use JavaScript. Conveniently, jQuery has a <a href="http://api.jquery.com/serialize/" target="_blank">serialize</a> function we can use to grab all of the input values at once and format them in a convenient string. Then we'll use an ajax call to submit that pre-formatted string to the server.</p>
+<p>I haven't removed any of the original code, simply added one JavaScript function insert() and one anchor tag that will call the insert function. The insert() function will actually POST the values back to the server, back to the very same page (see the url: "asynchDatabaseDemo2.php" line). Since our PHP is looking for POST values, it will 'catch' them and insert them into the database. Let's review the code:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;head&gt;</span>
+
+<span class="cp">&lt;?php</span>
+<span class="nv">$con</span><span class="o">=</span><span class="nb">mysqli_connect</span><span class="p">(</span><span class="s2">"&lt;hostname&gt;"</span><span class="p">,</span><span class="s2">"&lt;username&gt;"</span><span class="p">,</span><span class="s2">"&lt;password&gt;"</span><span class="p">,</span><span class="s2">"&lt;database_name&gt;"</span><span class="p">);</span>
+<span class="c1">// Check connection</span>
+<span class="k">if</span> <span class="p">(</span><span class="nf">mysqli_connect_errno</span><span class="p">())</span>
+  <span class="p">{</span>
+  <span class="k">echo</span> <span class="s2">"Failed to connect to MySQL: "</span> <span class="mf">.</span> <span class="nf">mysqli_connect_error</span><span class="p">();</span>
+  <span class="p">}</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="k">isset</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s2">"lastName"</span><span class="p">]))</span> <span class="p">{</span>
+  <span class="nv">$sql</span><span class="o">=</span><span class="s2">"INSERT INTO customer (Last_Name, First_Name, Phone_Number, Street_Address, City, State, Zip) VALUES ('</span><span class="nv">$_POST[lastName]</span><span class="s2">', '</span><span class="nv">$_POST[firstName]</span><span class="s2">', '</span><span class="nv">$_POST[phoneNumber]</span><span class="s2">', '</span><span class="nv">$_POST[address]</span><span class="s2">', '</span><span class="nv">$_POST[city]</span><span class="s2">', '</span><span class="nv">$_POST[state]</span><span class="s2">', '</span><span class="nv">$_POST[zip]</span><span class="s2">')"</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nf">mysqli_query</span><span class="p">(</span><span class="nv">$con</span><span class="p">,</span><span class="nv">$sql</span><span class="p">))</span>
+  <span class="p">{</span>
+    <span class="k">die</span><span class="p">(</span><span class="s1">'Error: '</span> <span class="mf">.</span> <span class="nf">mysqli_error</span><span class="p">());</span>
+  <span class="p">}</span>
+  <span class="k">echo</span> <span class="s2">"1 record added"</span><span class="p">;</span>
+  <span class="c1">//mysqli_close($con);</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span>
+
+<span class="nt">&lt;title&gt;</span>Alex Glover's Portfolio Site<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"http://code.jquery.com/jquery-1.9.1.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>    
+<span class="kd">function</span> <span class="nx">insert</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">formValues</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="dl">'</span><span class="s1">form</span><span class="dl">'</span><span class="p">).</span><span class="nx">serialize</span><span class="p">();</span>
+
+  <span class="nx">alert</span><span class="p">(</span><span class="nx">formValues</span><span class="p">);</span>
+  <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+    <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">POST</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">url</span><span class="p">:</span> <span class="dl">"</span><span class="s2">asynchDatabaseDemo2.php</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">data</span><span class="p">:</span> <span class="nx">formValues</span>
+  <span class="p">})</span>
+<span class="p">}</span>
+<span class="nt">&lt;/script&gt;</span>
+
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+<span class="nt">&lt;h1&gt;</span>Asynchronous Database Calls Demo<span class="nt">&lt;/h1&gt;</span>
+
+Search:<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">onkeydown=</span><span class="s">"search()"</span><span class="nt">&gt;&lt;button</span> <span class="na">type=</span><span class="s">"submit"</span><span class="nt">&gt;&lt;/button&gt;</span>
+
+<span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
+
+<span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">"asynchDatabaseDemo.php"</span> <span class="na">method=</span><span class="s">"post"</span><span class="nt">&gt;</span>
+Last Name: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"lastName"</span><span class="nt">&gt;&lt;br</span> <span class="nt">/&gt;</span>
+First Name: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"firstName"</span><span class="nt">&gt;&lt;br</span> <span class="nt">/&gt;</span>
+Phone: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"phoneNumber"</span><span class="nt">&gt;&lt;br</span> <span class="nt">/&gt;</span>
+Address: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"address"</span><span class="nt">&gt;&lt;br</span> <span class="nt">/&gt;</span>
+City: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"city"</span><span class="nt">&gt;&lt;br</span> <span class="nt">/&gt;</span>
+State: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"state"</span><span class="nt">&gt;&lt;br</span> <span class="nt">/&gt;</span>
+ZIP: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"zip"</span><span class="nt">&gt;&lt;br</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;button</span> <span class="na">type=</span><span class="s">"submit"</span><span class="nt">&gt;</span>Submit<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"#"</span> <span class="na">onclick=</span><span class="s">"insert()"</span><span class="nt">&gt;</span>jQuery Insert<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;/form&gt;</span>
+
+<span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
+
+<span class="nt">&lt;table&gt;</span>
+<span class="nt">&lt;tr&gt;&lt;th&gt;</span>Last Name<span class="nt">&lt;/th&gt;&lt;th&gt;</span>First Name<span class="nt">&lt;/th&gt;&lt;th&gt;</span>Phone Number<span class="nt">&lt;/th&gt;&lt;th&gt;</span>Address<span class="nt">&lt;/th&gt;&lt;th&gt;</span>City<span class="nt">&lt;/th&gt;&lt;th&gt;</span>State<span class="nt">&lt;/th&gt;&lt;th&gt;</span>Zip<span class="nt">&lt;/th&gt;&lt;/tr&gt;</span>
+
+<span class="cp">&lt;?php</span>
+<span class="cm">/* Get the entire appgen table to fill out the table on the page */</span>
+<span class="nv">$query</span> <span class="o">=</span> <span class="s2">"SELECT * FROM customer order by Last_Name desc;"</span><span class="p">;</span>
+<span class="k">if</span><span class="p">(</span><span class="nv">$result</span> <span class="o">=</span> <span class="nv">$con</span><span class="o">-&gt;</span><span class="nf">query</span><span class="p">(</span><span class="nv">$query</span><span class="p">))</span> <span class="p">{</span>
+  <span class="k">while</span> <span class="p">(</span><span class="nv">$row</span> <span class="o">=</span> <span class="nv">$result</span><span class="o">-&gt;</span><span class="nf">fetch_row</span><span class="p">()){</span>
+    <span class="k">echo</span> <span class="s2">"&lt;tr&gt;"</span><span class="p">;</span>
+    <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+    <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+    <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+    <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+    <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+    <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+    <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+    <span class="k">echo</span> <span class="s2">"&lt;/tr&gt;"</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nv">$result</span><span class="o">-&gt;</span><span class="nf">close</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span>
+<span class="nt">&lt;/table&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<p>Simple right? The data is inserted, we see the alert that shows the serialized string... but the table doesn't show the new values. No worries, we just need to make the table operate asynchronously as well.</p>
+<h2>Part 3 - Asynchronous Search Results</h2>
+<p>This is a slightly more complicated step, so a couple quick notes before we get started:</p>
+<ul>
+<li><span style="line-height: 13px;">JavaScript can't call the PHP directly to re-query the database; JavaScript is a client-side language, PHP is a server-side language. However, we can 'cheat' by using HTTP POST or GET requests to act as a bridge between the two. To do this we need to create a separate PHP page to handle the searching, called "asynchDatabaseDemo_DBEngine.php". This page will echo table tags identical to our original table structure</span></li>
+<li>We'll add a new JavaScript function, searchDB(), that will POST to the PHP page dedicated to querying the database. Then we'll add a search field that calls the searchDB() function. Finally, we'll modify the insert() function to call the searchDB() function - that way the table will be refreshed as soon as the insert completes</li>
+<li>The ajax call within the searchDB() function has an additional attribute, 'success' that will handle the server response by placing the HTML within the table tags (by referencing the ID '#searchResults')</li>
+</ul>
+<p>Alright, hopefully that will make the code make a little more sense. Let's look at theÂ asynchDatabaseDemo_DBEngine.php file to start:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+<span class="nv">$con</span><span class="o">=</span><span class="nb">mysqli_connect</span><span class="p">(</span><span class="s2">"&lt;hostname&gt;"</span><span class="p">,</span><span class="s2">"&lt;username&gt;"</span><span class="p">,</span><span class="s2">"&lt;password&gt;"</span><span class="p">,</span><span class="s2">"&lt;database_name&gt;"</span><span class="p">);</span>
+<span class="c1">// Check connection</span>
+<span class="k">if</span> <span class="p">(</span><span class="nf">mysqli_connect_errno</span><span class="p">())</span>
+<span class="p">{</span>
+  <span class="k">echo</span> <span class="s2">"Failed to connect to MySQL: "</span> <span class="mf">.</span> <span class="nf">mysqli_connect_error</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="k">isset</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s2">"keyword"</span><span class="p">]))</span>
+<span class="p">{</span>
+  <span class="nv">$keyword</span> <span class="o">=</span> <span class="nv">$_POST</span><span class="p">[</span><span class="s2">"keyword"</span><span class="p">];</span>
+  <span class="nv">$query</span> <span class="o">=</span> <span class="s2">"SELECT * FROM customer where Last_Name like '%</span><span class="nv">$keyword</span><span class="s2">%' order by Last_Name desc;"</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span><span class="nv">$result</span> <span class="o">=</span> <span class="nv">$con</span><span class="o">-&gt;</span><span class="nf">query</span><span class="p">(</span><span class="nv">$query</span><span class="p">))</span>
+  <span class="p">{</span>
+    <span class="k">echo</span> <span class="s2">"&lt;tr&gt;&lt;th&gt;Last Name&lt;/th&gt;&lt;th&gt;First Name&lt;/th&gt;&lt;th&gt;Phone Number&lt;/th&gt;&lt;th&gt;Address&lt;/th&gt;&lt;th&gt;City&lt;/th&gt;&lt;th&gt;State&lt;/th&gt;&lt;th&gt;Zip&lt;/th&gt;&lt;/tr&gt;"</span><span class="p">;</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="nv">$row</span> <span class="o">=</span> <span class="nv">$result</span><span class="o">-&gt;</span><span class="nf">fetch_row</span><span class="p">()){</span>
+      <span class="k">echo</span> <span class="s2">"&lt;tr&gt;"</span><span class="p">;</span>
+      <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+      <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+      <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+      <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+      <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+      <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+      <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+      <span class="k">echo</span> <span class="s2">"&lt;/tr&gt;"</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nv">$result</span><span class="o">-&gt;</span><span class="nf">close</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="k">else</span>
+  <span class="p">{</span>
+    <span class="k">echo</span> <span class="s1">'No Results for :"'</span><span class="mf">.</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">'keyword'</span><span class="p">]</span><span class="mf">.</span><span class="s1">'"'</span><span class="p">;</span>
+  <span class="p">}</span>
+
+<span class="p">}</span>
+<span class="cp">?&gt;</span>
+</code></pre></div></div>
+
+<p>And finally the aynchDatabaseDemo_frontEnd.php code:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;head&gt;</span>
+
+<span class="cp">&lt;?php</span>
+<span class="nv">$con</span><span class="o">=</span><span class="nb">mysqli_connect</span><span class="p">(</span><span class="s2">"&lt;hostname&gt;"</span><span class="p">,</span><span class="s2">"&lt;username&gt;"</span><span class="p">,</span><span class="s2">"&lt;password&gt;"</span><span class="p">,</span><span class="s2">"&lt;database_name&gt;"</span><span class="p">);</span>
+<span class="c1">// Check connection</span>
+<span class="k">if</span> <span class="p">(</span><span class="nf">mysqli_connect_errno</span><span class="p">())</span>
+  <span class="p">{</span>
+  <span class="k">echo</span> <span class="s2">"Failed to connect to MySQL: "</span> <span class="mf">.</span> <span class="nf">mysqli_connect_error</span><span class="p">();</span>
+  <span class="p">}</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="k">isset</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s2">"lastName"</span><span class="p">]))</span> <span class="p">{</span>
+  <span class="nv">$sql</span><span class="o">=</span><span class="s2">"INSERT INTO customer (Last_Name, First_Name, Phone_Number, Street_Address, City, State, Zip) VALUES ('</span><span class="nv">$_POST[lastName]</span><span class="s2">', '</span><span class="nv">$_POST[firstName]</span><span class="s2">', '</span><span class="nv">$_POST[phoneNumber]</span><span class="s2">', '</span><span class="nv">$_POST[address]</span><span class="s2">', '</span><span class="nv">$_POST[city]</span><span class="s2">', '</span><span class="nv">$_POST[state]</span><span class="s2">', '</span><span class="nv">$_POST[zip]</span><span class="s2">')"</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nf">mysqli_query</span><span class="p">(</span><span class="nv">$con</span><span class="p">,</span><span class="nv">$sql</span><span class="p">))</span>
+  <span class="p">{</span>
+    <span class="k">die</span><span class="p">(</span><span class="s1">'Error: '</span> <span class="mf">.</span> <span class="nf">mysqli_error</span><span class="p">());</span>
+  <span class="p">}</span>
+  <span class="k">echo</span> <span class="s2">"1 record added"</span><span class="p">;</span>
+  <span class="c1">//mysqli_close($con);</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span>
+
+<span class="nt">&lt;title&gt;</span>Alex Glover's Portfolio Site<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"http://code.jquery.com/jquery-1.9.1.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>    
+<span class="kd">function</span> <span class="nx">insert</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">formValues</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="dl">'</span><span class="s1">form</span><span class="dl">'</span><span class="p">).</span><span class="nx">serialize</span><span class="p">();</span>
+
+  <span class="nx">alert</span><span class="p">(</span><span class="nx">formValues</span><span class="p">);</span>
+
+  <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+    <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">POST</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">url</span><span class="p">:</span> <span class="dl">"</span><span class="s2">asynchDatabaseDemo_frontEnd.php</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">data</span><span class="p">:</span> <span class="nx">formValues</span>
+  <span class="p">})</span>
+
+  <span class="nx">queryDB</span><span class="p">();</span>
+
+  <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">closest</span><span class="p">(</span><span class="dl">'</span><span class="s1">form</span><span class="dl">'</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="dl">"</span><span class="s2">input[type=text], textarea</span><span class="dl">"</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="dl">""</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="nt">&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>    
+<span class="kd">function</span> <span class="nx">queryDB</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">keyword</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="dl">"</span><span class="s2">#searchField</span><span class="dl">"</span><span class="p">).</span><span class="nx">val</span><span class="p">();</span>
+
+  <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+    <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">POST</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">url</span><span class="p">:</span> <span class="dl">"</span><span class="s2">asynchDatabaseDemo_DBEngine.php</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">data</span><span class="p">:</span> <span class="dl">"</span><span class="s2">keyword=</span><span class="dl">"</span> <span class="o">+</span> <span class="nx">keyword</span><span class="p">,</span>
+    <span class="na">success</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">server_response</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="nx">$</span><span class="p">(</span><span class="dl">'</span><span class="s1">#searchResults</span><span class="dl">'</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">server_response</span><span class="p">).</span><span class="nx">show</span><span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">})</span>
+<span class="p">}</span>
+<span class="nt">&lt;/script&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+<span class="nt">&lt;h1&gt;</span>Asynchronous Database Calls Demo<span class="nt">&lt;/h1&gt;</span>
+
+Search:<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">onkeydown=</span><span class="s">"queryDB()"</span> <span class="na">id=</span><span class="s">"searchField"</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">"#"</span> <span class="na">onclick=</span><span class="s">"queryDB()"</span><span class="nt">&gt;</span>Search<span class="nt">&lt;/a&gt;</span>
+
+<span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
+
+<span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">"asynchDatabaseDemo.php"</span> <span class="na">method=</span><span class="s">"post"</span><span class="nt">&gt;</span>
+Last Name: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"lastName"</span><span class="nt">&gt;&lt;br</span> <span class="nt">/&gt;</span>
+First Name: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"firstName"</span><span class="nt">&gt;&lt;br</span> <span class="nt">/&gt;</span>
+Phone: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"phoneNumber"</span><span class="nt">&gt;&lt;br</span> <span class="nt">/&gt;</span>
+Address: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"address"</span><span class="nt">&gt;&lt;br</span> <span class="nt">/&gt;</span>
+City: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"city"</span><span class="nt">&gt;&lt;br</span> <span class="nt">/&gt;</span>
+State: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"state"</span><span class="nt">&gt;&lt;br</span> <span class="nt">/&gt;</span>
+ZIP: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"zip"</span><span class="nt">&gt;&lt;br</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;button</span> <span class="na">type=</span><span class="s">"submit"</span><span class="nt">&gt;</span>Submit<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"#"</span> <span class="na">onclick=</span><span class="s">"insert()"</span><span class="nt">&gt;</span>jQuery Insert<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;/form&gt;</span>
+
+<span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
+
+<span class="nt">&lt;table</span> <span class="na">id=</span><span class="s">"searchResults"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;tr&gt;&lt;th&gt;</span>Last Name<span class="nt">&lt;/th&gt;&lt;th&gt;</span>First Name<span class="nt">&lt;/th&gt;&lt;th&gt;</span>Phone Number<span class="nt">&lt;/th&gt;&lt;th&gt;</span>Address<span class="nt">&lt;/th&gt;&lt;th&gt;</span>City<span class="nt">&lt;/th&gt;&lt;th&gt;</span>State<span class="nt">&lt;/th&gt;&lt;th&gt;</span>Zip<span class="nt">&lt;/th&gt;&lt;/tr&gt;</span>
+
+<span class="cp">&lt;?php</span>
+<span class="cm">/* Get the entire appgen table to fill out the table on the page */</span>
+<span class="nv">$query</span> <span class="o">=</span> <span class="s2">"SELECT * FROM customer order by Last_Name desc;"</span><span class="p">;</span>
+<span class="k">if</span><span class="p">(</span><span class="nv">$result</span> <span class="o">=</span> <span class="nv">$con</span><span class="o">-&gt;</span><span class="nf">query</span><span class="p">(</span><span class="nv">$query</span><span class="p">))</span> <span class="p">{</span>
+  <span class="k">while</span> <span class="p">(</span><span class="nv">$row</span> <span class="o">=</span> <span class="nv">$result</span><span class="o">-&gt;</span><span class="nf">fetch_row</span><span class="p">()){</span>
+    <span class="k">echo</span> <span class="s2">"&lt;tr&gt;"</span><span class="p">;</span>
+    <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+    <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+    <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+    <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+    <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+    <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+    <span class="k">echo</span> <span class="s2">"&lt;td&gt;"</span> <span class="mf">.</span> <span class="nv">$row</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="mf">.</span> <span class="s2">"&lt;/td&gt;"</span><span class="p">;</span>
+    <span class="k">echo</span> <span class="s2">"&lt;/tr&gt;"</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nv">$result</span><span class="o">-&gt;</span><span class="nf">close</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span>
+<span class="nt">&lt;/table&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+<p>Done! This tutorial came out a little more scatter-brained than I had hoped, so feel free to comment/contact me if you have any questions. As always, I hope this helps.</p>
+:ET

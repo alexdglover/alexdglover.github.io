@@ -1,0 +1,50 @@
+I"�<p class="notice--success"><strong>It’s official!</strong> Linkets has been formally published on the <a href="https://www.zendesk.com/apps/support/linkets/?source=app_directory">Zendesk App marketplace</a> - go check it out!</p>
+
+<p>One of the coolest things about <a href="https://www.zendesk.com/">Zendesk</a> (both the
+company and the software itself) is how developer-friendly it is. The API is
+well documented and powerful, and they even provide an <a href="https://developer.zendesk.com/apps/docs/apps-v2/getting_started">App Framework</a>
+that allows you to develop “widgets” that are displayed in the standard Zendesk
+UIs. Full disclosure, I currently work at Zendesk.</p>
+
+<p>Zendesk Support has a ton of features, but doesn’t have the ability to link
+related tickets. There is a <a href="https://www.zendesk.com/apps/support/linked-ticket/?source=app_directory">Linked Ticket</a>
+app you can install for free, but this only allows you to create <em>new</em> tickets,
+and only as a <em>child</em> ticket. Want to link to an existing ticket? Too bad. Need
+to support relationships other than parent/child? Too bad. I want people to use
+and love Zendesk, so I decided to take a crack at my own version of the linked
+ticket app. I titled my app “Linkets.”</p>
+
+<p>The concept for the app is simple. Linked tickets are simply tickets with extra
+metadata about one another. The Zendesk API supports reading and writing tags
+on tickets, and tags are an <em>excellent</em> way to store metadata. When you open a
+ticket, the widget reads the tags, parses any tags that are specific to links,
+looks up those related tickets and displays them in the widget.</p>
+
+<p><a href="https://user-images.githubusercontent.com/25018339/31588375-8945a026-b1b6-11e7-9bcf-b757274d7810.png"><img class="text-center" src="https://user-images.githubusercontent.com/25018339/31588375-8945a026-b1b6-11e7-9bcf-b757274d7810.png" alt="Linkets displaying linked ticket" /></a></p>
+
+<p>Users obviously need to be able to create new links. To do so, users can simply
+search for tickets (using Zendesk’s search API, which is a speedy, badass,
+full-text search platform), click on the button to create the link, and then
+choose how the two tickets are related. Behind the scenes, this is another API
+call that updates the current ticket and the linked ticket.</p>
+
+<p><a href="https://user-images.githubusercontent.com/25018339/31588370-678156a6-b1b6-11e7-87ce-1449ef600d09.png"><img class="text-center" src="https://user-images.githubusercontent.com/25018339/31588370-678156a6-b1b6-11e7-87ce-1449ef600d09.png" alt="Linking a new ticket" /></a></p>
+
+<p>That’s it. Linkets is very lightweight, won’t eat through your API limits, and
+is easily modifiable/extensible. Don’t like the built-in relationship types?
+Just modify the <a href="https://github.com/alexdglover/linkets/blob/master/assets/main.js#L321-L343">JavaScript for handling ‘relationship codes’</a>
+and the <a href="https://github.com/alexdglover/linkets/blob/master/assets/iframe.html#L53-L57">relationship codes set in the UI</a>.</p>
+
+<p>The app isn’t published on the <a href="https://www.zendesk.com/apps/">Zendesk App Marketplace</a>
+yet, but in the meantime you can download the ZIP file from the <a href="https://github.com/alexdglover/linkets">GitHub repo</a>
+and <a href="https://help.zendesk.com/hc/en-us/articles/229137347#topic_opx_mvg_3l">install it as a “Private App”</a>.</p>
+
+<p class="text-center"><a href="https://github.com/alexdglover/linkets" class="btn btn--large btn--info">Linkets on GitHub</a></p>
+
+<p>The Zendesk developer docs are so good, I won’t bother walking through <em>how</em> to
+write your own app. If you’re interested in writing your own app, check out the <a href="https://help.zendesk.com/hc/en-us/articles/229137267-Build-your-first-Support-app-Part-1-Laying-the-groundwork">Build Your First Support App Walkthrough</a>.</p>
+
+<p>Let me know if you end up using Linkets, or if you’ve written your own custom app!</p>
+
+<p>As always, I hope you found this useful.</p>
+:ET

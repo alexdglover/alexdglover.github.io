@@ -1,0 +1,5 @@
+I"N<p>I've been looking for an API project for awhile now, either to write an API service or a client/app that consumes one. Then I finally thought of a use case - an app that would allow you to find an actor based on two movies they've been in, using only JavaScript and APIs. It took me awhile to find a movie API service that was free and suited my purposes, then I found <a href="http://themoviedb.org" target="_blank">TheMovieDB</a> (which has a pretty sweet API actually and is free to use). Check out the demo and grab the source from GitHub if you want to do something similar.</p>
+
+<p class="text-center"><a href="https://alexdglover.github.io/whosthatpersoninthatthing/" class="btn btn--large btn--info">Demo</a>
+<a href="https://github.com/alexdglover/whosthatpersoninthatthing" class="btn btn--large btn--info">GitHub Repo</a></p>
+:ET

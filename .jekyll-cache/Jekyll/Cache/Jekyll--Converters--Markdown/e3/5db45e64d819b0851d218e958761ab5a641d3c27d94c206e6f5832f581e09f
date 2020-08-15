@@ -1,0 +1,340 @@
+I"0�<p>A few months back, I came across this chart illustrating Apple's segment revenues on Reddit:</p>
+<p style="text-align: center;"><img class="aligncenter" alt="" src="/assets/fpGeLbd.png" width="615" height="461" /></p>
+<p style="text-align: left;">This is a great chart because it has impact with just a glance, and yet yields more solid data the longer you examine it. Ever since I saw this chart I wanted to build my own for my department, for startups, and offer it up to anyone else who might want to build a similar chart.</p>
+<p style="text-align: left;">Horace Dediu of <a href="http://www.asymco.com/" target="_blank">Asymco.com</a> put this together using a chart-building iPad app called <a href="https://itunes.apple.com/us/app/perspective/id516098684?mt=8" target="_blank">Perspective</a>. Now, I should have just downloaded the damn app and made some similar charts and been happy. Instead I built my own from scratch using HTML5's canvas tag. Check out the demo.</p>
+
+<p class="text-center"><a href="https://alexdglover.github.io/stunning-tribble/index.html?item1Label=iPhone&amp;item1Rev=237&amp;item1Cos=43&amp;item2Label=iPad&amp;item2Rev=148&amp;item2Cos=94&amp;item3Label=Software&amp;item3Rev=94&amp;item3Cos=75&amp;opEx=103&amp;scaleLabel=million" class="btn btn--large btn--info">Demo</a>
+<a href="https://github.com/alexdglover/stunning-tribble" class="btn btn--large btn--info">GitHub Repo</a></p>
+
+<p style="text-align: left;">In case you didn't notice it right away (I didn't either), Horace Dediu's chart uses the same colors to represent both a product's revenues as well as their cost of goods sold, giving you an at-a-glance idea of what a product's margin is. I replicated this feature in my tool as well.</p>
+<p style="text-align: left;">Instead of a long-winded walk through of how I built the tool, I'm just going to share the source here and add some extra commenting for clarity.</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+  <span class="nt">&lt;title&gt;</span>Finance Chart<span class="nt">&lt;/title&gt;</span>
+    <span class="nt">&lt;style&gt;</span>
+      <span class="nt">body</span> <span class="p">{</span>
+        <span class="nl">margin</span><span class="p">:</span> <span class="m">20px</span><span class="p">;</span>
+        <span class="nl">padding</span><span class="p">:</span> <span class="m">20px</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="nt">&lt;/style&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+  <span class="c">&lt;!-- A basic HTML form for getting custom inputs from users. All of these values will be sent as HTTP GET variables in the URL--&gt;</span>
+  <span class="c">&lt;!-- From there, the JavaScript will fetch these variables out of the URL--&gt;</span>
+  <span class="nt">&lt;form</span> <span class="na">method=</span><span class="s">"GET"</span> <span class="na">action=</span><span class="s">"html5canvas.html"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;label&gt;</span>Item 1 Label<span class="nt">&lt;/label&gt;&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"item1Label"</span> <span class="nt">/&gt;&lt;br/&gt;</span>
+    <span class="nt">&lt;label&gt;</span>Item 1 Revenues<span class="nt">&lt;/label&gt;&lt;input</span> <span class="na">type=</span><span class="s">"number"</span> <span class="na">name=</span><span class="s">"item1Rev"</span> <span class="nt">/&gt;&lt;br/&gt;</span>
+    <span class="nt">&lt;label&gt;</span>Item 1 COGS<span class="nt">&lt;/label&gt;&lt;input</span> <span class="na">type=</span><span class="s">"number"</span> <span class="na">name=</span><span class="s">"item1Cos"</span> <span class="nt">/&gt;&lt;br/&gt;</span>
+    <span class="nt">&lt;label&gt;</span>Item 2 Label<span class="nt">&lt;/label&gt;&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"item2Label"</span> <span class="nt">/&gt;&lt;br/&gt;</span>
+    <span class="nt">&lt;label&gt;</span>Item 2 Revenues<span class="nt">&lt;/label&gt;&lt;input</span> <span class="na">type=</span><span class="s">"number"</span> <span class="na">name=</span><span class="s">"item2Rev"</span> <span class="nt">/&gt;&lt;br/&gt;</span>
+    <span class="nt">&lt;label&gt;</span>Item 2 COGS<span class="nt">&lt;/label&gt;&lt;input</span> <span class="na">type=</span><span class="s">"number"</span> <span class="na">name=</span><span class="s">"item2Cos"</span> <span class="nt">/&gt;&lt;br/&gt;</span>
+    <span class="nt">&lt;label&gt;</span>Item 3 Label<span class="nt">&lt;/label&gt;&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"item3Label"</span> <span class="nt">/&gt;&lt;br/&gt;</span>
+    <span class="nt">&lt;label&gt;</span>Item 3 Revenues<span class="nt">&lt;/label&gt;&lt;input</span> <span class="na">type=</span><span class="s">"number"</span> <span class="na">name=</span><span class="s">"item3Rev"</span> <span class="nt">/&gt;&lt;br/&gt;</span>
+    <span class="nt">&lt;label&gt;</span>Item 3 COGS<span class="nt">&lt;/label&gt;&lt;input</span> <span class="na">type=</span><span class="s">"number"</span> <span class="na">name=</span><span class="s">"item3Cos"</span> <span class="nt">/&gt;&lt;br/&gt;</span>
+    <span class="nt">&lt;label&gt;</span>Operating Expense<span class="nt">&lt;/label&gt;&lt;input</span> <span class="na">type=</span><span class="s">"number"</span> <span class="na">name=</span><span class="s">"opEx"</span> <span class="nt">/&gt;&lt;br/&gt;</span>
+    <span class="nt">&lt;label&gt;</span>Scale ($M, $k, etc)<span class="nt">&lt;/label&gt;&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"scaleLabel"</span> <span class="nt">/&gt;&lt;br/&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"Submit"</span> <span class="na">value=</span><span class="s">"Submit"</span> <span class="nt">/&gt;&lt;br/&gt;</span>
+  <span class="nt">&lt;/form&gt;</span>
+  <span class="c">&lt;!-- The canvas tag - the only important thing here is to set your width and height as necessary--&gt;</span>
+    <span class="nt">&lt;canvas</span> <span class="na">id=</span><span class="s">"myCanvas"</span> <span class="na">width=</span><span class="s">"1000"</span> <span class="na">height=</span><span class="s">"1200"</span><span class="nt">&gt;&lt;/canvas&gt;</span>
+  <span class="nt">&lt;script&gt;</span>
+  <span class="c1">// A handy little function that I picked up at http://papermashup.com/read-url-get-variables-withjavascript/</span>
+  <span class="c1">// The function simply parses a GET variable out of the URL using REGEX and returns it</span>
+  <span class="kd">function</span> <span class="nx">getUrlVars</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">vars</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="kd">var</span> <span class="nx">parts</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">href</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/</span><span class="se">[</span><span class="sr">?&amp;</span><span class="se">]</span><span class="sr">+</span><span class="se">([^</span><span class="sr">=&amp;</span><span class="se">]</span><span class="sr">+</span><span class="se">)</span><span class="sr">=</span><span class="se">([^</span><span class="sr">&amp;</span><span class="se">]</span><span class="sr">*</span><span class="se">)</span><span class="sr">/gi</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">m</span><span class="p">,</span><span class="nx">key</span><span class="p">,</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">vars</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+    <span class="p">});</span>
+    <span class="k">return</span> <span class="nx">vars</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nt">&lt;/script&gt;</span>
+    <span class="nt">&lt;script&gt;</span>
+    <span class="c1">// Grabbing all of the user form variables out of the URL. For integer values, we need to cast them as an int datatype</span>
+    <span class="c1">// because by default, as part of the URL string, they exist as strings</span>
+    <span class="kd">var</span> <span class="nx">item1Label</span>  <span class="o">=</span><span class="p">(</span><span class="nx">getUrlVars</span><span class="p">()[</span><span class="dl">"</span><span class="s2">item1Label</span><span class="dl">"</span><span class="p">]);</span>
+    <span class="kd">var</span> <span class="nx">item1Rev</span>  <span class="o">=</span><span class="nb">parseInt</span><span class="p">((</span><span class="nx">getUrlVars</span><span class="p">()[</span><span class="dl">"</span><span class="s2">item1Rev</span><span class="dl">"</span><span class="p">]));</span>
+    <span class="kd">var</span> <span class="nx">item1Cos</span>  <span class="o">=</span><span class="nb">parseInt</span><span class="p">((</span><span class="nx">getUrlVars</span><span class="p">()[</span><span class="dl">"</span><span class="s2">item1Cos</span><span class="dl">"</span><span class="p">]));</span>
+
+    <span class="kd">var</span> <span class="nx">item2Label</span>  <span class="o">=</span><span class="p">(</span><span class="nx">getUrlVars</span><span class="p">()[</span><span class="dl">"</span><span class="s2">item2Label</span><span class="dl">"</span><span class="p">]);</span>
+    <span class="kd">var</span> <span class="nx">item2Rev</span>  <span class="o">=</span><span class="nb">parseInt</span><span class="p">((</span><span class="nx">getUrlVars</span><span class="p">()[</span><span class="dl">"</span><span class="s2">item2Rev</span><span class="dl">"</span><span class="p">]));</span>
+    <span class="kd">var</span> <span class="nx">item2Cos</span>  <span class="o">=</span><span class="nb">parseInt</span><span class="p">((</span><span class="nx">getUrlVars</span><span class="p">()[</span><span class="dl">"</span><span class="s2">item2Cos</span><span class="dl">"</span><span class="p">]));</span>
+
+    <span class="kd">var</span> <span class="nx">item3Label</span>  <span class="o">=</span><span class="p">(</span><span class="nx">getUrlVars</span><span class="p">()[</span><span class="dl">"</span><span class="s2">item3Label</span><span class="dl">"</span><span class="p">]);</span>
+    <span class="kd">var</span> <span class="nx">item3Rev</span>  <span class="o">=</span><span class="nb">parseInt</span><span class="p">((</span><span class="nx">getUrlVars</span><span class="p">()[</span><span class="dl">"</span><span class="s2">item3Rev</span><span class="dl">"</span><span class="p">]));</span>
+    <span class="kd">var</span> <span class="nx">item3Cos</span>  <span class="o">=</span><span class="nb">parseInt</span><span class="p">((</span><span class="nx">getUrlVars</span><span class="p">()[</span><span class="dl">"</span><span class="s2">item3Cos</span><span class="dl">"</span><span class="p">]));</span>
+
+    <span class="kd">var</span> <span class="nx">opExInput</span>  <span class="o">=</span><span class="nb">parseInt</span><span class="p">((</span><span class="nx">getUrlVars</span><span class="p">()[</span><span class="dl">"</span><span class="s2">opEx</span><span class="dl">"</span><span class="p">]));</span>
+
+    <span class="kd">var</span> <span class="nx">scaleLabelInput</span> <span class="o">=</span> <span class="p">(</span><span class="nx">getUrlVars</span><span class="p">()[</span><span class="dl">"</span><span class="s2">scaleLabel</span><span class="dl">"</span><span class="p">]);</span>
+
+    <span class="c1">// We calculate the total revenue right away. Total revenue should be the largest number in any practical use case</span>
+    <span class="c1">// and we will use it to set the scale for all of the rest of the variables</span>
+    <span class="kd">var</span> <span class="nx">totalRev</span>   <span class="o">=</span> <span class="nx">item1Rev</span> <span class="o">+</span> <span class="nx">item2Rev</span> <span class="o">+</span> <span class="nx">item3Rev</span><span class="p">;</span>
+
+    <span class="c1">// Calculate and set variables for scaling purposes</span>
+    <span class="kd">var</span> <span class="nx">scaler</span> <span class="o">=</span> <span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">ceil</span><span class="p">(</span><span class="mi">100</span><span class="o">/</span><span class="nx">totalRev</span><span class="p">));</span>
+    <span class="kd">var</span> <span class="nx">totalRevScaled</span> <span class="o">=</span> <span class="p">(</span><span class="nx">scaler</span><span class="o">*</span><span class="nx">totalRev</span><span class="p">);</span>
+
+    <span class="c1">// Scale label that will be used later - a conversion on the size of the scale bar will happen at the time of drawing the scale</span>
+    <span class="kd">var</span> <span class="nx">scaleValue</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">= 10 </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">scaleLabelInput</span><span class="p">;</span>
+
+    <span class="c1">// Scale all of the item revenue and cost of goods solds values, and set them to new variables (unnecessary artifact of old code)</span>
+    <span class="kd">var</span> <span class="nx">revenueItem1</span>  <span class="o">=</span> <span class="nx">scaler</span><span class="o">*</span><span class="nx">item1Rev</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">revenueItem2</span>  <span class="o">=</span> <span class="nx">scaler</span><span class="o">*</span><span class="nx">item2Rev</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">revenueItem3</span>  <span class="o">=</span> <span class="nx">scaler</span><span class="o">*</span><span class="nx">item3Rev</span><span class="p">;</span>
+    <span class="c1">// Enter all revenues into an array to iterate through later. Do the same for labels</span>
+    <span class="kd">var</span> <span class="nx">revenues</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="nx">revenueItem1</span><span class="p">,</span><span class="nx">revenueItem2</span><span class="p">,</span><span class="nx">revenueItem3</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">revenuesLabels</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="nx">item1Label</span><span class="p">,</span><span class="nx">item2Label</span><span class="p">,</span><span class="nx">item3Label</span><span class="p">);</span>
+
+    <span class="c1">//more detailed level COGS variables</span>
+    <span class="kd">var</span> <span class="nx">cosItem1</span>  <span class="o">=</span> <span class="nx">scaler</span><span class="o">*</span><span class="nx">item1Cos</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">cosItem2</span>  <span class="o">=</span> <span class="nx">scaler</span><span class="o">*</span><span class="nx">item2Cos</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">cosItem3</span>  <span class="o">=</span> <span class="nx">scaler</span><span class="o">*</span><span class="nx">item3Cos</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">cosItems</span>  <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="nx">cosItem1</span><span class="p">,</span><span class="nx">cosItem2</span><span class="p">,</span><span class="nx">cosItem3</span><span class="p">);</span>
+    <span class="c1">// This array is redundant with revenuesLabels, another artifact</span>
+    <span class="kd">var</span> <span class="nx">cosItemsLabels</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="nx">item1Label</span><span class="p">,</span><span class="nx">item2Label</span><span class="p">,</span><span class="nx">item3Label</span><span class="p">);</span>
+
+    <span class="c1">// Set total COS, scale the Operating Expense value, and set operating income (aka net income in this case)</span>
+    <span class="c1">// to total revenue minus all other costs and operating expense. We use scaled values in this case because</span>
+    <span class="c1">// we don't actually care about the dollar value, just that the cart is proportionally correct</span>
+    <span class="kd">var</span> <span class="nx">cos</span>        <span class="o">=</span> <span class="nx">cosItem1</span><span class="o">+</span><span class="nx">cosItem2</span><span class="o">+</span><span class="nx">cosItem3</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">opEx</span>      <span class="o">=</span> <span class="nx">scaler</span><span class="o">*</span><span class="nx">opExInput</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">operatingIncome</span>  <span class="o">=</span> <span class="nx">totalRevScaled</span> <span class="o">-</span> <span class="p">(</span><span class="nx">cosItem1</span><span class="o">+</span><span class="nx">cosItem2</span><span class="o">+</span><span class="nx">cosItem3</span><span class="p">)</span> <span class="o">-</span> <span class="nx">opEx</span><span class="p">;</span>
+    <span class="c1">// Set an array to iterate through for expense categories</span>
+    <span class="kd">var</span> <span class="nx">expenseCats</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="nx">operatingIncome</span><span class="p">,</span><span class="nx">cos</span><span class="p">,</span><span class="nx">opEx</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">expenseCatsLabels</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="dl">'</span><span class="s1">Operating Income</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">COGS</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">Operating Expense</span><span class="dl">'</span><span class="p">);</span>
+
+    <span class="c1">// generic canvas variable setting</span>
+    <span class="kd">var</span> <span class="nx">canvas</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">myCanvas</span><span class="dl">'</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">context</span> <span class="o">=</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">getContext</span><span class="p">(</span><span class="dl">'</span><span class="s1">2d</span><span class="dl">'</span><span class="p">);</span>
+
+    <span class="c1">// Generic variables for storing location information - these will be used, incremented, and re-used to act as a "ceiling"</span>
+    <span class="c1">// for the bars in the chart</span>
+    <span class="kd">var</span> <span class="nx">globalVerticalAdjustment</span>  <span class="o">=</span> <span class="mi">30</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">revenueVerticalAdjustment</span>  <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
+
+    <span class="c1">// Generic color array for assigning different colors to all blocks</span>
+    <span class="kd">var</span> <span class="nx">colors</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="dl">'</span><span class="s1">black</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">orange</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">red</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">yellow</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">green</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">blue</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">purple</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">gray</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">white</span><span class="dl">'</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">// Begin "painting" revenue bars</span>
+    <span class="c1">// Grab the number of items in the revenues array</span>
+    <span class="kd">var</span> <span class="nx">length</span> <span class="o">=</span> <span class="nx">revenues</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+
+    <span class="c1">//for debugging only</span>
+    <span class="c1">//alert("revenues array has "+length+" items");</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">//debugging code</span>
+      <span class="c1">//for debugging only</span>
+      <span class="c1">//alert("global vert adj"+globalVerticalAdjustment);</span>
+      <span class="c1">//draw rectangle for revenue source</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+      <span class="c1">// Set the upper left top corner. We will always use 230 as the horizontal value so all of the bars align</span>
+      <span class="c1">// globalVerticalAdjustment will be incremented each time we paint a bar. 20 represents the width of the bar</span>
+      <span class="c1">// in pixels, and the last argument is the height of the bar</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">rect</span><span class="p">(</span><span class="mi">230</span><span class="p">,</span> <span class="nx">globalVerticalAdjustment</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="p">(</span><span class="nx">revenues</span><span class="p">[</span><span class="nx">i</span><span class="p">]));</span>
+      <span class="c1">// Set the color of the bar, and increment the color array for the next color selection</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">fillStyle</span> <span class="o">=</span> <span class="nx">colors</span><span class="p">[</span><span class="nx">c</span><span class="p">];</span>
+      <span class="nx">c</span><span class="o">++</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">fill</span><span class="p">();</span>
+      <span class="c1">// Set line color and width, then paint</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">lineWidth</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">strokeStyle</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">black</span><span class="dl">'</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">stroke</span><span class="p">();</span>
+
+      <span class="c1">// Set label for revenue sources</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">textAlign</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">right</span><span class="dl">'</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">fillStyle</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">black</span><span class="dl">'</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">font</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">14pt sans-serif</span><span class="dl">"</span><span class="p">;</span>
+      <span class="c1">// Here we use the revenuesLabel array to get the correct item name, and then set it to a location to correspond</span>
+      <span class="c1">// with the location of the bar</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">fillText</span><span class="p">(</span><span class="nx">revenuesLabels</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="mi">250</span><span class="p">,</span> <span class="nx">globalVerticalAdjustment</span><span class="o">-</span><span class="mi">10</span><span class="p">);</span>
+
+      <span class="c1">// If this is NOT the first iteration, then we need to account for the previous bars heights for spacing reasons</span>
+      <span class="k">if</span><span class="p">(</span><span class="nx">i</span><span class="o">!=</span><span class="mi">0</span><span class="p">){</span>
+        <span class="nx">revenueVerticalAdjustment</span> <span class="o">=</span> <span class="p">(</span><span class="nx">revenueVerticalAdjustment</span> <span class="o">+</span> <span class="nx">revenues</span><span class="p">[</span><span class="nx">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]);</span>
+        <span class="c1">//for debugging only</span>
+        <span class="c1">//alert("rev vertical adj = "+revenueVerticalAdjustment);</span>
+      <span class="p">}</span>
+
+      <span class="c1">// Drawing the top lines that connect with the total revenue bar</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(</span><span class="mi">250</span><span class="p">,</span> <span class="p">(</span><span class="nx">globalVerticalAdjustment</span><span class="p">));</span>
+      <span class="c1">// The curve is simply a line based on 4 points - the origin, which is set in the 'moveTo' function, two points that dictate</span>
+      <span class="c1">// which direction to curve the line (they act almost like gravity wells, if that helps your understanding), and an ending</span>
+      <span class="c1">// point for the line</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">bezierCurveTo</span><span class="p">(</span><span class="mi">260</span><span class="p">,</span> <span class="nx">revenueVerticalAdjustment</span><span class="p">,</span> <span class="mi">380</span><span class="p">,</span> <span class="nx">revenueVerticalAdjustment</span><span class="p">,</span> <span class="mi">420</span><span class="p">,</span> <span class="nx">revenueVerticalAdjustment</span><span class="p">);</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">lineWidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">strokeStyle</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">black</span><span class="dl">'</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">stroke</span><span class="p">();</span>
+
+      <span class="c1">// Drawing bottom lines to connect with total revenue bar - same functions, just different arguments</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(</span><span class="mi">250</span><span class="p">,</span> <span class="p">(</span><span class="nx">globalVerticalAdjustment</span><span class="o">+</span><span class="nx">revenues</span><span class="p">[</span><span class="nx">i</span><span class="p">]));</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">bezierCurveTo</span><span class="p">(</span><span class="mi">260</span><span class="p">,</span> <span class="nx">revenueVerticalAdjustment</span><span class="o">+</span><span class="nx">revenues</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="mi">380</span><span class="p">,</span> <span class="nx">revenueVerticalAdjustment</span><span class="o">+</span><span class="nx">revenues</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="mi">420</span><span class="p">,</span> <span class="nx">revenueVerticalAdjustment</span><span class="o">+</span><span class="nx">revenues</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">lineWidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">strokeStyle</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">black</span><span class="dl">'</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">stroke</span><span class="p">();</span>
+
+      <span class="nx">globalVerticalAdjustment</span> <span class="o">+=</span> <span class="p">(</span><span class="nx">revenues</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">+</span> <span class="mi">50</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">//Draw vetical revenue bar here - here we don't need an iterative function, because there always be one and only one revenue line</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">rect</span><span class="p">(</span><span class="mi">420</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="p">(</span><span class="nx">totalRevScaled</span><span class="p">));</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">fillStyle</span> <span class="o">=</span> <span class="nx">colors</span><span class="p">[</span><span class="nx">c</span><span class="p">];</span>
+    <span class="nx">c</span><span class="o">++</span><span class="p">;</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">fill</span><span class="p">();</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">lineWidth</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">strokeStyle</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">black</span><span class="dl">'</span><span class="p">;</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">stroke</span><span class="p">();</span>
+
+    <span class="c1">// Create the text label for the total revenue bar</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">fillStyle</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">black</span><span class="dl">'</span><span class="p">;</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">font</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">14pt sans-serif</span><span class="dl">"</span><span class="p">;</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">textAlign</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">left</span><span class="dl">'</span><span class="p">;</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">fillText</span><span class="p">(</span><span class="dl">"</span><span class="s2">Total Revenue</span><span class="dl">"</span><span class="p">,</span> <span class="mi">380</span><span class="p">,</span> <span class="mi">40</span><span class="p">);</span>
+
+    <span class="c1">// Resetting generic variables for location informatino</span>
+    <span class="nx">globalVerticalAdjustment</span>    <span class="o">=</span> <span class="mi">30</span><span class="p">;</span>
+    <span class="nx">expenseCatVerticalAdjustment</span>  <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
+
+    <span class="nx">length</span> <span class="o">=</span> <span class="nx">expenseCats</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+
+    <span class="c1">//for debugging only</span>
+    <span class="c1">//alert("expense category array has "+length+" items");</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">//for debugging only</span>
+      <span class="c1">//alert("global vert adj "+globalVerticalAdjustment);</span>
+
+      <span class="c1">// Same set of functions as the revenues section - drawing rectangles in the same way, just with different values</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">rect</span><span class="p">(</span><span class="mi">620</span><span class="p">,</span> <span class="nx">globalVerticalAdjustment</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="p">(</span><span class="nx">expenseCats</span><span class="p">[</span><span class="nx">i</span><span class="p">]));</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">fillStyle</span> <span class="o">=</span> <span class="nx">colors</span><span class="p">[</span><span class="nx">c</span><span class="p">];</span>
+      <span class="nx">c</span><span class="o">++</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">fill</span><span class="p">();</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">lineWidth</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">strokeStyle</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">black</span><span class="dl">'</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">stroke</span><span class="p">();</span>
+
+      <span class="c1">// Set label for expense category</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">fillStyle</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">black</span><span class="dl">'</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">font</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">14pt sans-serif</span><span class="dl">"</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">fillText</span><span class="p">(</span><span class="nx">expenseCatsLabels</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="mi">620</span><span class="p">,</span> <span class="nx">globalVerticalAdjustment</span><span class="o">-</span><span class="mi">10</span><span class="p">);</span>
+
+      <span class="k">if</span><span class="p">(</span><span class="nx">i</span><span class="o">!=</span><span class="mi">0</span><span class="p">){</span>
+        <span class="nx">expenseCatVerticalAdjustment</span> <span class="o">=</span> <span class="p">(</span><span class="nx">expenseCatVerticalAdjustment</span> <span class="o">+</span> <span class="nx">expenseCats</span><span class="p">[</span><span class="nx">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]);</span>
+        <span class="c1">//for debugging only</span>
+        <span class="c1">//alert("rev vertical adj = "+expenseCatVerticalAdjustment);</span>
+      <span class="p">}</span>
+
+      <span class="c1">// Drawing top lines to connect with total revenue bar</span>
+      <span class="c1">// Only difference is here is we are drawing the lines from right to left now, instead of left to right. This was done to keep the code</span>
+      <span class="c1">// as consistent as possible</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(</span><span class="mi">620</span><span class="p">,</span> <span class="p">(</span><span class="nx">globalVerticalAdjustment</span><span class="p">));</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">bezierCurveTo</span><span class="p">(</span><span class="mi">600</span><span class="p">,</span> <span class="nx">expenseCatVerticalAdjustment</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="nx">expenseCatVerticalAdjustment</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="nx">expenseCatVerticalAdjustment</span><span class="p">);</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">lineWidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">strokeStyle</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">black</span><span class="dl">'</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">stroke</span><span class="p">();</span>
+
+      <span class="c1">//drawing bottom lines to connect with total revenue bar</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(</span><span class="mi">620</span><span class="p">,</span> <span class="p">(</span><span class="nx">globalVerticalAdjustment</span><span class="o">+</span><span class="nx">expenseCats</span><span class="p">[</span><span class="nx">i</span><span class="p">]));</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">bezierCurveTo</span><span class="p">(</span><span class="mi">600</span><span class="p">,</span> <span class="nx">expenseCatVerticalAdjustment</span><span class="o">+</span><span class="nx">expenseCats</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="mi">440</span><span class="p">,</span> <span class="nx">expenseCatVerticalAdjustment</span><span class="o">+</span><span class="nx">expenseCats</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="mi">440</span><span class="p">,</span> <span class="nx">expenseCatVerticalAdjustment</span><span class="o">+</span><span class="nx">expenseCats</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">lineWidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">strokeStyle</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">black</span><span class="dl">'</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">stroke</span><span class="p">();</span>
+
+      <span class="nx">globalVerticalAdjustment</span> <span class="o">+=</span> <span class="p">(</span><span class="nx">expenseCats</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">+</span> <span class="mi">50</span><span class="p">);</span>
+
+    <span class="p">}</span>
+
+    <span class="c1">//resetting generic variables for location informatino</span>
+    <span class="nx">globalVerticalAdjustment</span>    <span class="o">=</span> <span class="mi">30</span> <span class="o">+</span> <span class="nx">operatingIncome</span><span class="p">;</span>
+    <span class="nx">expenseCatVerticalAdjustment</span>  <span class="o">=</span> <span class="mi">50</span> <span class="o">+</span> <span class="nx">operatingIncome</span> <span class="o">+</span> <span class="mi">30</span><span class="p">;</span>
+    <span class="nx">c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="nx">length</span> <span class="o">=</span> <span class="nx">cosItems</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+
+    <span class="c1">//for debugging only</span>
+    <span class="c1">//alert("expense category array has "+length+" items");</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">//for debugging only</span>
+      <span class="c1">//alert("global vert adj "+globalVerticalAdjustment);</span>
+
+      <span class="c1">// Again, drawing rectangles in the exact same way as before, just different values</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">rect</span><span class="p">(</span><span class="mi">820</span><span class="p">,</span> <span class="nx">globalVerticalAdjustment</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="p">(</span><span class="nx">cosItems</span><span class="p">[</span><span class="nx">i</span><span class="p">]));</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">fillStyle</span> <span class="o">=</span> <span class="nx">colors</span><span class="p">[</span><span class="nx">c</span><span class="p">];</span>
+      <span class="nx">c</span><span class="o">++</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">fill</span><span class="p">();</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">lineWidth</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">strokeStyle</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">black</span><span class="dl">'</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">stroke</span><span class="p">();</span>
+
+      <span class="c1">//set label for revenue source</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">fillStyle</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">black</span><span class="dl">'</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">font</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">14pt sans-serif</span><span class="dl">"</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">fillText</span><span class="p">(</span><span class="nx">cosItemsLabels</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="mi">820</span><span class="p">,</span> <span class="nx">globalVerticalAdjustment</span><span class="o">-</span><span class="mi">10</span><span class="p">);</span>
+
+      <span class="k">if</span><span class="p">(</span><span class="nx">i</span><span class="o">!=</span><span class="mi">0</span><span class="p">){</span>
+        <span class="nx">expenseCatVerticalAdjustment</span> <span class="o">=</span> <span class="p">(</span><span class="nx">expenseCatVerticalAdjustment</span> <span class="o">+</span> <span class="nx">cosItems</span><span class="p">[</span><span class="nx">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]);</span>
+        <span class="c1">//for debugging only</span>
+        <span class="c1">//alert("rev vertical adj = "+expenseCatVerticalAdjustment);</span>
+      <span class="p">}</span>
+
+      <span class="c1">// Drawing top lines to connect with total revenue bar</span>
+      <span class="c1">// As before with the expense categories, we draw the lines from right to left, this time aligning with the COS bar instead of</span>
+      <span class="c1">// the total revenue bar. Also, to account for the variable height and location of the COS bar, we now use the expenseCatVerticalAdjustment</span>
+      <span class="c1">// variable as the ceiling for the drawn lines.</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(</span><span class="mi">820</span><span class="p">,</span> <span class="p">(</span><span class="nx">globalVerticalAdjustment</span><span class="p">));</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">bezierCurveTo</span><span class="p">(</span><span class="mi">800</span><span class="p">,</span> <span class="nx">expenseCatVerticalAdjustment</span><span class="p">,</span> <span class="mi">640</span><span class="p">,</span> <span class="nx">expenseCatVerticalAdjustment</span><span class="p">,</span> <span class="mi">640</span><span class="p">,</span> <span class="nx">expenseCatVerticalAdjustment</span><span class="p">);</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">lineWidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">strokeStyle</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">black</span><span class="dl">'</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">stroke</span><span class="p">();</span>
+
+      <span class="c1">// Drawing bottom lines to connect with total revenue bar</span>
+      <span class="c1">// Same as above, except we now add the scaled value of cosItems[i] to expenseCatVerticalAdjustment to draw the bottom line</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(</span><span class="mi">820</span><span class="p">,</span> <span class="p">(</span><span class="nx">globalVerticalAdjustment</span><span class="o">+</span><span class="nx">cosItems</span><span class="p">[</span><span class="nx">i</span><span class="p">]));</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">bezierCurveTo</span><span class="p">(</span><span class="mi">800</span><span class="p">,</span> <span class="nx">expenseCatVerticalAdjustment</span><span class="o">+</span><span class="nx">cosItems</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="mi">640</span><span class="p">,</span> <span class="nx">expenseCatVerticalAdjustment</span><span class="o">+</span><span class="nx">cosItems</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="mi">640</span><span class="p">,</span> <span class="nx">expenseCatVerticalAdjustment</span><span class="o">+</span><span class="nx">cosItems</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">lineWidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">strokeStyle</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">black</span><span class="dl">'</span><span class="p">;</span>
+      <span class="nx">context</span><span class="p">.</span><span class="nx">stroke</span><span class="p">();</span>
+
+      <span class="nx">globalVerticalAdjustment</span> <span class="o">+=</span> <span class="p">(</span><span class="nx">cosItems</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">+</span> <span class="mi">50</span><span class="p">);</span>
+
+    <span class="p">}</span>
+
+    <span class="c1">// Begin scale section</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+    <span class="c1">// Here we draw a rectangle that is a scaled 10 units tall (relative to user inputs). The top of the scale rectangle will always be</span>
+    <span class="c1">// 150 pixels below the total revenue bar</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">rect</span><span class="p">(</span><span class="mi">420</span><span class="p">,</span> <span class="nx">totalRevScaled</span><span class="o">+</span><span class="mi">150</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="o">*</span><span class="nx">scaler</span><span class="p">);</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">fillStyle</span> <span class="o">=</span> <span class="nx">colors</span><span class="p">[</span><span class="nx">c</span><span class="p">];</span>
+    <span class="nx">c</span><span class="o">++</span><span class="p">;</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">fill</span><span class="p">();</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">lineWidth</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">strokeStyle</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">black</span><span class="dl">'</span><span class="p">;</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">stroke</span><span class="p">();</span>
+
+    <span class="c1">//set label for scale</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">fillStyle</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">black</span><span class="dl">'</span><span class="p">;</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">font</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">14pt sans-serif</span><span class="dl">"</span><span class="p">;</span>
+    <span class="c1">// Set the scale label to line up with the scale rectangle</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">fillText</span><span class="p">(</span><span class="nx">scaleValue</span><span class="p">,</span> <span class="mi">450</span><span class="p">,</span> <span class="nx">totalRevScaled</span><span class="o">+</span><span class="mi">160</span><span class="p">);</span>
+
+    <span class="nt">&lt;/script&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<p>It could still use some polish and pizzazz, but overall I'm pretty pleased with the tool. I've also learned with some time, math skills, and trial and error, you can draw just about anything in HTML5's canvas tag. If you are looking to build something using canvas, I'd highly recommend checking out <a href="http://www.html5canvastutorials.com/" target="_blank">HTML5 Canvas Tutorials</a>. With almost zero knowledge of the canvas tag, I was able to knock out this project in just a few hours with the help of their tutorials.</p>
+<p>As always, hope you enjoyed the post and let me know if you have any questions!</p>
+:ET

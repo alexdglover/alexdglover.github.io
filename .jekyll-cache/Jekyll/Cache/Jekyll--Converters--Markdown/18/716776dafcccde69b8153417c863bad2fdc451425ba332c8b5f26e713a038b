@@ -1,0 +1,5 @@
+I"<p>In a previous project, I built "<a href="http://www.alexdglover.com/whos-that-person-in-that-thing-app/" target="_blank">Who's that person in that thing?</a>," a JavaScript web app that called The Movie DB's API to find common actors given two movies. That was fun, but I still wanted to build an API service myself and I wanted to experiment with some new tools. But first I needed a project idea as an excuse to use them.</p>
+<h2>Project Idea/Application Premise/The Excuse</h2>
+<p>People are funny about money, especially about their salary. With most people, it's a taboo to talk about it. But everyone's been curious at some point to know how they compare to their peers. Some people fear they are getting paid less to do the same work as others, and sometimes that fear is founded in fact. The "Share Your Salary" app is an anonymous salary survey tool to address these kinds of use cases.</p>
+<p>Before we get into any of the tools or how-to, feel free to check out the application first or look over the source.</p>
+:ET

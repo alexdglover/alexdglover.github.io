@@ -1,0 +1,20 @@
+I"�<p>Like all good things, my time on WordPress.com's hosting has come to an end. Don't get me wrong - anyone toying with the idea for a blog should strongly consider it, as it's well-managed and does 90% of what any user needs it to do. It's a powerful tool for the uninitiated...</p>
+<p style="text-align: center;"><a href="https://www.alexdglover.com/assets/bane.png"><img class="aligncenter size-full wp-image-502" alt="bane-but-we-are-initiated" src="/assets/bane.png" width="460" height="663" /></a></p>
+<p>So as one of the 'initiated,' I had to go to my own hosting to take full control. For subscribers of my old site, you've been migrated (this is probably obvious since this post has been emailed to you) with the rest of the site. If you're just visiting the site, consider <a title="Register" href="http://www.alexdglover.com/membership-account-2/">registering</a>  - it's free, hides all advertisements, and signs you up to receive future posts by email.</p>
+<p>Now, in the process of migrating to my own WordPress instance, I've learned a number of valuable things. And what's a better way to transition to a new site than to cover the lessons learned from the migration? I present to you, the 6 WordPress.com Migration Tips!</p>
+<h1>6 WordPress.com Migration Tips</h1>
+<p>Now some of these tips are more generic, some are specific to migrating FROM WordPress.com hosting. I'm not going to cover the hosting setup or WordPress install, but leave a comment if you have questions related to those processes.</p>
+<ol>
+  <li>
+    <p>Assuming you want to keep all of your pages/posts/images, your first step should be to do an export/import. On your WordPress.com site's dashboard, go to Tools --&gt; Export</p>
+    <p style="text-align: center;"><a href="https://www.alexdglover.com/assets/wp_export.png"><img class="aligncenter size-full wp-image-505" alt="WordPress export link" src="/assets/wp_export.png" width="364" height="173" /></a></p>
+    <p>WordPress.com will present  you with 2 options, a free XML export or a "Guided Transfer" for a whopping $129... just do the XML export. Remember where you saved your XML export! Next, go to your new WordPress instance dashboard  and choose Tools --&gt; Import. Click on the WordPress option, and install the necessary plugin. Then upload your XML file. The import should include all pages, posts, and even images/media.</p>
+    <p>Now, that's all pretty useless, "WordPress-101" information. Here's the important tip - if you do the import, and you seem to be missing pages/posts, try 2 things:</p>
+    <ul>
+      <li>Re-run the import - the WordPress import function is smart enough to skip any posts/pages that already exist based on permalink.</li>
+      <li>Go to your "All Posts" view and look for "Deleted" posts. A good number of my posts were marked as deleted for some reason. Then just select all of the posts that should NOT be deleted, and click restore!
+      </li>
+    </ul>
+  </li>
+</ol>
+:ET

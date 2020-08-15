@@ -1,0 +1,16 @@
+I"P<p>I'm getting ready to start an Arduino home automation project, so I started looking at ways to interface with an Arduino across the internet. That way I'll be able to control all of the lights, locks, etc. anywhere I have internet access.</p>
+<p>Now, the obvious answer was to buy an Ethernet shield, but I already run a home web server so that seemed unnecessary. I saw a few solutions using Processing or Python scripts, but that seemed unnecessarily complicated. It took a fair amount of digging and brainstorming, but I've found an ultra-easy, ultra-flexible, and ultra-fast solution. <strong>Ultra</strong>.</p>
+<p>There are a few major assumptions here.</p>
+<ol>
+<li>You have a computer running a web server that is accessible from the open internet, using a static IP address or a Dynamic DNS name. Your computer is either directly connected to your ISP and using a public IP address or your router is set up for port forwarding. If you don't have this set up yet, just Google it - there are a lot of tutorials that explain how to set up a home web server.</li>
+<li>Your home web server has PHP. If not, this will still work, you'll just have to re-write it in Java or whatever server-side language you're using.</li>
+<li><span style="line-height: 13px;">The Arduino will be plugged into the web server via USB.</span></li>
+</ol>
+<p>Here's the basic concept: the Arduino can't read files from the server via the USB serial connection, so the server will have to "push" the message. The server side code (PHP, Java, whatever you choose) cannot talk directly to the serial COM port, so we need a local script on the web server that can talk to the serial (USB) port. Last, the Arduino sketch has to be written so it can "catch" and process the message.</p>
+<p>In this example, we'll just create a barebones web page for controls that will turn an LED on and off via the Arduino. Let's start with the sketch. The sketch is just listening on the serial connection for a 1 or 0. If it receives a 1 it will turn the LED on, if it receives a 0 it will turn the LED off.</p>
+<p>```c
+/*
+Alex Glover
+February 2013
+*/</p>
+:ET
