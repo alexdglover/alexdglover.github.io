@@ -1,5 +1,5 @@
 ---
-title: What's "pass-reference-by-value?"
+title: What's pass-reference-by-value?
 categories:
 - IT/Software Projects
 tags:
