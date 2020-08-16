@@ -1,3 +1,0 @@
-I"÷<p>This project is more of a warm-up than a full-blown project. I wanted to get a feel for the basic workings of an accelerometer in preparation for a larger undertaking (no spoilers!). I borrowed this project idea from a forum about Arduino and accelerometers but can't remember which forum, so I can't credit back to the original poster - sorry about that.</p>
-<p>Before we get to the how, let's take a look at the what. Basically we have an accelerometer and 5 LEDs mounted on a breadboard. Four of the LEDs are mounted to correspond with the X and Y accelerometer axes and one LED is in the middle. Â  When the accelerometer is level, only the middle LED is illuminated. If you tilt the accelerometer to the side, the LED on that side is illuminated.</p>
-:ET

@@ -1,5 +1,0 @@
-I"Ø<p>A few months back, I came across this chart illustrating Apple's segment revenues on Reddit:</p>
-<p style="text-align: center;"><img class="aligncenter" alt="" src="/assets/fpGeLbd.png" width="615" height="461" /></p>
-<p style="text-align: left;">This is a great chart because it has impact with just a glance, and yet yields more solid data the longer you examine it. Ever since I saw this chart I wanted to build my own for my department, for startups, and offer it up to anyone else who might want to build a similar chart.</p>
-<p style="text-align: left;">Horace Dediu of <a href="http://www.asymco.com/" target="_blank">Asymco.com</a>Â put this together using a chart-building iPad app called <a href="https://itunes.apple.com/us/app/perspective/id516098684?mt=8" target="_blank">Perspective</a>. Now, I should have just downloaded the damn app and made some similar charts and been happy. Instead I built my own from scratch using HTML5's canvas tag. Check out the demo.</p>
-:ET

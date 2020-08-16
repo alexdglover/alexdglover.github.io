@@ -1,6 +1,0 @@
-I"�<p>This one is pretty much a no-brainer, but I wasn't aware of it until very recently so I thought I'd share.</p>
-<p>Source code, as you've probably seen on lots of web pages, is <em>treated special</em>. And for good reasons, like readability, syntax highlighting, and to protect against the use of formatted instead of plain-text characters.</p>
-<p>When I first started using my Wordpress site, I just used the &lt;code&gt; HTML tag. Which is fine. But there is no syntax highlighting, which makes reading code a little more painful. I stumbled on the <a href="http://wordpress.org/extend/plugins/syntaxhighlighter/" target="_blank">Syntax Highlighter</a> plugin which does a great job and covers many languages, but alas - I'm hosted on Wordpress.com and am restricted from adding my own plugins.</p>
-<p>But wait - what's this? Wordpress.com has integrated Alex Gorbatchev's <a href="http://wordpress.org/extend/plugins/syntaxhighlighter/" target="_blank">Syntax Highlighter</a> into their instances! So all I need to do is switch from the &lt;code&gt; tag to the [sourcecode language="language"] tag! Boom, syntax highlighting in my Wordpress posts.</p>
-<p>Here's a quick example of what the syntax highlighting looks like for HTML, just for kicks:</p>
-:ET

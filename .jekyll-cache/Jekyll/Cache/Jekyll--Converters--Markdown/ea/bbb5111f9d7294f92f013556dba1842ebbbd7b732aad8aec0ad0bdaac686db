@@ -1,9 +1,0 @@
-I"<p>I've been using <a href="https://aws.amazon.com/codedeploy/" target="_blank">AWS CodeDeploy</a> for some time now and it's really an awesome service. If you're hosting your application in AWS and not using CodeDeploy you're missing out.</p>
-<p>If you want to use CodeDeploy yet but you just don't know how, check out my <a href="https://www.udemy.com/aws-codedeploy/?couponCode=GOBLs375" target="_blank">in-depth AWS CodeDeploy course</a>.</p>
-<p>I had been successfully using CodeDeploy for an app at work for a few months when I was told we had to switch to using Linux AMI's that were 'hardened' to meet CIS benchmarks for security. No problem right? I redeployed the app stack with the CIS-hardened AMI and worked through a few bugs that came out of it.</p>
-<p>However, when I went tried to execute my CodeDeploy deployment it died with an error claiming that it couldn't access the "patch.sh" file due to permissions. I logged on to the instance, cd'd into the CodeDeploy directory, and didn't notice anything obviously wrong with the permissions.</p>
-<p>I took a look at the appspec.yml to see what might be different about this one script that was failing. Here's a mock-up of the appspec.yml similar to the one I was using:</p>
-<p>```yaml
-version: 0.0
-os: linux</p>
-:ET

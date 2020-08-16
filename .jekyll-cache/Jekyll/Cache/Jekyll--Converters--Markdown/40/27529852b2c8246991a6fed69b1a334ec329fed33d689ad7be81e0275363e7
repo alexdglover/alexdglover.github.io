@@ -1,9 +1,0 @@
-I"H<p>In my new job at <a href="https://www.zendesk.com/">Zendesk</a>, I deal with a lot of Ruby
-projects that leverage <a href="http://bundler.io/">bundler</a> for dependency management.
-Specifically, right now I’m working with
-<a href="http://www.sparkleformation.io/">SparkleFormation</a>,
-<a href="https://github.com/envato/stack_master">stack_master</a>, and
-<a href="https://github.com/99designs/aws-vault">aws-vault</a>. With that toolset, each
-command starts with a staggering <strong><em>43 static characters</em></strong> that don’t change
-between commands, like this:</p>
-:ET
