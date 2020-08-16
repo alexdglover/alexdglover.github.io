@@ -7,9 +7,11 @@ categories:
 tags:
 - google
 - hacking
+excerpt_separator: <!--more-->
 ---
 <p>When I was still working at the University of Wisconsin, a co-worker of mine showed me a way to find unprotected directories indexed by Apache and web cameras. Not those kind of web cam feeds - these are usually security cameras in innocuous places, like restaurants, streets, tops of buildings... etc., that are so benign (usually) that whoever set them up decided they didn't need to be secured (or didn't know how to secure them).</p>
 <p>Anyway, the <strong>way</strong> he found these was the interesting part. At the time, it was termed "Google Hacking" although now it is sometimes called "Google dorking." It is simply using Google to find unsecured web content with targeted search terms. <!--more-->You're generally looking for things like:</p>
+<!--more-->
 <ul>
 <li>Content that has been indexed by Apache or IIS (or any webserver for that matter), but isn't secured. This allows you to find web content that may not be intended for public consumption (i.e. there aren't links from web pages to these files). A good example would be to Google this:<br />
 intitle:index.of "Apache/2.0 Server at"<br />

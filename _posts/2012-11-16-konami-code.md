@@ -8,9 +8,11 @@ tags:
 - easter egg
 - javascript
 - konami
+excerpt_separator: <!--more-->
 ---
 <p>The Konami code... if you were born in 1990 or earlier, and play (or played) video games, you probably already know what I'm talking about.</p>
 <p>The history of the Konami code is awesome in it's own rite. Here's the short version: the Konami code is a famous cheat code (up, up, down, down, left, right, left, right, B, A) that first appeared in NES games like Contra. Many times the code was added to video games as a tribute to the classic games or as a tribute to Kazuhisa Hashimoto, the developer who accidentally left the cheat code in the game when it was sold to the public.</p>
+<!--more-->
 <p>That homage has been proliferated by nerds and techies through many games and, eventually, made it's way on websites.</p>
 <p>YES, THERE IS A CHEAT CODE FOR THE INTERNET.</p>
 <p>Sort of. It usually just reveals an easter egg on that site. You can find a whole list of websites that use Konami codes at Konami Code Sites. It's a lot of fun finding the secret content people have put behind respectable websites.</p>

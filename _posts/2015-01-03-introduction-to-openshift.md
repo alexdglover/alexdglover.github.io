@@ -11,8 +11,10 @@ tags:
 - paas
 header:
   teaser: /assets/OpenShift2.png
+excerpt_separator: <!--more-->
 ---
 <p><a href="https://www.openshift.com/" target="_blank">OpenShift</a> is a Platform-as-a-Service offering provided by Red Hat. It's built on top of <a href="http://en.wikipedia.org/wiki/LXC" target="_blank">Linux containers</a> (which they refer to as 'gears') hosted in Amazon's Amazon Web Services (AWS). They offer many different platforms such as PHP/Apache, JBoss, Tomcat, NodeJS, Python, Ruby-on-Rails, and many more. OpenShift refers to these pre-built platforms as 'cartridges.'</p>
+<!--more-->
 <p>Beyond the platforms they offer, OpenShift also takes care of DNS (you are given a *.rhcloud.com subdomain), load balancing via HAProxy, and auto-scaling for your application. Much like Heroku, code deployment is as easy as executing a git push. All of these features, including 3 containers, are all free of charge.</p>
 <p>Red Hat has done a good job making OpenShift "cloudy" - for example, database connection strings are handled by environment variables. This is cloud-friendly because:</p>
 <ol>

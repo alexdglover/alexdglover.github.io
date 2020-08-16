@@ -8,8 +8,10 @@ tags:
 - mongodb
 - nosql
 - php
+excerpt_separator: <!--more-->
 ---
 <p>I recently used MongoDB in the Share Your Salary app and had a few hiccups as I tried to blunder my way through learning how to use it. MongoDB, like many NoSQL document databases, uses JavaScript Object Notation or JSON to represent the objects/documents. JSON is great, especially when you're using JavaScript in conjunction. PHP, however, doesn't 'speak' JSON natively; it uses arrays instead, and this makes for some less than intuitive interactions. This post will go over some of the basic CRUD operations using PHP against a MongoDB.</p>
+<!--more-->
 <h3>Connecting</h3>
 <p>Connecting is pretty straight-forward:</p>
 ```php

@@ -14,12 +14,15 @@ tags:
 - todomvc
 header:
   teaser: /assets/todos.png
+excerpt_separator: <!--more-->
 ---
 **Be advised** This post is quite old ({{ page.date | date_to_string }}) and any code may be out of date. Proceed with caution.
 {: .notice--warning}
 
 **Update Feb 2017** I've happily used this TODO app for the past ~4 years, but I'm taking it down with the rest of my old PHP hosting. In conjunction, I've removed the demo-related content from this post. For anyone interested, I'm now using [Wunderlist](http://www.wunderlist.com/)
 {: .notice--info}
+
+<!--more-->
 
 <p>Short post, as this isn't really a tutorial. I was recently checking out <a href="http://todomvc.com/" target="_blank">ToDoMVC</a> to look at some JavaScript frameworks, and I really liked the To Do list app...</p>
 <p><img class="aligncenter size-full wp-image-544" alt="todosmvc" src="{{ site.baseurl }}/assets/todos.png" width="682" height="534" /></p>

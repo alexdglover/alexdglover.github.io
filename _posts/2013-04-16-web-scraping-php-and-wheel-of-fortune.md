@@ -8,12 +8,14 @@ tags:
 - php
 - scraping
 - web scraping
+excerpt_separator: <!--more-->
 ---
 **Be advised** This post is quite old ({{ page.date | date_to_string }}) and any code may be out of date. Proceed with caution.
 {: .notice--warning}
 
 <p>My fiancee loves Wheel of Fortune and watches whenever she can. The clever folks over at Sony (producers of Wheel of Fortune) introduced a loyalty program called "Wheel Watchers." People who sign up get a "Spin ID," and if your Spin ID is chosen for a given episode, you win one of the prizes they gave away on the show. Only catch is you have to watch every night.</p>
 <p>This is a lot of random background information, but there's a reason. My fiancee asked me to write an application that would check the Spin ID every day and notify us if we won. This seemed like a great reason to learn some <a href="http://en.wikipedia.org/wiki/Web_scraping" target="_blank">web scraping</a> with PHP (although you could probably do this in just about any language).</p>
+<!--more-->
 <h3>Pulling Raw Data</h3>
 <p>First things first, you need a decent website to scrape the information from! Strangely, the official Wheel of Fortune site doesn't offer up the winning spin IDs. Luckily, there are a handful of websites that do report the winning numbers. For my application, I'll be using <a href="http://wheeloffortuneclub.blogspot.com/">http://wheeloffortuneclub.blogspot.com</a></p>
 <p>We'll pull the entire web page first and then parse for the Spin ID later. In PHP, this is quite simple:</p>

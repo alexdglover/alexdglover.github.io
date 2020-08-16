@@ -12,19 +12,10 @@ tags:
 - monitoring
 - raid
 - windows 7
-meta:
-  _wpas_done_all: '1'
-  _publicize_pending: '1'
-  jabber_published: '1354718459'
-  publicize_twitter_user: alexdglover
-  _wpas_done_1477652: '1'
-  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:297624509;b:1;}}
-  email_notification: '1354718460'
-  _wpas_done_1477650: '1'
-  reddit: a:2:{s:5:"count";i:0;s:4:"time";i:1355790895;}
+excerpt_separator: <!--more-->
 ---
 <p>For many folks whose motherboards don't support RAID or just want a simple, easy to implement RAID solution, software RAID is often the best solution. In Windows 7, Microsoft finally got around to providing out-of-the-box software <a href="http://en.wikipedia.org/wiki/RAID" target="_blank">RAID</a> capabilities (apparently you could <a href="http://www.tomshardware.com/reviews/windowsxp-make-raid-5-happen,925-2.html" target="_blank">do it in Windows XP</a>, but not without some real leg work). Only problem is Microsoft didn't include a notification or alarm mechanism to deal with disk failures. The only notification is a passive entry in the Event Log, which is not obvious for basic users and not really convenient for anyone. This effectively defeats the purpose of RAID as a mechanism for data redundancy, as your disks could fail one by one until all of your data was unrecoverable, and you as the user wouldn't realize until it was too late.</p>
-<p><!--more Click to see my solution --></p>
+<!--more-->
 <p>Fortunately there are several free disk monitoring applications that can fill this void Microsoft left for us. I've chosen <a href="http://www.passmark.com/products/diskcheckup.htm" target="_blank">DiskCheckup</a> for one important reason - it has the ability to send email notifications when there's an issue (what good is a desktop alert, if you're not on your desktop?). DiskCheckup uses the <a href="http://en.wikipedia.org/wiki/S.M.A.R.T." target="_blank">S.M.A.R.T</a> values from your hard drives to look for potential issues and notifies you if they exceed pre-set thresholds. Downloading and installing DiskCheckup is quite easy, but there are a few important configuration steps I wanted to highlight:</p>
 <ol>
 <li><span style="line-height:13px;">After installing, open DiskCheckup. Note - by default, it doesn't start the application after installation or after a reboot. Something to keep in mind if  you want it running all the time</span></li>

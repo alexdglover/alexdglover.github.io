@@ -8,18 +8,11 @@ tags:
 - expect
 - script
 - unix
-meta:
-  _wpas_done_all: '1'
-  jabber_published: '1347740022'
-  email_notification: '1347740023'
-  _wpas_done_twitter: '1'
-  _wpas_skip_1477652: '1'
-  _edit_last: '1'
-  _s2mail: 'yes'
-  _wpas_skip_1477650: '1'
+excerpt_separator: <!--more-->
 ---
 <p>I think this topic has been covered, in varying levels, by many people on the internet. Still, I felt like I was bashing my head against the wall trying to figure this out. To prevent head trauma to some other sys admins, I thought I'd post this.</p>
 <p>First, some assumptions. Let's assume you're a sysadmin, working mainly in a LAMP environment (or at least Linux and MySQL). Let's also assume you have a reasonable number of hosts, between 5 and 50. You don't really have the right scale to warrant setting up RADIUS or TACACS authentication systems, but it is a real pain in the ass to reset passwords on a regular basis. Last, let's assume that for some good reason, you use the same password across many machines, both for the OS and DB authentication. To change all of those passwords, you would have to SSH into each box, run a couple password change commands, and exit each host.</p>
+<!--more-->
 <p>Using BASH and 'Expect,' I've automated that process. For my experiment, I assumed that I wanted to change OS passwords for users root, oracle, and asm and DB passwords for root and oracle. I provide a list of hosts that are going to be updated in a control file titled 'password_change_list' There is a single shell script, 'change_password' (to invoke, just cd to the appropriate directory and type ./change_password').  Instead of taking a bunch of screenshots, I've included a quick screencapture of the script in action!</p>
 
 {% include video id="49511130" provider="vimeo" %}

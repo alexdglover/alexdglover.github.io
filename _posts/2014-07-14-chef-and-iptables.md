@@ -9,9 +9,11 @@ tags:
 - configuration management
 - devops
 - iptables
+excerpt_separator: <!--more-->
 ---
 <p>Like many DevOps professionals before me, I needed a way to manage iptables programmatically through Chef. Before I realized that Opscode had written a cookbook for just this, I had already spent some time building my own. The cookbook written by Opscode is very clever and allows you to apply a set of iptables rules with a single line in another recipe. The only problem is that it is predicated on you creating 'templates' of iptables policies you want to apply in advance, and you can only apply those templates. You can't just supply a port number or part of a rule. Additionally, their cookbook wasn't compatible with <a href="http://www.vagrantup.com/" target="_blank">Vagrant</a> because of the ruby binary wasn't in the paths used in the cookbook.</p>
 <p>Short version - I wrote my own iptables cookbook and augmented the Opscode iptables cookbook, and I wanted to share.</p>
+<!--more-->
 <h2>Changes to the Opscode Cookbook</h2>
 <p>Basically, the cookbook functionality is unchanged save for two parts. First, in addition to the previous method for invoking iptables, you can now invoke it by setting the ['iptables']['roles'] attribute to one or more roles (comma delimited). There is a new 'default.rb' attribute file and the default recipe has been modified slighly to support this. Second, the default recipe has been modified to detect the path to the ruby binary so as to be compatible with Vagrant boxes instead of being hardcoded.</p>
 <p>You can check out all of the code on <a href="https://github.com/alexdglover/iptables" target="_blank">Github</a>.</p>

@@ -12,8 +12,10 @@ tags:
 - swagger ui
 header:
   teaser: /assets/SwaggerUILogo.png
+excerpt_separator: <!--more-->
 ---
 <p>In <a title="Share Your Salary App Part 1" href="http://www.alexdglover.com/share-your-salary-app-part-1/" target="_blank">Part 1</a>, I covered the core classes for the Share Your Salary application. These classes covered my Model and Controllers in my quasi-MVC application. Now we're ready to expose those controller functions via a RESTful API.</p>
+<!--more-->
 <p>For this project, I used the Fat Free Framework for both API routes and web page templating. To start, I simply downloaded and unzipped the <a href="https://github.com/bcosca/fatfree/archive/master.zip">F3 package</a> and added the contents to my shareyoursalary app directory. Next, I created a "classes" folder and added the PHP class files I created in Part 1. At this point, my folder structure looked like this:</p>
 <ul>
 <li>shareyoursalary/

@@ -12,8 +12,10 @@ tags:
 - raspberry pi
 header:
   teaser: /assets/raspberryPiPolyfuse.png
+excerpt_separator: <!--more-->
 ---
 <p>I recently started building out a combination NAS and HTPC on a Raspberry Pi and came across some interesting information about powering Raspberry Pi's. While this isn't a project post per se, I thought it was interesting enough to share and wanted to send this out as sort of a PSA for the users out there who don't know the potential danger of "backpowering" a Raspberry Pi.</p>
+<!--more-->
 <p>For those who don't already have one, here are a few suggestions for where to get a Raspberry Pi.</p>
 <h3>Where to get a Raspberry Pi</h3>
 <p>If you have some of the peripherals (SD card, HDMI cable, micro USB power supply), you can get started with a standalone Model B Raspberry Pi for as low as $35.</p>

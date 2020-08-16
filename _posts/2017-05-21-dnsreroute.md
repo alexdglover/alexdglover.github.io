@@ -13,6 +13,7 @@ tags:
 - SaaS
 header:
   teaser: /assets/img/DNSReRoute_Architecture.png
+excerpt_separator: <!--more-->
 ---
 
 **Dec 28 2017 Update** OpenShift deprecated their original offering, so the API backend is completely dead. All functionality in the single page app (besides the Auth0 integration) is now broken. 
@@ -27,6 +28,8 @@ simple JavaScript redirect using S3, but the bucket obviously didn't match my
 DNS name, so that didn't work. Route53 doesn't support HTTP redirects. I was at
 a loss - how could something so trivial require a whole web server to
 accomplish?
+
+<!--more-->
 
 I started looking into 3rd party services that could do this, mostly out of
 curiosity. I stumbled across [301redirect.it](https://www.301redirect.it/) and

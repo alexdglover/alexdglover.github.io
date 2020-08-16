@@ -2,9 +2,6 @@
 
 title: Bootstrap Scrollspy Workaround
 date: 2014-06-16 08:00:10.000000000 -05:00
-
-
-
 categories:
 - IT/Software Projects
 - How-to Guides
@@ -13,15 +10,10 @@ tags:
 - javascript
 - scrollspy
 - web design
-meta:
-  _edit_last: '1'
-  _s2mail: 'yes'
-  _wpas_mess: "#Bootstrap Scrollspy Workaround http://wp.me/p3dG3x-cn"
-  _wpas_done_all: '1'
-  _wpas_skip_1477652: '1'
-  _wpas_skip_1477650: '1'
+excerpt_separator: <!--more-->
 ---
 <p>I was recently working on a new HTML project when I came across the <a title="Scrollspy" href="http://getbootstrap.com/2.3.2/javascript.html#scrollspy" target="_blank">Scrollspy</a> feature in Bootstrap's framework (v2.3). The feature looks really good on Bootstrap's pages, I figured I'd use it in my project as well. I immediately had issues with the links aligning the content to the viewport and issues with the scrollspy highlighting the right link based on what content was in the viewport. This was all supposed to be out of the box functionality... After doing some research (read: Googling), I came across a few <a href="https://github.com/twbs/bootstrap/issues/3316" target="_blank">bug tickets</a> and workarounds, but no wholistic solutions to reproducing the functionality on Bootstrap's site. So I decided to build it manually.</p>
+<!--more-->
 <p>Let's get started.</p>
 <p><!--more Continue to the instructions--></p>
 <h2>Preparation</h2>

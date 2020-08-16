@@ -11,8 +11,10 @@ tags:
 - wget
 header:
   teaser: /assets/download_all_files_http_request1-1024x797.png
+excerpt_separator: <!--more-->
 ---
 <p>I recently got a membership to a site hosting a boatload of private label rights (PLR) material (<a href="http://www.idplr.com/go.php?offer=alexdglove&pid=4" target="_blank">IDPLR.com</a>). 99% of PLR items are scams, garbage, or are outdated, but if you have the time or tools to dig through it you can find some gems. (Just so we're clear, I'm not running any scams, I was just looking for some content for another project). Anyway, I got access to the site that had thousands of zip files but obviously didn't want to download them one by one. Administrator wouldn't give me any way to download the files in bulk either, so I was left with no choice but to automate...</p>
+<!--more-->
 <p>This is one of those projects that can be done a dozen different ways. There's probably a real slick way to do this with one line of code, but this method worked for me.</p>
 <h2>Step 1 - Identify your targets</h2>
 <p>This was the most challenging part for me, until I got lucky and found <a href="http://blog.adlibre.org/2011/06/03/extracting-all-links-website-using-wget/" target="_blank">a blog post</a> on how to grab EVERY link on a site using wget. I can't take any credit for this script, so I'll just share my slightly modified version:</p>

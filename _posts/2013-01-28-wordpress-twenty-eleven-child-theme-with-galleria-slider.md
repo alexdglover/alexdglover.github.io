@@ -11,9 +11,11 @@ tags:
 - wordpress
 header:
   teaser: /assets/twentyeleven_slider_preview.png
+excerpt_separator: <!--more-->
 ---
 <p>OK - I've been spending the last few hours getting acquainted with the WordPress backend (that sounds more risque than I had intended) and making my first custom 'child' theme.</p>
 <p>If you have an interest in making custom themes and you're just getting started, I've got a few very generic tips:</p>
+<!--more-->
 <ul>
 <li>Don't underestimate how complex some of the themes and frameworks can be</li>
 <li>Start by creating a child theme or modifying an existing theme</li>

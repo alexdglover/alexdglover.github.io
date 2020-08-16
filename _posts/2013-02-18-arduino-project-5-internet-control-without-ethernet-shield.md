@@ -15,9 +15,11 @@ tags:
 - script
 - serial port
 - USB
+excerpt_separator: <!--more-->
 ---
 <p>I'm getting ready to start an Arduino home automation project, so I started looking at ways to interface with an Arduino across the internet. That way I'll be able to control all of the lights, locks, etc. anywhere I have internet access.</p>
 <p>Now, the obvious answer was to buy an Ethernet shield, but I already run a home web server so that seemed unnecessary. I saw a few solutions using Processing or Python scripts, but that seemed unnecessarily complicated. It took a fair amount of digging and brainstorming, but I've found an ultra-easy, ultra-flexible, and ultra-fast solution. <strong>Ultra</strong>.</p>
+<!--more-->
 <p>There are a few major assumptions here.</p>
 <ol>
 <li>You have a computer running a web server that is accessible from the open internet, using a static IP address or a Dynamic DNS name. Your computer is either directly connected to your ISP and using a public IP address or your router is set up for port forwarding. If you don't have this set up yet, just Google it - there are a lot of tutorials that explain how to set up a home web server.</li>
