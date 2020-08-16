@@ -4,6 +4,7 @@ categories:
 - IT/Software Projects
 tags:
 - ruby
+excerpt_separator: <!--more-->
 ---
 I'm not an authority on this - take my explanation with a grain of skepticism
 and do your own research.
@@ -21,8 +22,11 @@ StackOverflow articles. There's a lot of content, but it's not very clear.
 In the abstract, the concepts are simple. In the context of Python and Ruby,
 it's a confusing mess. 
 
-So that's what this post is about - trying to clarify, the
-differences between the two and what "pass-reference-by-value" actually means.
+So that's what this post is about - trying to clarify the
+differences between the two and define what "pass-reference-by-value" actually
+means.
+
+<!--more-->
 
 ## Quick, naive explanation
 
